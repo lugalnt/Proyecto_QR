@@ -1,0 +1,185 @@
+/* ============================
+   Paleta de colores y variables
+   ============================ */
+:root {
+    --color-bg: #f5f7fa;
+    --color-panel-bg: #ffffff;
+    --color-primary: #c90003b2;
+    --color-primary-hover: #b31b1be7;
+    --color-secondary: #8d1202;
+    --color-text: #2c3e50;
+    --color-text-light: #ffffff;
+    --radius-base: 0.5rem;
+    --spacing-base: 1rem;
+    --transition-speed: 0.3s;
+}
+
+/* ============================
+   Estilos generales
+   ============================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ============================
+   Cabecera (Navbar)
+   ============================ */
+.header {
+    background-color: var(--color-primary);
+    padding: var(--spacing-base);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav-brand {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+.logout-button {
+    background-color: var(--color-secondary);
+    border: 2px solid var(--color-text-light);
+    color: var(--color-text-light);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-base);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+.logout-button:hover {
+    background-color: var(--color-text-light);
+    color: var(--color-primary);
+}
+
+/* ============================
+   Contenedor principal
+   ============================ */
+.main-container {
+    max-width: 1200px;
+    margin: calc(var(--spacing-base) * 2) auto;
+    padding: var(--spacing-base);
+}
+
+/* ============================
+   Barra de botones
+   ============================ */
+.button-grid {
+    display: grid;
+    gap: var(--spacing-base);
+    grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+}
+.button-grid .action-btn {
+    background-color: var(--color-primary);
+    border: none;
+    color: var(--color-text-light);
+    padding: 0.75rem;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    border-radius: var(--radius-base);
+    transition: background-color var(--transition-speed);
+}
+.button-grid .action-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* ============================
+   Panel de contenido
+   ============================ */
+.content-panel {
+    display: none;
+    background-color: var(--color-panel-bg);
+    padding: var(--spacing-base);
+    margin-top: var(--spacing-base);
+    border-radius: var(--radius-base);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================
+   Tablas de datos
+   ============================ */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-base);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    background-color: var(--color-panel-bg);
+    border-radius: var(--radius-base);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.data-table th, .data-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e4e8;
+}
+.data-table th {
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    font-weight: 500;
+}
+.data-table tr:nth-child(even) {
+    background-color: #f9fbfc;
+}
+.data-table tr:hover {
+    background-color: #f1f5f8;
+}
+
+/* ============================
+   Botones de acción específicos
+   ============================ */
+.btn-highlight {
+    background-color: #f5a623;
+    color: var(--color-text-light);
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: var(--radius-base);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: background-color var(--transition-speed);
+}
+.btn-highlight:hover {
+    background-color: #d88e1e;
+}
+.btn-danger {
+    background-color: #e74c3c;
+    color: var(--color-text-light);
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: var(--radius-base);
+    font-size: 0.9rem;
+    transition: background-color var(--transition-speed);
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* ============================
+   Responsive: tablets y móviles
+   ============================ */
+@media (max-width: 992px) {
+    .main-container {
+        padding: calc(var(--spacing-base) / 2);
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        flex-direction: column;
+        gap: var(--spacing-base);
+        text-align: center;
+    }
+    .button-grid {
+        grid-template-columns: repeat(auto-fit, minmax(3rem, 1fr));
+    }
+}
+
+/* Final */

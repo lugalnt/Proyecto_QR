@@ -1,0 +1,52 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Scanner Container */
+#reader {
+    width: 90%; /* Full width for smaller screens */
+    max-width: 500px; /* Limit the width on larger screens */
+    height: auto;
+    border: 2px solid #343a40;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+/* Result Display */
+#result {
+    font-size: 1.2rem;
+    color: #343a40;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    #reader {
+        width: 100%; /* Use full width on very small screens */
+        height: auto;
+    }
+
+    #result {
+        font-size: 1rem; /* Adjust font size for smaller screens */
+    }
+}

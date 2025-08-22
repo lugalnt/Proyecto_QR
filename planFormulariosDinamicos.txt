@@ -1,0 +1,14 @@
+Plan para hacer dinamico los formularios que se quieren guardar:
+Formulario para hacer formularios:
+->Nombre del area
+---
+Datos que siempre van: Id, Id ref de empleado (si vea?), Fecha rev
+---
+->Nombre de dato, -> Como se guarda dato (Tipo)
+->Nombre de dato, -> Como se guarda dato (Tipo) || SI es numero = Max y Minimo (Opcional, guardar algo para demostrar que hay max y min)
+->Nombre de dato, -> Como se guarda dato (Tipo) || SI es letras ofrecer una descripción
+->Nombre de dato, -> Como se guarda dato (Tipo) || SI es fecha ofrecer rango(?)
+.... Agregar una columna según necesidad
+
+Luego obvio se crea una tabla en la BD con estos datos (Crear precauciones y asi)
+Para luego (De alguna forma lol) crear los formularios de los empleados leyendo las tablas (sus campos) y asi los formularios y tal son totalmente dinámicos.

@@ -1,0 +1,104 @@
+/* styleLogin.css */
+
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #c63f42, #ffae15);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* Container */
+.container {
+  background: #ffffff;
+  color: #333;
+  width: 90%; /* Adjusted for smaller screens */
+  max-width: 400px; /* Limit the width on larger screens */
+  padding: 20px; /* Reduced padding for smaller screens */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Form Title */
+.container h1 {
+  font-size: 22px; /* Slightly smaller font size */
+  margin-bottom: 15px;
+  color: #c63f42;
+}
+
+/* Input Fields */
+.container input[type="text"],
+.container input[type="password"],
+.container input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+.container button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px; /* Reduced margin for smaller screens */
+  background: #c63f42;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.container button:hover {
+  background: #2575fc;
+}
+
+/* Links */
+.container a {
+  display: block;
+  margin-top: 10px; /* Reduced margin for smaller screens */
+  color: #c63f42;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.container a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  body {
+    padding: 10px; /* Add padding for smaller screens */
+  }
+
+  .container {
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+
+  .container h1 {
+    font-size: 20px; /* Smaller font size for titles */
+  }
+
+  .container button {
+    font-size: 14px; /* Adjust button font size */
+    padding: 8px; /* Reduce button padding */
+  }
+
+  .container input[type="text"],
+  .container input[type="password"],
+  .container input[type="email"] {
+    font-size: 14px; /* Adjust input font size */
+    padding: 8px; /* Reduce input padding */
+  }
+}
