@@ -37,11 +37,6 @@ require_once('conn.php');
                         </div>
                         <button type="submit" class="button">Registrarse</button>
                     </form>
-
-                    <div class="toggle">
-                        <span id="toggle-text"><h2>¿No Tienes Cuenta?</h2></span>
-                        <a><label for="check" onclick="toggleForm()">Registrate</label></a>
-                    </div>
                 </div>
             </div>
 
@@ -98,22 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             exit();
         } else {
             echo "<script>alert('Usuario o contraseña incorrectos');</script>";
-        }
-    }
-
-    if($tipo == "register")
-    {
-        $nombre = $_POST['NombreR'];
-        $contra = $_POST['passR'];
-        $telefono = $_POST['telefonoR'];
-
-        $queryR = $conn->prepare("INSERT INTO usuario (Nombre_Usuario, Contra_Usuario, Telefono) VALUES (?, ?, ?)");
-        $queryR->bind_param("sss", $nombre, $contra, $telefono);
-        if ($queryR->execute()) {
-            $queryR->close();
-            echo "<script>alert('Registro exitoso, proceda a ingresar');</script>";
-        } else {
-            echo "<script>alert('Error al registrar');</script>";
         }
     }
 
