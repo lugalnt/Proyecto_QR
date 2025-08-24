@@ -28,15 +28,6 @@ require_once('conn.php');
                     </form>
 
                     <!-- Formulario de Registro -->
-                    <form id="register-form" action="" method="post" style="display: none;">
-                        <input type="hidden" name="form_type" value="register">
-                        <div>
-                            <input type="text" name="NombreR" placeholder="Nombre" maxlength="50" required>
-                            <input type="password" name="passR" placeholder="Contraseña" maxlength="30" required>
-                            <input type="text" name="telefonoR" placeholder="Telefono" maxlength="10" required>
-                        </div>
-                        <button type="submit" class="button">Registrarse</button>
-                    </form>
                 </div>
             </div>
 
@@ -72,31 +63,24 @@ require_once('conn.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $tipo = $_POST['form_type'];
-
-
-    if($tipo == "login")
-    {
+        require_once('controllers/usuarioController.php');
 
         $nombre = $_POST['NombreL'];
         $contra = $_POST['passL'];
-        $queryL = $conn->prepare("SELECT * FROM usuario WHERE Nombre_Usuario = ? AND Contra_Usuario = ?");
-        $queryL->bind_param("ss", $nombre, $contra);
-        $queryL->execute();
-        $resultL = $queryL->get_result();
-        if ($resultL->num_rows > 0) {
 
-            session_start();
+        $UsuarioController = new UsuarioController();
+
+        try
+        {
+            $login = $UsuarioController->login($nombre, $contra);
+            $_SESSION['Id_Usuario'] = $login;
             $_SESSION['Nombre_Usuario'] = $nombre;
-            $_SESSION['Id_Usuario'] = $resultL->fetch_assoc()['Id_Usuario'];
             echo "<script> window.location.href = 'index.php';</script>";
-            exit();
-        } else {
-            echo "<script>alert('Usuario o contraseña incorrectos');</script>";
         }
-    }
-
+        catch (Exception $e)
+        {
+            echo '<script>alert("'. $e->getMessage() .'")</script>';
+        }
 }
-
 
 ?>

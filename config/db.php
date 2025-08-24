@@ -6,7 +6,7 @@ class DB {
     private static ?\PDO $pdo = null;
 
     private const HOST = 'localhost';
-    private const NAME = 'proyecto_qr';
+    private const NAME = 'fcs';
     private const USER = 'root';
     private const PASS = '';
     private const CHARSET = 'utf8mb4';

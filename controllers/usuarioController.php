@@ -9,7 +9,7 @@ class UsuarioController {
     private BaseController $base;
 
     // Indica las columnas en el orden para CSV si quieres usar registrar con string
-    private array $fields = ['Nombre_Usuario', 'Telefono', 'Contra_Usuario'];
+    private array $fields = ['Nombre_Usuario', 'Password_Usuario', 'Telefono_Usuario', 'Puesto_Usuario'];
 
     public function __construct() {
         // tabla 'usuarios', pk 'id_usuario', campos para CSV
@@ -28,13 +28,13 @@ class UsuarioController {
         // Si es array, comprobamos email y username
         if (is_array($data)) {
             if (empty($data['Nombre_Usuario'])) throw new \InvalidArgumentException('Nombre requerido');
-            if (empty($data['Contra_Usuario'])) throw new \InvalidArgumentException('Contraseña requerido');
-            if (empty($data['Telefono']) || !filter_var($data['Telefono'], FILTER_VALIDATE_INT)) {
+            if (empty($data['Password_Usuario'])) throw new \InvalidArgumentException('Contraseña requerido');
+            if (empty($data['Telefono_Usuario']) || !filter_var($data['Telefono_Usuario'], FILTER_VALIDATE_INT)) {
                 throw new \InvalidArgumentException('Numero inválido');
             }
         }
 
-        $data['Contra_Usuario'] = password_hash($data['Contra_Usuario'], PASSWORD_DEFAULT);
+        $data['Password_Usuario'] = password_hash($data['Password_Usuario'], PASSWORD_DEFAULT);
 
         // Aquí podrías hashear contraseñas, normalizar datos, etc.
         return $this->base->registrar($data);
@@ -55,12 +55,12 @@ class UsuarioController {
     public function actualizar($id, array $data) {
         // ejemplo: prohibir actualizar username a vacío
             if (empty($data['Nombre_Usuario'])) throw new \InvalidArgumentException('Nombre requerido');
-            if (empty($data['Contra_Usuario'])) throw new \InvalidArgumentException('Contraseña requerido');
-            if (empty($data['Telefono']) || !filter_var($data['Telefono'], FILTER_VALIDATE_INT)) {
+            if (empty($data['Password_Usuario'])) throw new \InvalidArgumentException('Contraseña requerido');
+            if (empty($data['Telefono_Usuario']) || !filter_var($data['Telefono_Usuario'], FILTER_VALIDATE_INT)) {
                 throw new \InvalidArgumentException('Numero inválido');
             }
 
-        $data['Contra_Usuario'] = password_hash($data['Contra_Usuario'], PASSWORD_DEFAULT);
+        $data['Password_Usuario'] = password_hash($data['Password_Usuario'], PASSWORD_DEFAULT);
         return $this->base->actualizar($id, $data);
     }
 
@@ -69,7 +69,22 @@ class UsuarioController {
     }
 
     public function login($NombreUsuario, $Contraseña){
-        //if(password_verify())
+        
+        if (empty($NombreUsuario)) throw new \InvalidArgumentException('Nombre requerido');
+        if (empty($Contraseña)) throw new \InvalidArgumentException('Contraseña requerido');
+
+        $usuarios = $this->obtenerPor("Nombre_Usuario", $NombreUsuario);
+        echo '<script>console.log('.json_encode($usuarios).')</script>';
+
+        if ($usuarios && count($usuarios) > 0) 
+        {
+          $usuario = $usuarios[0];
+          if (password_verify($Contraseña, $usuario['Password_Usuario']))
+          {
+            return $usuario['Id_Usuario'];
+          }
+          else {throw new \InvalidArgumentException('Contraseña Incorrecta');}  
+        } else {throw new \InvalidArgumentException('Nombre de usuario no registrado');}
 
     }
 }

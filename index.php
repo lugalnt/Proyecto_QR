@@ -12,7 +12,7 @@ unset($_SESSION['mensaje']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['Registrar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono", "Contra_Usuario"];
+        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         try {
             $UsuarioController->registrar($payload);
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['Editar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono", "Contra_Usuario"];
+        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
         if ($id > 0) {
@@ -94,8 +94,9 @@ $usuarios = $UsuarioController->obtenerTodos();
             <form action="" method="POST" style="margin-bottom:16px;">
                 <label>Registra un usuario al sistema</label><br>
                 <input type="text" name="Nombre_Usuario" placeholder="Nombre del usuario" required>
-                <input type="tel" name="Telefono" placeholder="Telefono del Usuario" required>
-                <input type="password" name="Contra_Usuario" placeholder="Una contraseña para el usuario" required>
+                <input type="tel" name="Telefono_Usuario" placeholder="Telefono del Usuario" required>
+                <input type="password" name="Password_Usuario" placeholder="Una contraseña para el usuario" required>
+                <input type="text" name="Puesto_Usuario" placeholder="Puesto del usuario" required>
                 <input type="hidden" name="Registrar_Usuario" value="1">
                 <button type="submit">Registrar</button>
             </form>
@@ -116,8 +117,9 @@ $usuarios = $UsuarioController->obtenerTodos();
                                 <td>
                                     <form method="post" style="display:flex; gap:8px; align-items:center;">
                                         <input type="text" name="Nombre_Usuario" value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required>
-                                        <input type="text" name="Telefono" value="<?= htmlspecialchars($usuario['Telefono'] ?? '') ?>">
-                                        <input type="password" name="Contra_Usuario" value="" placeholder="Nueva contraseña">
+                                        <input type="tel" name="Telefono_Usuario" value="<?= htmlspecialchars($usuario['Telefono_Usuario'] ?? '') ?>">
+                                        <input type="text" name="Puesto_Usuario" value="<?= htmlspecialchars($usuario['Puesto_Usuario'] ?? '') ?>">
+                                        <input type="password" name="Password_Usuario" value="" placeholder="Nueva contraseña">
                                         <input type="hidden" name="Id_Usuario" value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
                                         <button type="submit" name="Editar_Usuario" value="1">Editar</button>
                                     </form>
