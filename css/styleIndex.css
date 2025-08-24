@@ -182,4 +182,15 @@ a {
     }
 }
 
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: middle; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #fafafa; }
+        .mensaje { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .mensaje.ok { background:#e6ffed; color:#07662e; border:1px solid #c9f0d7; }
+        .mensaje.error { background:#ffecec; color:#a70000; border:1px solid #f5c2c2; }
+        .action-btn{margin:6px;}
+        .button-grid{margin-bottom:16px;}
+        .content-panel{display:none;}
+
 /* Final */

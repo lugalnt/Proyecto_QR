@@ -4,11 +4,62 @@ if (!isset($_SESSION['Id_Usuario'])) {
     header("Location: login.php");
     exit();
 }
-if ($_SESSION['Id_Usuario'] != 1) {
-    header("Location: escanear.php");
-    exit();
-}
+require_once 'controllers/usuarioController.php';
+$UsuarioController = new UsuarioController();
+$mensaje = $_SESSION['mensaje'] ?? '';
+unset($_SESSION['mensaje']);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (isset($_POST['Registrar_Usuario'])) {
+        $permitidos = ["Nombre_Usuario", "Telefono", "Contra_Usuario"];
+        $payload = array_intersect_key($_POST, array_flip($permitidos));
+        try {
+            $UsuarioController->registrar($payload);
+            $_SESSION['mensaje'] = "✅ Usuario registrado con éxito";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } catch (Exception $e) {
+            $mensaje = "❌ Error: " . $e->getMessage();
+        }
+    }
+
+    if (isset($_POST['Editar_Usuario'])) {
+        $permitidos = ["Nombre_Usuario", "Telefono", "Contra_Usuario"];
+        $payload = array_intersect_key($_POST, array_flip($permitidos));
+        $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
+        if ($id > 0) {
+            try {
+                $UsuarioController->actualizar($id, $payload);
+                $_SESSION['mensaje'] = "✅ Usuario modificado con éxito";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            } catch (Exception $e) {
+                $mensaje = "❌ Error: " . $e->getMessage();
+            }
+        } else {
+            $mensaje = "❌ Id de usuario inválido";
+        }
+    }
+
+    if (isset($_POST['Borrar_Usuario'])) {
+        $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
+        if ($id > 0) {
+            try {
+                $UsuarioController->eliminar($id);
+                $_SESSION['mensaje'] = "✅ Usuario eliminado con éxito";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            } catch (Exception $e) {
+                $mensaje = "❌ Error: " . $e->getMessage();
+            }
+        } else {
+            $mensaje = "❌ Id de usuario inválido";
+        }
+    }
+
+}
+$usuarios = $UsuarioController->obtenerTodos();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -32,120 +83,75 @@ if ($_SESSION['Id_Usuario'] != 1) {
             <button class="action-btn" onclick="showDiv('div4')">4</button>
         </div>
 
+        <?php if ($mensaje): ?>
+            <div id="mensaje" class="mensaje <?= (strpos($mensaje,'✅')===0) ? 'ok' : 'error' ?>">
+                <?= htmlspecialchars($mensaje) ?>
+            </div>
+        <?php endif; ?>
+
         <div id="div1" class="content-panel">
             <h1>Usuarios</h1>
-            <br>
-            <form action="" method="POST">
-                <label>Registra un usuario al sistema</label>
+            <form action="" method="POST" style="margin-bottom:16px;">
+                <label>Registra un usuario al sistema</label><br>
                 <input type="text" name="Nombre_Usuario" placeholder="Nombre del usuario" required>
                 <input type="tel" name="Telefono" placeholder="Telefono del Usuario" required>
-                <input type="text" name="Contra_Usuario" placeholder="Una contraseña para el usuario" required>
+                <input type="password" name="Contra_Usuario" placeholder="Una contraseña para el usuario" required>
                 <input type="hidden" name="Registrar_Usuario" value="1">
-                <button type="submit"> Registrar </button>
+                <button type="submit">Registrar</button>
             </form>
-
-            <?php
-            require_once('controllers/usuarioController.php');
-
-            $UsuarioController = new UsuarioController();
-            $usuarios = $UsuarioController->obtenerTodos();
-
-            ?>
 
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nombre de Usuario</th>
-                        <th>Teléfono</th>
-                        <th>Editar</th>
-                        <th>Borrar</th>
+                        <th>Datos</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($usuarios): ?>
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
-                                <form> 
-                                <td><input type="text" name="Id_Usuario" value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>"></td>
-                                <td><input type="text" name="Nombre_Usuario" value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>"></td>
-                                <td><input type="text" name="Telefono" value="<?= htmlspecialchars($usuario['Telefono_Usuario']) ?>"></td>
-                                
-                                <td><?= htmlspecialchars($usuario['Nombre_Usuario']) ?></td>
-                                <td><?= htmlspecialchars($usuario['Telefono']) ?></td>
+                                <td><?= htmlspecialchars($usuario['Id_Usuario']) ?></td>
                                 <td>
+                                    <form method="post" style="display:flex; gap:8px; align-items:center;">
+                                        <input type="text" name="Nombre_Usuario" value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required>
+                                        <input type="text" name="Telefono" value="<?= htmlspecialchars($usuario['Telefono'] ?? '') ?>">
+                                        <input type="password" name="Contra_Usuario" value="" placeholder="Nueva contraseña">
+                                        <input type="hidden" name="Id_Usuario" value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
+                                        <button type="submit" name="Editar_Usuario" value="1">Editar</button>
+                                    </form>
                                 </td>
-                                </form>
                                 <td>
+                                    <form method="post" style="display:inline;">
+                                        <input type="hidden" name="Id_Usuario" value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
+                                        <button type="submit" name="Borrar_Usuario" value="1" onclick="return confirm('¿Eliminar usuario <?= htmlspecialchars($usuario['Nombre_Usuario']) ?>?');">Borrar</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr><td colspan="4">No hay usuarios registrados</td></tr>
+                        <tr><td colspan="3">No hay usuarios registrados</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
-        
         </div>
 
-        <div id="div2" class="content-panel">
-            <h1>2</h1>
-        </div>
-        <div id="div3" class="content-panel">
-            <h1>3</h1>
-        </div>
-        <div id="div4" class="content-panel">
-            <h1>4</h1>
-        </div>
+        <div id="div2" class="content-panel"><h1>2</h1></div>
+        <div id="div3" class="content-panel"><h1>3</h1></div>
+        <div id="div4" class="content-panel"><h1>4</h1></div>
     </div>
 
     <script>
         function showDiv(divId) {
-            // Ocultar todos los paneles
-            document.querySelectorAll('.content-panel').forEach(panel => {
-                panel.style.display = 'none';
-            });
-            // Mostrar el panel seleccionado
-            document.getElementById(divId).style.display = 'block';
+            document.querySelectorAll('.content-panel').forEach(panel => panel.style.display = 'none');
+            const el = document.getElementById(divId);
+            if (el) el.style.display = 'block';
+            try { localStorage.setItem('adminDiv', divId); } catch(e){}
         }
-
-        // Mostrar el panel guardado en sesión (o el primero por defecto)
-        <?php if (isset($_SESSION['divID'])): ?>
-            showDiv('div<?= $_SESSION['divID'] ?>');
-        <?php else: ?>
-            showDiv('div1');
-        <?php endif; ?>
+        const defaultDiv = <?= isset($_SESSION['divID']) ? json_encode('div'.intval($_SESSION['divID'])) : 'null' ?>;
+        const saved = defaultDiv || (localStorage.getItem('adminDiv') || 'div1');
+        showDiv(saved);
     </script>
-
-    <?php
-    require_once('conn.php');
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST")
-    {
-
-        if(isset($_POST['Registrar_Usuario']))
-        {
-
-            $UsuarioController = new UsuarioController();
-            $payload = [
-                        "Nombre_Usuario" => $_POST["Nombre_Usuario"] ?? null,
-                        "Telefono"       => $_POST["Telefono"] ?? null,
-                        "Contra_Usuario" => $_POST["Contra_Usuario"] ?? null,
-                       ];
-                
-            try {
-                $UsuarioController->registrar($payload);
-                echo "<script>alert('✅ Usuario registrado con éxito');</script>";
-            } catch (Exception $e) {
-                echo "<script>alert('❌ Error: " . $e->getMessage() . "');</script>";
-            }
-            unset($_POST['Registrar_Usuario']);
-        }
-        
-
-
-    }
-
-
-    ?>
 </body>
 </html>
