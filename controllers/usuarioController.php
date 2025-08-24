@@ -9,7 +9,7 @@ class UsuarioController {
     private BaseController $base;
 
     // Indica las columnas en el orden para CSV si quieres usar registrar con string
-    private array $fields = ['Nombre_Usuario', 'Telefono'];
+    private array $fields = ['Nombre_Usuario', 'Telefono', 'Contra_Usuario'];
 
     public function __construct() {
         // tabla 'usuarios', pk 'id_usuario', campos para CSV
@@ -21,16 +21,22 @@ class UsuarioController {
         // ejemplo: validación mínima
         $data = is_string($payload) ? $payload : (array)$payload;
 
+        $existe = $this->obtenerPor('Nombre_Usuario', $data['Nombre_Usuario']);
+        if ($existe) {
+            throw new \InvalidArgumentException('El usuario ya existe, elige otro nombre.');
+        }
         // Si es array, comprobamos email y username
         if (is_array($data)) {
             if (empty($data['Nombre_Usuario'])) throw new \InvalidArgumentException('Nombre requerido');
-            if (empty($data['Telefono']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                throw new \InvalidArgumentException('email inválido');
+            if (empty($data['Telefono']) || !filter_var($data['Telefono'], FILTER_VALIDATE_INT)) {
+                throw new \InvalidArgumentException('Numero inválido');
             }
         }
 
+        $data['Contra_Usuario'] = password_hash($data['Contra_Usuario'], PASSWORD_DEFAULT);
+
         // Aquí podrías hashear contraseñas, normalizar datos, etc.
-        return $this->base->registrar($payload);
+        return $this->base->registrar($data);
     }
 
     // Métodos que delegan en BaseController
@@ -55,5 +61,10 @@ class UsuarioController {
 
     public function eliminar($id) {
         return $this->base->eliminar($id);
+    }
+
+    public function login($NombreUsuario, $Contraseña){
+        //if(password_verify())
+
     }
 }
