@@ -254,7 +254,12 @@ $maquilas = $MaquilaController->obtenerTodos();
         </div>
         <!--MAQUILAS/////////////////////////////-->
 
-        <div id="div3" class="content-panel"><h1>3</h1></div>
+        <!--AREAS/////////////////////////////-->
+        <div id="div3" class="content-panel">
+        <h1></h1>
+        </div>
+        <!--AREAS/////////////////////////////-->
+
         <div id="div4" class="content-panel"><h1>4</h1></div>
     </div>
 
