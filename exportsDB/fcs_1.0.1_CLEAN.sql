@@ -62,7 +62,7 @@ CREATE TABLE `area_reporte` (
 CREATE TABLE `maquila` (
   `Id_Maquila` int(11) NOT NULL,
   `Nombre_Maquila` varchar(50) NOT NULL,
-  `Contraseña_Maquila` int(66) NOT NULL,
+  `Contraseña_Maquila` varchar(66) NOT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

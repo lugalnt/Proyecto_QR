@@ -74,7 +74,7 @@ class UsuarioController {
         if (empty($Contraseña)) throw new \InvalidArgumentException('Contraseña requerido');
 
         $usuarios = $this->obtenerPor("Nombre_Usuario", $NombreUsuario);
-        echo '<script>console.log('.json_encode($usuarios).')</script>';
+        echo '<script>console.log('.json_encode($usuarios).')</script>'; //<---QUITAR!
 
         if ($usuarios && count($usuarios) > 0) 
         {
