@@ -20,7 +20,7 @@ class MaquilaController {
         // ejemplo: validación mínima
         $data = is_string($payload) ? $payload : (array)$payload;
 
-        $existe = $this->obtenerPor('Nombre_Maquila', $data['Nombre_Usuario']);
+        $existe = $this->obtenerPor('Nombre_Maquila', $data['Nombre_Maquila']);
         if ($existe) {
             throw new \InvalidArgumentException('La maquila ya existe, elige otro nombre.');
         }
@@ -74,7 +74,7 @@ class MaquilaController {
           $maquila = $maquilas[0];
           if (password_verify($Contraseña, $maquila['Contraseña_Maquila']))
           {
-            return $maquila['Id_Usuario'];
+            return $maquila['Id_Maquila'];
           }
           else {throw new \InvalidArgumentException('Contraseña Incorrecta');}  
         } else {throw new \InvalidArgumentException('Nombre de maquila no registrado');}

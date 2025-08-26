@@ -6,8 +6,13 @@ if (!isset($_SESSION['Id_Usuario'])) {
 }
 require_once 'controllers/usuarioController.php';
 require_once 'controllers/maquilaController.php';
+require_once 'controllers/areaController.php';
+require_once 'controllers/maquilaareaController.php';
+
 $MaquilaController = new MaquilaController();
 $UsuarioController = new UsuarioController();
+$AreaController = new AreaController();
+$MaquilaAreaController = new MaquilaAreaController();
 $mensaje = $_SESSION['mensaje'] ?? '';
 unset($_SESSION['mensaje']);
 
@@ -115,6 +120,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 //MAQUILA//////////////////////////////////////////
+
+//AREA/////////////////////////////////////////////
+
+    if (isset($_POST['Registrar_Area'])){
+        $permitidos = ["Nombre_Area","Descripcion_Area","NumeroCAR_Area","Descripcion_Area","JSON_Area"];
+        $payload = array_intersect_key($_POST, array_flip($permitidos));
+        try {
+           $idArea = (int) $AreaController->registrar($payload);
+                try{
+                    $MaquilaAreaController->asignarMaquilaArea($_POST['Id_Maquila'], $idArea);
+                } 
+                catch (Exception $e) {
+                    $mensaje = "❌ Error: " . $e->getMessage();
+                }
+            $_SESSION['mensaje'] = "✅ Area registrada con éxito";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } catch (Exception $e) {
+            $mensaje = "❌ Error: " . $e->getMessage();
+        }
+    }
+
+//AREA/////////////////////////////////////////////
 
 
 
@@ -256,12 +284,112 @@ $maquilas = $MaquilaController->obtenerTodos();
 
         <!--AREAS/////////////////////////////-->
         <div id="div3" class="content-panel">
-        <h1></h1>
+                  <h1>Area</h1>
+
+                    <main class="container">
+              <form id="areaForm" method="post" action="">
+
+                <div class="row top">
+                  <label class="field">
+                    <span>Nombre Area:</span>
+                    <input type="text" name="Nombre_Area" id="area_name" required />
+                  </label>
+
+                  <label class="field field-wide">
+                    <span>Descripcion area:</span>
+                    <textarea name="Descripcion_Area" id="area_description" rows="3"></textarea>
+                  </label>
+
+                  <label class="field">
+                    <span>Maquila del Area</span>
+                    <select name="Id_Maquila" id="maquila_id" required>
+                        <?php if ($maquilas): ?>
+                            <?php foreach ($maquilas as $maquila): ?>
+                                <option value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>"><?= htmlspecialchars($maquila['Nombre_Maquila'])  ?></option>
+
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                  </label>
+                </div>
+
+                <hr />
+
+                <section class="car-section">
+                  <h2>Agregar C.A.R (Cosas A Revisar)</h2>
+
+                  <div class="car-left">
+                    <label class="field">
+                      <span>Nombre C.A.R</span>
+                      <input type="text" id="car_name_input" placeholder="Ej: Valvula principal" />
+                    </label>
+
+                    <div class="prop-buttons">
+                      <button type="button" class="prop-btn" data-type="bool">ok/no</button>
+                      <button type="button" class="prop-btn" data-type="range">rango</button>
+                      <button type="button" class="prop-btn" data-type="number">numero</button>
+                      <button type="button" class="prop-btn" data-type="text">descripc</button>
+                      <button type="button" class="prop-btn" data-type="date">fecha</button>
+                      <button type="button" class="prop-btn" data-type="misc">etc</button>
+                    </div>
+
+                    <div class="editor" id="propEditor" aria-hidden="true">
+                      <h3 id="editorTitle">Añadir propiedad</h3>
+                      <label class="field small">
+                        <span>Nombre de propiedad</span>
+                        <input type="text" id="prop_label" placeholder="Ej: Funcionamiento" />
+                      </label>
+                      <div id="typeSettings"></div>
+
+                      <div class="editor-actions">
+                        <button type="button" id="addPropertyBtn">Agregar propiedad</button>
+                        <button type="button" id="cancelPropertyBtn" class="secondary">Cancelar</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="car-right">
+                    <div class="card">
+                      <h4>CAJAS DE PROPIEDADES SEGUN BOTON DE ARRIBA</h4>
+                      <div id="currentPropsContainer">
+                        <p class="muted">No hay propiedades agregadas (selecciona un tipo arriba).</p>
+                      </div>
+
+                      <div class="add-car-row">
+                        <button type="button" id="addCarBtn">Agregar C.A.R</button>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <h4>Listado de C.A.R agregados</h4>
+                      <div id="carsList"></div>
+                    </div>
+
+                  </div>
+                </section>
+
+                <hr />
+
+                <div class="final-row">
+                  <input type="hidden" name="JSON_Area" id="area_json" />
+                  <input type="hidden" name="NumeroCAR_Area" id="car_count_input" value="0" />
+                  <input type="hidden" name="Registrar_Area" value="1" />
+                  <button type="submit" id="submitBtn">Finalizar y Registrar Area</button>
+                </div>
+              </form>
+            </main>
+
+            <script src="js/area_form.js"></script>
+
+
+
+
         </div>
         <!--AREAS/////////////////////////////-->
 
         <div id="div4" class="content-panel"><h1>4</h1></div>
-    </div>
+        </div>
 
     <script>
         function showDiv(divId) {
