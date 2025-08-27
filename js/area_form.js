@@ -96,7 +96,7 @@
 
   function renderTempProps(){
     if(tempProperties.length === 0){
-      currentPropsContainer.innerHTML = '<p class="muted">No hay propiedades agregadas (selecciona un tipo arriba).</p>';
+      currentPropsContainer.innerHTML = '<p class="muted">No hay propiedades agregadas (selecciona un tipo con los botones).</p>';
       return;
     }
     const ul = document.createElement('ul'); ul.className='prop-list';

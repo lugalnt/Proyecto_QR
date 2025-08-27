@@ -148,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
                 $areasPorMaquila = $MaquilaAreaController->obtenerAreasPorMaquila($idMaquila);
                 $_SESSION['areasPorMaquila'] = $areasPorMaquila;
+                $_SESSION['areasPorMaquilaQueMaquila'] = $idMaquila;
                 $_SESSION['mensaje'] = "✅ Areas de maquila econtradas con éxito";
                 header("Location: " . $_SERVER['PHP_SELF']);
                 exit();
@@ -365,19 +366,20 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
 
                   <div class="car-right">
                     <div class="card">
-                      <h4>CAJAS DE PROPIEDADES SEGUN BOTON DE ARRIBA</h4>
+                      <h4>Propiedades añadidas.</h4>
                       <div id="currentPropsContainer">
-                        <p class="muted">No hay propiedades agregadas (selecciona un tipo arriba).</p>
+                        <p class="muted">No hay propiedades agregadas (selecciona un tipo con los botones).</p>
                       </div>
 
-                      <div class="add-car-row">
-                        <button type="button" id="addCarBtn">Agregar C.A.R</button>
-                      </div>
                     </div>
 
                     <div class="card">
                       <h4>Listado de C.A.R agregados</h4>
                       <div id="carsList"></div>
+
+                      <div class="add-car-row">
+                        <button type="button" id="addCarBtn">Agregar C.A.R</button>
+                      </div>
                     </div>
 
                   </div>
@@ -409,7 +411,15 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                 <input type="hidden" name="Area_BuscarPorMaquila"/>
                 <button type="submit"> Buscar </button>
                 </form>
+                <br>
+                <?php
+                if(!empty($_SESSION['areasPorMaquilaQueMaquila'])){
+                    $queMaquilas = $MaquilaController->obtenerPor('Id_Maquila', $_SESSION['areasPorMaquilaQueMaquila']);
+                    $laMaquilaBuscada = $queMaquilas[0];
+                }
 
+                ?>
+                <h2> Areas de la maquila: <?= $laMaquilaBuscada['Nombre_Maquila'] ?> </h2>
                 <table>
                 <thead>
                     <tr>
@@ -421,7 +431,7 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($areasPorMaquila): ?>
+                    <?php if (!empty($areasPorMaquila)): ?>
                         <?php foreach ($areasPorMaquila as $areaPorMaquila): ?>
                             <tr>
                                 <td><?= htmlspecialchars($areaPorMaquila['Id_Area']) ?></td>
