@@ -55,7 +55,7 @@
     } else if(type === 'bool'){
       typeSettings.innerHTML = `
         <label class="field small"><span>Valor por defecto</span>
-          <select id="bool_default"><option value="true">ok</option><option value="false">no</option></select>
+          <select id="bool_default"><option value="true">Ok</option><option value="false">No Ok</option></select>
         </label>
       `;
     } else if(type === 'date'){

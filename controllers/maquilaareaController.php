@@ -31,7 +31,7 @@ class MaquilaAreaController {
             FROM maquila_area ma
             JOIN area a ON ma.Id_Area = a.Id_Area
             WHERE ma.Id_Maquila = ?
-            ORDER BY a.NombreArea -- o el campo que uses para nombre
+            ORDER BY a.Nombre_Area 
         ";
         return $this->base->ejecutarConsulta($sql, [$idMaquila]);
     }

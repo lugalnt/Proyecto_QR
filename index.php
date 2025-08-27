@@ -142,6 +142,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if(isset($_POST['Area_BuscarPorMaquila'])){
+        $idMaquila = $_POST['Id_Maquila'];
+
+        try {
+                $areasPorMaquila = $MaquilaAreaController->obtenerAreasPorMaquila($idMaquila);
+                $_SESSION['areasPorMaquila'] = $areasPorMaquila;
+                $_SESSION['mensaje'] = "✅ Areas de maquila econtradas con éxito";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+        } catch (Exception $e) {
+                $mensaje = "❌ Error: " . $e->getMessage();
+        }
+    }
+
 //AREA/////////////////////////////////////////////
 
 
@@ -150,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //AGARRES/////////////////////////////////////////
 $usuarios = $UsuarioController->obtenerTodos();
 $maquilas = $MaquilaController->obtenerTodos();
+if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorMaquila'];}
 //AGARRES/////////////////////////////////////////
 
 ?>
@@ -172,7 +187,7 @@ $maquilas = $MaquilaController->obtenerTodos();
         <div class="button-grid">
             <button class="action-btn" onclick="showDiv('div1')">Usuarios</button>
             <button class="action-btn" onclick="showDiv('div2')">Maquila</button>
-            <button class="action-btn" onclick="showDiv('div3')">3</button>
+            <button class="action-btn" onclick="showDiv('div3')">Area</button>
             <button class="action-btn" onclick="showDiv('div4')">4</button>
         </div>
 
@@ -325,12 +340,11 @@ $maquilas = $MaquilaController->obtenerTodos();
                     </label>
 
                     <div class="prop-buttons">
-                      <button type="button" class="prop-btn" data-type="bool">ok/no</button>
-                      <button type="button" class="prop-btn" data-type="range">rango</button>
-                      <button type="button" class="prop-btn" data-type="number">numero</button>
-                      <button type="button" class="prop-btn" data-type="text">descripc</button>
-                      <button type="button" class="prop-btn" data-type="date">fecha</button>
-                      <button type="button" class="prop-btn" data-type="misc">etc</button>
+                      <button type="button" class="prop-btn" data-type="bool">Ok/ No Ok</button>
+                      <button type="button" class="prop-btn" data-type="range">Rango</button>
+                      <button type="button" class="prop-btn" data-type="number">Numero</button>
+                      <button type="button" class="prop-btn" data-type="text">Descripcion</button>
+                      <button type="button" class="prop-btn" data-type="date">Fecha</button>
                     </div>
 
                     <div class="editor" id="propEditor" aria-hidden="true">
@@ -381,6 +395,96 @@ $maquilas = $MaquilaController->obtenerTodos();
             </main>
 
             <script src="js/area_form.js"></script>
+
+            <br>
+            <div>
+                <form method="post">
+                <select name="Id_Maquila" id="selectMaquila" required>
+                    <?php if ($maquilas): ?>
+                        <?php foreach ($maquilas as $maquila): ?>
+                            <option value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>"><?= htmlspecialchars($maquila['Nombre_Maquila'])  ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+                <input type="hidden" name="Area_BuscarPorMaquila"/>
+                <button type="submit"> Buscar </button>
+                </form>
+
+                <table>
+                <thead>
+                    <tr>
+                        <th>ID del Area</th>
+                        <th>Nombre del Area</th>
+                        <th>Descripcion del Area</th>
+                        <th>Numero del C.A.R del Area</th>
+                        <th>Codigo QR del Area</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($areasPorMaquila): ?>
+                        <?php foreach ($areasPorMaquila as $areaPorMaquila): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($areaPorMaquila['Id_Area']) ?></td>
+                                <td><?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?></td>
+                                <td><?= htmlspecialchars($areaPorMaquila['Descripcion_Area']) ?></td>
+                                <td>
+                                <?= htmlspecialchars($areaPorMaquila['NumeroCAR_Area']) ?>
+                                
+                                <?php
+                                    // Decodificamos y re-encodeamos el JSON para asegurarlo
+                                    $areaData = json_decode($areaPorMaquila['JSON_Area'], true);
+                                    if ($areaData === null) $areaData = [];
+                                    // json_encode con flags y luego escapar para atributo HTML
+                                    $areaJsonEscaped = htmlspecialchars(json_encode($areaData, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), ENT_QUOTES, 'UTF-8');
+                                ?>
+
+                                <!-- botón que abre el popup; data-area contiene el JSON escapado -->
+                                <button type="button" class="mostrarCarsBtn" data-area="<?= $areaJsonEscaped ?>">
+                                    Mostrar CARS
+                                </button>
+                                </td>
+                                <td style="max-width:150px; max-height: 150px">
+                                <a href="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png" download="CodigoQR_Area<?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?>.png">
+                                <img style="max-width:150px; max-height: 150px" src="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png"/>
+                                </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="3">No hay areas o no has buscado aun.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+                </table>            
+
+
+            </div>
+
+            <script src="js/popupCars.js"></script>
+
+            <!-- Script para enganchar los botones y pasarles su JSON al popup -->
+            <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                const botones = document.querySelectorAll('.mostrarCarsBtn');
+                botones.forEach(btn => {
+                  btn.addEventListener('click', function () {
+                    const data = btn.getAttribute('data-area');
+                    let areaObj = {};
+                    try {
+                      areaObj = data ? JSON.parse(data) : {};
+                    } catch (err) {
+                      console.error('JSON inválido en data-area:', err, data);
+                      areaObj = {};
+                    }
+                    if (window.CarsPopup && typeof window.CarsPopup.showCars === 'function') {
+                      window.CarsPopup.showCars(areaObj);
+                    } else {
+                      console.warn('popupCars.js no cargado o CarsPopup no definido');
+                    }
+                  });
+                });
+              });
+            </script>            
+
 
 
 
