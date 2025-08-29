@@ -1,6 +1,8 @@
 ﻿Build1=Default,b4a.example
-File1=MainPage.bal
+File1=loginscreen.bal
+File2=MainPage.bal
 FileGroup1=Default Group
+FileGroup2=Default Group
 Group=Default Group
 Library1=b4xpages
 Library2=core
@@ -9,10 +11,11 @@ Library4=serial
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~CreateResourceFromFile(Macro, FirebaseAnalytics.GooglePlayBase) 'add if not already there~\n~~\n~'******* google code scanner~\n~AddApplicationText(~\n~<meta-data~\n~      android:name="com.google.mlkit.vision.DEPENDENCIES"~\n~      android:value="barcode_ui"/>~\n~ <activity~\n~            android:name="com.google.mlkit.vision.codescanner.internal.GmsBarcodeScanningDelegateActivity"~\n~            android:exported="false"~\n~            android:screenOrientation="portrait"~\n~           >~\n~  </activity>~\n~)~\n~'*****************~\n~~\n~'*********  ML kit **********~\n~AddApplicationText(~\n~ <activity~\n~            android:name="com.google.mlkit.vision.documentscanner.internal.GmsDocumentScanningDelegateActivity"~\n~            android:exported="false"~\n~            android:screenOrientation="portrait"~\n~            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"~\n~             >~\n~        </activity>~\n~		 <provider~\n~            android:name="com.google.mlkit.common.internal.MlKitInitProvider"~\n~            android:authorities="${applicationId}.mlkitinitprovider"~\n~            android:exported="false"~\n~            android:initOrder="99" />~\n~~\n~        <service~\n~            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"~\n~            android:directBootAware="true"~\n~            android:exported="false"~\n~             >~\n~            <meta-data~\n~                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"~\n~                android:value="com.google.firebase.components.ComponentRegistrar" />~\n~        </service>~\n~)~\n~'******************************
 Module1=B4XMainPage
 Module2=GoogleCodeScanner
-Module3=Starter
-NumberOfFiles=1
+Module3=login
+Module4=Starter
+NumberOfFiles=2
 NumberOfLibraries=4
-NumberOfModules=3
+NumberOfModules=4
 Version=13.1
 @EndOfDesignText@
 #Region  Project Attributes 

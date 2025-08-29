@@ -15,8 +15,6 @@ Sub Class_Globals
 	Private Root As B4XView
 	Private xui As XUI
 	Private Scanner As GoogleCodeScanner
-	Private usb As UsbDevice
-	Private serial As Serial
 End Sub
 
 Public Sub Initialize
@@ -28,7 +26,6 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root = Root1
 	Root.LoadLayout("MainPage")
 	Scanner.Initialize
-	serial.Initialize("serial")
 	
 End Sub
 
