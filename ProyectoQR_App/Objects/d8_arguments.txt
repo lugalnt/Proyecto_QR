@@ -8,7 +8,18 @@ C:\Android\platforms\android-34\android.jar
 C:\Android\tools\..\extras\b4a_local\unpacked-b4ashared-63872380516000\dex_v1\b4ashared.zip
 c:\android\tools\..\extras\b4a_remote\androidx\multidex\multidex\2.0.1\unpacked-multidex-2.0.1\jars\classes.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-core-63872380518000\dex_v1\core.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-json-63872380518000\dex_v1\json.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-xui-63872380518000\dex_v1\xui.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-javaobject-63872380518000\dex_v1\javaobject.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-okhttp-63872380518000\dex_v1\okhttp.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-stringutils-63872380518000\dex_v1\stringutils.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-okhttp-4.9.0-63872380518000\dex_v1\okhttp-4.9.0.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-okio-2.8.0-63872380518000\dex_v1\okio-2.8.0.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-okhttp-urlconnection-4.9.3-63872380518000\dex_v1\okhttp-urlconnection-4.9.3.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-org.jetbrains.kotlin-kotlin-stdlib-63872380518000\dex_v1\org.jetbrains.kotlin-kotlin-stdlib.zip
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\httpjob$_multipartfiledata.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\httpjob.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\httputils2service.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\login$1.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\login$B4AMenuItemsClickListener.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\login$HandleKeyDelayed.dex
@@ -21,6 +32,12 @@ C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\main$Handle
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\main$ResumeMessage.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\main$WaitForLayout.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\main.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal$1.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal$B4AMenuItemsClickListener.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal$HandleKeyDelayed.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal$ResumeMessage.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal$WaitForLayout.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\menuprincipal.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R$drawable.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R$style.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R.dex
@@ -30,3 +47,4 @@ C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$sta
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\designerscripts\LS_layout.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\designerscripts\LS_loginscreen.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\designerscripts\LS_menuprincipal.dex

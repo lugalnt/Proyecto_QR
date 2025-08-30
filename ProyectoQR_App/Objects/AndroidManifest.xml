@@ -11,6 +11,7 @@
 	    android:normalScreens="true" 
 	    android:smallScreens="true" 
 	    android:anyDensity="true"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<application
 		android:name="androidx.multidex.MultiDexApplication"
@@ -30,6 +31,14 @@
 			</intent-filter>
 			
 		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".login"
+			android:label="B4A Example"
+			android:screenOrientation="unspecified"
+			android:exported="true">
+		</activity>
 		<service
 			android:name=".starter"
 			android:exported="true">
@@ -41,10 +50,14 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".login"
+			android:name=".menuprincipal"
 			android:label="B4A Example"
 			android:screenOrientation="unspecified"
 			android:exported="true">
 		</activity>
+		<receiver
+			android:name=".httputils2service"
+			android:exported="true">
+		</receiver>
 	</application>
 </manifest>

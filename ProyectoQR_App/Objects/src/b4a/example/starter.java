@@ -136,40 +136,51 @@ public class starter extends android.app.Service{
 	public android.os.IBinder onBind(android.content.Intent intent) {
 		return null;
 	}public anywheresoftware.b4a.keywords.Common __c = null;
+public static int _id_usuario = 0;
+public static String _nombre_usuario = "";
+public static String _puesto_usuario = "";
 public b4a.example.main _main = null;
 public b4a.example.login _login = null;
+public b4a.example.menuprincipal _menuprincipal = null;
+public b4a.example.httputils2service _httputils2service = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
- //BA.debugLineNum = 27;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
- //BA.debugLineNum = 28;BA.debugLine="Return True";
+ //BA.debugLineNum = 29;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
+ //BA.debugLineNum = 30;BA.debugLine="Return True";
 if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 29;BA.debugLine="End Sub";
+ //BA.debugLineNum = 31;BA.debugLine="End Sub";
 return false;
 }
 public static String  _process_globals() throws Exception{
  //BA.debugLineNum = 6;BA.debugLine="Sub Process_Globals";
- //BA.debugLineNum = 10;BA.debugLine="End Sub";
+ //BA.debugLineNum = 9;BA.debugLine="Public Id_Usuario As Int";
+_id_usuario = 0;
+ //BA.debugLineNum = 10;BA.debugLine="Public Nombre_Usuario As String";
+_nombre_usuario = "";
+ //BA.debugLineNum = 11;BA.debugLine="Public Puesto_Usuario As String";
+_puesto_usuario = "";
+ //BA.debugLineNum = 12;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{
- //BA.debugLineNum = 12;BA.debugLine="Sub Service_Create";
- //BA.debugLineNum = 16;BA.debugLine="End Sub";
+ //BA.debugLineNum = 14;BA.debugLine="Sub Service_Create";
+ //BA.debugLineNum = 18;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_destroy() throws Exception{
- //BA.debugLineNum = 31;BA.debugLine="Sub Service_Destroy";
- //BA.debugLineNum = 33;BA.debugLine="End Sub";
+ //BA.debugLineNum = 33;BA.debugLine="Sub Service_Destroy";
+ //BA.debugLineNum = 35;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 18;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 19;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
+ //BA.debugLineNum = 20;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
+ //BA.debugLineNum = 21;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
 mostCurrent._service.StopAutomaticForeground();
- //BA.debugLineNum = 20;BA.debugLine="End Sub";
+ //BA.debugLineNum = 22;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_taskremoved() throws Exception{
- //BA.debugLineNum = 22;BA.debugLine="Sub Service_TaskRemoved";
- //BA.debugLineNum = 24;BA.debugLine="End Sub";
+ //BA.debugLineNum = 24;BA.debugLine="Sub Service_TaskRemoved";
+ //BA.debugLineNum = 26;BA.debugLine="End Sub";
 return "";
 }
 }

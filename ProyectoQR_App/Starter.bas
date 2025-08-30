@@ -12,7 +12,9 @@ Version=9.9
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
-
+	Public Id_Usuario As Int
+	Public Nombre_Usuario As String
+	Public Puesto_Usuario As String
 End Sub
 
 Sub Service_Create
