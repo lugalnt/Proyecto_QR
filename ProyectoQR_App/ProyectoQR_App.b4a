@@ -12,12 +12,13 @@ Library3=okhttputils2
 Library4=xui
 Library5=javaobject
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
-Module1=login
-Module2=menuprincipal
-Module3=Starter
+Module1=GoogleCodeScanner
+Module2=login
+Module3=menuprincipal
+Module4=Starter
 NumberOfFiles=3
 NumberOfLibraries=5
-NumberOfModules=3
+NumberOfModules=4
 Version=13.1
 @EndOfDesignText@
 #Region  Project Attributes 

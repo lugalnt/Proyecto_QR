@@ -24,8 +24,8 @@ public class menuprincipal extends Activity implements B4AActivity{
 	BA activityBA;
     ActivityWrapper _activity;
     java.util.ArrayList<B4AMenuItem> menuItems;
-	public static final boolean fullScreen = false;
-	public static final boolean includeTitle = true;
+	public static final boolean fullScreen = true;
+	public static final boolean includeTitle = false;
     public static WeakReference<Activity> previousOne;
     public static boolean dontPause;
 
@@ -336,6 +336,9 @@ public class menuprincipal extends Activity implements B4AActivity{
     }
 
 public anywheresoftware.b4a.keywords.Common __c = null;
+public static String _nombre_usuario = "";
+public b4a.example.googlecodescanner _scanner = null;
+public anywheresoftware.b4a.objects.LabelWrapper _lb_bienvenido_nombreusuario = null;
 public b4a.example.main _main = null;
 public b4a.example.login _login = null;
 public b4a.example.starter _starter = null;
@@ -349,25 +352,105 @@ public static void initializeProcessGlobals() {
             }
 }
 public static String  _activity_create(boolean _firsttime) throws Exception{
- //BA.debugLineNum = 19;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
- //BA.debugLineNum = 22;BA.debugLine="Activity.LoadLayout(\"menuprincipal\")";
+ //BA.debugLineNum = 22;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
+ //BA.debugLineNum = 25;BA.debugLine="Activity.LoadLayout(\"menuprincipal\")";
 mostCurrent._activity.LoadLayout("menuprincipal",mostCurrent.activityBA);
- //BA.debugLineNum = 24;BA.debugLine="End Sub";
+ //BA.debugLineNum = 26;BA.debugLine="LB_Bienvenido_NombreUsuario.Text = Nombre_Usuario";
+mostCurrent._lb_bienvenido_nombreusuario.setText(BA.ObjectToCharSequence(mostCurrent._nombre_usuario));
+ //BA.debugLineNum = 27;BA.debugLine="Scanner.Initialize";
+mostCurrent._scanner._initialize /*String*/ (processBA);
+ //BA.debugLineNum = 29;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 30;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 32;BA.debugLine="End Sub";
+ //BA.debugLineNum = 35;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 37;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 26;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 28;BA.debugLine="End Sub";
+ //BA.debugLineNum = 31;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 33;BA.debugLine="End Sub";
+return "";
+}
+public static void  _btn_escaneararea_click() throws Exception{
+ResumableSub_BTN_EscanearArea_Click rsub = new ResumableSub_BTN_EscanearArea_Click(null);
+rsub.resume(processBA, null);
+}
+public static class ResumableSub_BTN_EscanearArea_Click extends BA.ResumableSub {
+public ResumableSub_BTN_EscanearArea_Click(b4a.example.menuprincipal parent) {
+this.parent = parent;
+}
+b4a.example.menuprincipal parent;
+anywheresoftware.b4a.objects.collections.List _formats = null;
+b4a.example.googlecodescanner._scannerresult _result = null;
+
+@Override
+public void resume(BA ba, Object[] result) throws Exception{
+
+    while (true) {
+        switch (state) {
+            case -1:
+return;
+
+case 0:
+//C
+this.state = 1;
+ //BA.debugLineNum = 46;BA.debugLine="Dim formats As List = Array(Scanner.FORMAT_ALL_FO";
+_formats = new anywheresoftware.b4a.objects.collections.List();
+_formats = anywheresoftware.b4a.keywords.Common.ArrayToList(new Object[]{(Object)(parent.mostCurrent._scanner._format_all_formats /*int*/ )});
+ //BA.debugLineNum = 47;BA.debugLine="Wait For (Scanner.Scan(formats)) Complete (Result";
+anywheresoftware.b4a.keywords.Common.WaitFor("complete", processBA, this, parent.mostCurrent._scanner._scan /*anywheresoftware.b4a.keywords.Common.ResumableSubWrapper*/ (_formats));
+this.state = 5;
+return;
+case 5:
+//C
+this.state = 1;
+_result = (b4a.example.googlecodescanner._scannerresult) result[0];
+;
+ //BA.debugLineNum = 48;BA.debugLine="If Result.Success Then";
+if (true) break;
+
+case 1:
+//if
+this.state = 4;
+if (_result.Success /*boolean*/ ) { 
+this.state = 3;
+}if (true) break;
+
+case 3:
+//C
+this.state = 4;
+ //BA.debugLineNum = 49;BA.debugLine="MsgboxAsync(Result.Value, \"Escaneado\")";
+anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence(_result.Value /*String*/ ),BA.ObjectToCharSequence("Escaneado"),processBA);
+ if (true) break;
+
+case 4:
+//C
+this.state = -1;
+;
+ //BA.debugLineNum = 51;BA.debugLine="End Sub";
+if (true) break;
+
+            }
+        }
+    }
+}
+public static void  _complete(b4a.example.googlecodescanner._scannerresult _result) throws Exception{
+}
+public static String  _btn_iniciarreporte_click() throws Exception{
+ //BA.debugLineNum = 40;BA.debugLine="Private Sub BTN_IniciarReporte_Click";
+ //BA.debugLineNum = 43;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
  //BA.debugLineNum = 13;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 17;BA.debugLine="End Sub";
+ //BA.debugLineNum = 16;BA.debugLine="Dim Nombre_Usuario As String = Starter.Nombre_Usu";
+mostCurrent._nombre_usuario = mostCurrent._starter._nombre_usuario /*String*/ ;
+ //BA.debugLineNum = 18;BA.debugLine="Private Scanner As GoogleCodeScanner";
+mostCurrent._scanner = new b4a.example.googlecodescanner();
+ //BA.debugLineNum = 19;BA.debugLine="Private LB_Bienvenido_NombreUsuario As Label";
+mostCurrent._lb_bienvenido_nombreusuario = new anywheresoftware.b4a.objects.LabelWrapper();
+ //BA.debugLineNum = 20;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
