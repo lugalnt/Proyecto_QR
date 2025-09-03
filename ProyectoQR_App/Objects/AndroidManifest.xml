@@ -7,6 +7,9 @@
 	android:installLocation="internalOnly">
 	
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<!-- Si no quieres que la app requiera cámara para instalarse en dispositivos sin ella -->
+	<uses-feature android:name="android.hardware.camera" android:required="false"/>
 	<supports-screens android:largeScreens="true" 
 	    android:normalScreens="true" 
 	    android:smallScreens="true" 
@@ -18,6 +21,45 @@
 		android:icon="@drawable/icon"
 		android:label="B4A Example"
 		android:theme="@style/LightTheme">
+		
+		<!-- ML Kit / Code Scanner meta-data -->
+		    <meta-data
+		        android:name="com.google.mlkit.vision.DEPENDENCIES"
+		        android:value="barcode_ui"/>
+		
+		    <activity
+		        android:name="com.google.mlkit.vision.codescanner.internal.GmsBarcodeScanningDelegateActivity"
+		        android:exported="false"
+		        android:screenOrientation="portrait" >
+		    </activity>
+		
+		    <activity
+		        android:name="com.google.mlkit.vision.documentscanner.internal.GmsDocumentScanningDelegateActivity"
+		        android:exported="false"
+		        android:screenOrientation="portrait"
+		        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+		    </activity>
+		
+		    <provider
+		        android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+		        android:authorities="b4a.example.mlkitinitprovider"
+		        android:exported="false"
+		        android:initOrder="99" />
+		
+		    <service
+		        android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+		        android:directBootAware="true"
+		        android:exported="false" >
+		        <meta-data
+		            android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+		            android:value="com.google.firebase.components.ComponentRegistrar" />
+		    </service>
+		<activity android:name="com.google.android.gms.common.api.GoogleApiActivity"
+		  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+		  android:exported="false"/>
+		    <meta-data
+		  android:name="com.google.android.gms.version"
+		  android:value="@integer/google_play_services_version" />
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
