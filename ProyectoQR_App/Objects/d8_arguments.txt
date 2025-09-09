@@ -79,9 +79,9 @@ c:\android\tools\..\extras\b4a_remote\androidx\multidex\multidex\2.0.1\unpacked-
 C:\Android\tools\..\extras\b4a_local\unpacked-camera-63872380516000\dex_v1\camera.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-camera2-63872380516000\dex_v1\camera2.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-core-63872380518000\dex_v1\core.zip
-C:\Android\tools\..\extras\b4a_local\unpacked-javaobject-63872380518000\dex_v1\javaobject.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-json-63872380518000\dex_v1\json.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-xui-63872380518000\dex_v1\xui.zip
+C:\Android\tools\..\extras\b4a_local\unpacked-javaobject-63872380518000\dex_v1\javaobject.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-org.jetbrains.kotlin-kotlin-stdlib-63872380518000\dex_v1\org.jetbrains.kotlin-kotlin-stdlib.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-okhttp-63872380518000\dex_v1\okhttp.zip
 C:\Android\tools\..\extras\b4a_local\unpacked-stringutils-63872380518000\dex_v1\stringutils.zip
@@ -901,6 +901,12 @@ C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R$string.de
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R$style.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R$styleable.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog$1.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog$B4AMenuItemsClickListener.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog$HandleKeyDelayed.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog$ResumeMessage.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog$WaitForLayout.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdialog.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$1.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$2.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$starter_BR.dex

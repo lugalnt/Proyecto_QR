@@ -340,6 +340,7 @@ public static anywheresoftware.b4a.objects.B4XViewWrapper.XUI _xui = null;
 public b4a.example.login _login = null;
 public b4a.example.starter _starter = null;
 public b4a.example.menuprincipal _menuprincipal = null;
+public b4a.example.reportdialog _reportdialog = null;
 public b4a.example.httputils2service _httputils2service = null;
 
 public static boolean isAnyActivityVisible() {
@@ -347,6 +348,7 @@ public static boolean isAnyActivityVisible() {
 vis = vis | (main.mostCurrent != null);
 vis = vis | (login.mostCurrent != null);
 vis = vis | (menuprincipal.mostCurrent != null);
+vis = vis | (reportdialog.mostCurrent != null);
 return vis;}
 public static String  _activity_create(boolean _firsttime) throws Exception{
  //BA.debugLineNum = 28;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
@@ -385,6 +387,7 @@ public static void initializeProcessGlobals() {
 login._process_globals();
 starter._process_globals();
 menuprincipal._process_globals();
+reportdialog._process_globals();
 httputils2service._process_globals();
 		
         } catch (Exception e) {
