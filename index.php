@@ -8,11 +8,13 @@ require_once 'controllers/usuarioController.php';
 require_once 'controllers/maquilaController.php';
 require_once 'controllers/areaController.php';
 require_once 'controllers/maquilaareaController.php';
+require_once 'controllers/reporteController.php';
 
 $MaquilaController = new MaquilaController();
 $UsuarioController = new UsuarioController();
 $AreaController = new AreaController();
 $MaquilaAreaController = new MaquilaAreaController();
+$ReporteController = new ReporteController();
 $mensaje = $_SESSION['mensaje'] ?? '';
 unset($_SESSION['mensaje']);
 
@@ -504,7 +506,312 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
 
         <div id="div4" class="content-panel">
             <h1>Reportes</h1>
+
+            <?php
+            // Mensaje de notificación (si existe)
+            if (isset($mensaje) && $mensaje) {
+                echo '<div class="alert alert-info">' . htmlspecialchars($mensaje) . '</div>';
+            }
+
+            // --- Parámetros de la UI / filtros (vienen por GET al recargar) ---
+            $mode = $_GET['mode'] ?? 'latest'; // latest, maquila, usuario, estado
+            $limit = isset($_GET['limit']) ? max(1, (int)$_GET['limit']) : 10;
+            $maquilaId = isset($_GET['maquila']) ? (int)$_GET['maquila'] : null;
+            $areaId = isset($_GET['area']) ? (int)$_GET['area'] : null;
+            $userId = isset($_GET['usuario']) ? (int)$_GET['usuario'] : null;
+            $estado = isset($_GET['estado']) ? trim($_GET['estado']) : null;
+
+            // --- Helpers para normalizar respuestas de controllers ---
+            $normalizeControllerRows = function($res) {
+                // acepta: array of rows OR ['success'=>true,'data'=>rows] OR ['success'=>false,'error'=>..]
+                if ($res === null) return [];
+                if (is_array($res) && isset($res['success'])) {
+                    if ($res['success'] === true && isset($res['data']) && is_array($res['data'])) {
+                        return $res['data'];
+                    } else {
+                        return []; // fallo o no hay datos
+                    }
+                }
+                if (is_array($res)) {
+                    // si es lista de filas (indexadas) devolvemos tal cual
+                    $isAssoc = array_keys($res) !== range(0, count($res)-1);
+                    if (!$isAssoc) return $res;
+                    // si es asociativo y contiene filas dentro, fallback vacío
+                    return [];
+                }
+                return [];
+            };
+
+            // --- Intentar cargar maquilas (varias estrategias) ---
+            $maquilas = [];
+            try {
+                if (isset($MaquilaController) && is_object($MaquilaController)) {
+                    if (method_exists($MaquilaController, 'obtenerTodos')) {
+                        $mres = $MaquilaController->obtenerTodos();
+                        $maquilas = $normalizeControllerRows($mres);
+                    } elseif (method_exists($MaquilaController, 'obtenerPor')) {
+                        // intento razonable: obtener filas con deleted_at = NULL no es soportado, intentar campo 'deleted_at' = ''
+                        $mres = $MaquilaController->obtenerPor('deleted_at', '');
+                        $maquilas = $normalizeControllerRows($mres);
+                        // si no hay resultado, intentar obtener por 'Id_Maquila' = 0 (probablemente vacio)
+                        if (empty($maquilas)) {
+                            // do nothing, leave empty
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                $maquilas = [];
+            }
+
+            // --- Intentar cargar usuarios (para el select) ---
+            $usuarios = [];
+            try {
+                if (isset($UsuarioController) && is_object($UsuarioController)) {
+                    if (method_exists($UsuarioController, 'obtenerTodos')) {
+                        $ures = $UsuarioController->obtenerTodos();
+                        $usuarios = $normalizeControllerRows($ures);
+                    } elseif (method_exists($UsuarioController, 'obtenerPor')) {
+                        // Intentar obtener usuarios activos por 'deleted_at' = ''
+                        $ures = $UsuarioController->obtenerPor('deleted_at', '');
+                        $usuarios = $normalizeControllerRows($ures);
+                    }
+                }
+            } catch (\Throwable $e) {
+                $usuarios = [];
+            }
+
+            // --- Intentar cargar áreas para la maquila seleccionada (si hay maquila) ---
+            $areasForMaquila = [];
+            try {
+                if ($maquilaId && isset($MaquilaAreaController) && is_object($MaquilaAreaController) && method_exists($MaquilaAreaController, 'obtenerAreasPorMaquila')) {
+                    $ares = $MaquilaAreaController->obtenerAreasPorMaquila($maquilaId);
+                    $areasForMaquila = $normalizeControllerRows($ares);
+                } elseif ($areaId && isset($AreaController) && is_object($AreaController) && method_exists($AreaController, 'obtenerPor')) {
+                    // si se cargó un areaId pero no hay maquila, intentar traer solo esa area para mostrarla en select
+                    $a = $AreaController->obtenerPor('Id_Area', $areaId);
+                    $areasForMaquila = $normalizeControllerRows($a);
+                }
+            } catch (\Throwable $e) {
+                $areasForMaquila = [];
+            }
+
+            // --- Determinar qué llamada al ReporteController hacemos según modo ---
+            $result = null;
+            try {
+                if ($mode === 'maquila' && $maquilaId) {
+                    // pasar $areaId si fue seleccionado (la versión del controller acepta areaId opcional)
+                    // Si tu controller anterior no tenía areaId, la llamada seguirá funcionando sin él (depende de la implementación).
+                    // Para compatibilidad, detectamos si el método acepta 3 parámetros.
+                    $ref = new ReflectionMethod($ReporteController, 'getByMaquila');
+                    $params = $ref->getNumberOfParameters();
+                    if ($params >= 3) {
+                        $result = $ReporteController->getByMaquila($maquilaId, $areaId ?: null, $limit);
+                    } else {
+                        // Llamada legacy: solo maquilaId y limit
+                        $result = $ReporteController->getByMaquila($maquilaId, $limit);
+                    }
+                } elseif ($mode === 'usuario' && $userId) {
+                    $result = $ReporteController->getByUsuario($userId, $limit);
+                } elseif ($mode === 'estado' && $estado !== null) {
+                    $result = $ReporteController->getByEstado($estado, $limit);
+                } else {
+                    // default últimos
+                    $result = $ReporteController->getLatest($limit);
+                }
+            } catch (\Throwable $e) {
+                $result = ['success' => false, 'error' => $e->getMessage()];
+            }
+
+            // Manejo de errores
+            if (!isset($result['success']) || $result['success'] !== true) {
+                $err = $result['error'] ?? 'Error desconocido al obtener reportes.';
+                echo '<div class="alert alert-danger">Error: ' . htmlspecialchars($err) . '</div>';
+                $rows = [];
+            } else {
+                $rows = $result['data'];
+            }
+            ?>
+
+            <!-- FILTROS -->
+            <form id="filterForm" method="get" style="margin-bottom:1rem;">
+                <label>
+                    Ver:
+                    <select id="modeSelect" name="mode">
+                        <option value="latest" <?php if($mode==='latest') echo 'selected'; ?>>Últimos</option>
+                        <option value="maquila" <?php if($mode==='maquila') echo 'selected'; ?>>Por Maquila</option>
+                        <option value="usuario" <?php if($mode==='usuario') echo 'selected'; ?>>Por Usuario</option>
+                        <option value="estado" <?php if($mode==='estado') echo 'selected'; ?>>Por Estado</option>
+                    </select>
+                </label>
+
+                <label style="margin-left:0.5rem;">
+                    Limit:
+                    <input type="number" name="limit" value="<?php echo htmlspecialchars($limit); ?>" min="1" max="500" style="width:70px;">
+                </label>
+
+                <!-- MAQUILA select (si no logramos obtener maquilas, se muestra input) -->
+                <span id="maquilaContainer" style="margin-left:0.5rem;">
+                    <?php if (!empty($maquilas)): ?>
+                        <label>Maquila:
+                            <select id="maquilaSelect" name="maquila">
+                                <option value="">--Seleccionar--</option>
+                                <?php foreach ($maquilas as $m): 
+                                    // columnas comunes: Id_Maquila, Nombre_Maquila
+                                    $mid = $m['Id_Maquila'] ?? $m['id'] ?? $m['Id'] ?? '';
+                                    $mname = $m['Nombre_Maquila'] ?? $m['Nombre'] ?? $m['name'] ?? ('Maquila ' . $mid);
+                                ?>
+                                    <option value="<?php echo htmlspecialchars($mid); ?>" <?php if($maquilaId && $maquilaId == $mid) echo 'selected'; ?>><?php echo htmlspecialchars((string)$mname); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </label>
+                    <?php else: ?>
+                        <label>Id Maquila:
+                            <input type="number" name="maquila" value="<?php echo htmlspecialchars($maquilaId ?? ''); ?>" style="width:100px;">
+                        </label>
+                    <?php endif; ?>
+                </span>
+
+                <!-- AREA select (populado si hay maquila y areasForMaquila) -->
+                <span id="areaContainer" style="margin-left:0.5rem;">
+                    <?php if (!empty($areasForMaquila)): ?>
+                        <label>Área:
+                            <select id="areaSelect" name="area">
+                                <option value="">--Todas--</option>
+                                <?php foreach ($areasForMaquila as $a):
+                                    $aid = $a['Id_Area'] ?? $a['id'] ?? $a['Id'] ?? '';
+                                    $aname = $a['Nombre_Area'] ?? $a['Nombre'] ?? $a['name'] ?? ('Área ' . $aid);
+                                ?>
+                                    <option value="<?php echo htmlspecialchars($aid); ?>" <?php if($areaId && $areaId == $aid) echo 'selected'; ?>><?php echo htmlspecialchars((string)$aname); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </label>
+                    <?php else: ?>
+                        <label>Área:
+                            <input type="number" name="area" value="<?php echo htmlspecialchars($areaId ?? ''); ?>" style="width:100px;">
+                        </label>
+                    <?php endif; ?>
+                </span>
+
+                <!-- USUARIO select (si no disponible, mostrar input) -->
+                <span id="usuarioContainer" style="margin-left:0.5rem;">
+                    <?php if (!empty($usuarios)): ?>
+                        <label>Usuario:
+                            <select name="usuario">
+                                <option value="">--Todos--</option>
+                                <?php foreach ($usuarios as $u):
+                                    $uid = $u['Id_Usuario'] ?? $u['id'] ?? $u['Id'] ?? '';
+                                    $uname = $u['Nombre_Usuario'] ?? $u['Nombre'] ?? $u['name'] ?? ('Usuario ' . $uid);
+                                ?>
+                                    <option value="<?php echo htmlspecialchars($uid); ?>" <?php if($userId && $userId == $uid) echo 'selected'; ?>><?php echo htmlspecialchars((string)$uname); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </label>
+                    <?php else: ?>
+                        <label>Id Usuario:
+                            <input type="number" name="usuario" value="<?php echo htmlspecialchars($userId ?? ''); ?>" style="width:100px;">
+                        </label>
+                    <?php endif; ?>
+                </span>
+
+                <!-- ESTADO -->
+                <span id="estadoContainer" style="margin-left:0.5rem;">
+                    <label>Estado:
+                        <input type="text" name="estado" value="<?php echo htmlspecialchars($estado ?? ''); ?>" style="width:140px;">
+                    </label>
+                </span>
+
+                <button type="submit" style="margin-left:0.5rem;">Aplicar</button>
+            </form>
+
+            <?php if (!empty($rows)): ?>
+
+            <table class="report-table" id="reportTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Fecha Registro</th>
+                        <th>Fecha Modificación</th>
+                        <th>Total CAR</th>
+                        <th>CAR Revisadas</th>
+                        <th>Estado</th>
+                        <th>Responsable Id</th>
+                        <th>Responsable Nombre</th>
+                        <th>JSON (detalle)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($rows as $row):
+                        $id = $row['Id_Reporte'] ?? $row['id'] ?? '';
+                        $fecha = $row['FechaRegistro_Reporte'] ?? '';
+                        $fechaMod = $row['FechaModificacion_Reporte'] ?? '';
+                        $totalCAR = $row['CARTotal_Reporte'] ?? '';
+                        $revisadas = $row['CARRevisadas_Reporte'] ?? '';
+                        $estadoR = $row['Estado_Reporte'] ?? '';
+                        $respId = $row['Resp_Id_Usuario'] ?? $row['Id_Usuario'] ?? '';
+                        $respName = $row['Resp_Nombre'] ?? $row['Nombre_Usuario'] ?? '';
+                        $jsonRaw = $row['JSON_Reporte'] ?? '';
+                        $jsonB64 = base64_encode((string)$jsonRaw);
+                    ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string)$id); ?></td>
+                        <td><?php echo htmlspecialchars((string)$fecha); ?></td>
+                        <td><?php echo htmlspecialchars((string)$fechaMod); ?></td>
+                        <td><?php echo htmlspecialchars((string)$totalCAR); ?></td>
+                        <td><?php echo htmlspecialchars((string)$revisadas); ?></td>
+                        <td><?php echo htmlspecialchars((string)$estadoR); ?></td>
+                        <td><?php echo htmlspecialchars((string)$respId); ?></td>
+                        <td><?php echo htmlspecialchars((string)$respName); ?></td>
+                        <td>
+                            <button class="btn-small view-json-btn" data-report-id="<?php echo htmlspecialchars((string)$id); ?>" data-json="<?php echo $jsonB64; ?>">Ver respuestas</button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <?php else: ?>
+                <div class="alert alert-warning">No se encontraron reportes para estos criterios.</div>
+            <?php endif; ?>
+
+            <!-- Modal overlay (ya está en tu proyecto; si no, asegúrate de incluir rpOverlay markup) -->
+            <div id="rpOverlay" class="rp-overlay" aria-hidden="true" style="display:none;">
+                <div class="rp-modal" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
+                    <button id="rpClose" class="rp-close" title="Cerrar">&times;</button>
+                    <h3 id="rpTitle">Detalle del reporte</h3>
+                    <div id="rpContent" style="white-space:normal;"></div>
+                </div>
+            </div>
+
+            <!-- Scripts: enviar el formulario automáticamente cuando cambie la maquila para poblar áreas -->
+            <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                var maquilaSelect = document.getElementById('maquilaSelect');
+                if (maquilaSelect) {
+                    maquilaSelect.addEventListener('change', function(){
+                        // submit al cambiar maquila para que el servidor recargue y traiga las areas correspondientes
+                        document.getElementById('filterForm').submit();
+                    });
+                }
+
+                // ocultar/mostrar campos según modo seleccionado
+                var modeSelect = document.getElementById('modeSelect');
+                function updateVisibility() {
+                    var v = modeSelect.value;
+                    // mostramos los selects/inputs según el modo
+                    // Para simplicidad: siempre mostramos todos; si prefieres ocultar algunos según modo, se puede ajustar.
+                }
+                if (modeSelect) {
+                    modeSelect.addEventListener('change', function(){ document.getElementById('filterForm').submit(); });
+                }
+            });
+            </script>
+
+            <!-- incluir comportamiento del popout -->
+            <script src="js/report_popout.js"></script>
+
         </div>
+
+
         
     </div>
 

@@ -237,3 +237,13 @@ button.secondary{background:#999}
   .car-section{flex-direction:column}
 }
 /* Final */
+
+                /* Modal / popout básico */
+.rp-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:10000; }
+.rp-modal { background:#fff; padding:20px; border-radius:6px; width:90%; max-width:800px; max-height:80vh; overflow:auto; box-shadow:0 6px 24px rgba(0,0,0,0.3); }
+.rp-modal h3 { margin-top:0; }
+.rp-close { float:right; cursor:pointer; font-size:18px; color:#666; }
+.report-table { width:100%; border-collapse: collapse; margin-top:0.5rem; }
+.report-table th, .report-table td { border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top; }
+.report-table th { background:#f7f7f7; }
+.btn-small { padding:6px 10px; font-size:13px; cursor:pointer; }

@@ -812,52 +812,52 @@ anywheresoftware.b4a.objects.collections.JSONParser _parser = null;
 anywheresoftware.b4a.objects.collections.Map _root = null;
 int _idrep = 0;
 String _msg = "";
- //BA.debugLineNum = 668;BA.debugLine="Sub JobDone(Job As HttpJob)";
- //BA.debugLineNum = 669;BA.debugLine="ProgressDialogHide";
+ //BA.debugLineNum = 678;BA.debugLine="Sub JobDone(Job As HttpJob)";
+ //BA.debugLineNum = 679;BA.debugLine="ProgressDialogHide";
 anywheresoftware.b4a.keywords.Common.ProgressDialogHide();
- //BA.debugLineNum = 670;BA.debugLine="If Job.Success Then";
+ //BA.debugLineNum = 680;BA.debugLine="If Job.Success Then";
 if (_job._success /*boolean*/ ) { 
- //BA.debugLineNum = 671;BA.debugLine="Dim res As String = Job.GetString";
+ //BA.debugLineNum = 681;BA.debugLine="Dim res As String = Job.GetString";
 _res = _job._getstring /*String*/ ();
- //BA.debugLineNum = 672;BA.debugLine="Log(\"Respuesta SendReport: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("45308420","Respuesta SendReport: "+_res,0);
- //BA.debugLineNum = 673;BA.debugLine="Dim parser As JSONParser";
+ //BA.debugLineNum = 682;BA.debugLine="Log(\"Respuesta SendReport: \" & res)";
+anywheresoftware.b4a.keywords.Common.LogImpl("52818052","Respuesta SendReport: "+_res,0);
+ //BA.debugLineNum = 683;BA.debugLine="Dim parser As JSONParser";
 _parser = new anywheresoftware.b4a.objects.collections.JSONParser();
- //BA.debugLineNum = 674;BA.debugLine="parser.Initialize(res)";
+ //BA.debugLineNum = 684;BA.debugLine="parser.Initialize(res)";
 _parser.Initialize(_res);
- //BA.debugLineNum = 675;BA.debugLine="Try";
-try { //BA.debugLineNum = 676;BA.debugLine="Dim root As Map = parser.NextObject";
+ //BA.debugLineNum = 685;BA.debugLine="Try";
+try { //BA.debugLineNum = 686;BA.debugLine="Dim root As Map = parser.NextObject";
 _root = new anywheresoftware.b4a.objects.collections.Map();
 _root = _parser.NextObject();
- //BA.debugLineNum = 677;BA.debugLine="If root.ContainsKey(\"success\") And root.Get(\"su";
+ //BA.debugLineNum = 687;BA.debugLine="If root.ContainsKey(\"success\") And root.Get(\"su";
 if (_root.ContainsKey((Object)("success")) && (_root.Get((Object)("success"))).equals((Object)(anywheresoftware.b4a.keywords.Common.True))) { 
- //BA.debugLineNum = 678;BA.debugLine="Dim idRep As Int = 0";
+ //BA.debugLineNum = 688;BA.debugLine="Dim idRep As Int = 0";
 _idrep = (int) (0);
- //BA.debugLineNum = 679;BA.debugLine="If root.ContainsKey(\"Id_Reporte\") Then idRep =";
+ //BA.debugLineNum = 689;BA.debugLine="If root.ContainsKey(\"Id_Reporte\") Then idRep =";
 if (_root.ContainsKey((Object)("Id_Reporte"))) { 
 _idrep = (int)(BA.ObjectToNumber(_root.Get((Object)("Id_Reporte"))));};
- //BA.debugLineNum = 680;BA.debugLine="ToastMessageShow(\"Reporte guardado. Id: \" & id";
+ //BA.debugLineNum = 690;BA.debugLine="ToastMessageShow(\"Reporte guardado. Id: \" & id";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Reporte guardado. Id: "+BA.NumberToString(_idrep)),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 682;BA.debugLine="Activity.Finish";
+ //BA.debugLineNum = 692;BA.debugLine="Activity.Finish";
 mostCurrent._activity.Finish();
  }else {
- //BA.debugLineNum = 684;BA.debugLine="Dim msg As String = root.GetDefault(\"error\", r";
+ //BA.debugLineNum = 694;BA.debugLine="Dim msg As String = root.GetDefault(\"error\", r";
 _msg = BA.ObjectToString(_root.GetDefault((Object)("error"),_root.GetDefault((Object)("message"),(Object)("Error desconocido"))));
- //BA.debugLineNum = 685;BA.debugLine="ToastMessageShow(\"Error servidor: \" & msg, Tru";
+ //BA.debugLineNum = 695;BA.debugLine="ToastMessageShow(\"Error servidor: \" & msg, Tru";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error servidor: "+_msg),anywheresoftware.b4a.keywords.Common.True);
  };
  } 
        catch (Exception e19) {
-			processBA.setLastException(e19); //BA.debugLineNum = 688;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servid";
+			processBA.setLastException(e19); //BA.debugLineNum = 698;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servid";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta inválida del servidor"),anywheresoftware.b4a.keywords.Common.True);
  };
  }else {
- //BA.debugLineNum = 691;BA.debugLine="ToastMessageShow(\"Error de red: \" & Job.ErrorMes";
+ //BA.debugLineNum = 701;BA.debugLine="ToastMessageShow(\"Error de red: \" & Job.ErrorMes";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error de red: "+_job._errormessage /*String*/ ),anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 693;BA.debugLine="Job.Release";
+ //BA.debugLineNum = 703;BA.debugLine="Job.Release";
 _job._release /*String*/ ();
- //BA.debugLineNum = 694;BA.debugLine="End Sub";
+ //BA.debugLineNum = 704;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
@@ -959,9 +959,11 @@ anywheresoftware.b4a.objects.collections.Map _cr = null;
 anywheresoftware.b4a.objects.collections.Map _resp = null;
 String _idarea = "";
 String _rawa = "";
+int _p = 0;
 anywheresoftware.b4a.objects.collections.JSONParser _jp2 = null;
 anywheresoftware.b4a.objects.collections.Map _root = null;
 String _innerraw = "";
+int _q = 0;
 anywheresoftware.b4a.objects.collections.JSONParser _jp3 = null;
 anywheresoftware.b4a.objects.collections.Map _inner = null;
 String _idusuario = "";
@@ -1043,163 +1045,173 @@ if (anywheresoftware.b4a.keywords.Common.File.Exists(anywheresoftware.b4a.keywor
  //BA.debugLineNum = 563;BA.debugLine="Dim rawA As String = File.ReadString(File.DirInt";
 _rawa = anywheresoftware.b4a.keywords.Common.File.ReadString(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"last_area.json");
  //BA.debugLineNum = 564;BA.debugLine="Log(\"last_area.json raw: \" & rawA)";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242922","last_area.json raw: "+_rawa,0);
- //BA.debugLineNum = 565;BA.debugLine="Dim jp2 As JSONParser";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752554","last_area.json raw: "+_rawa,0);
+ //BA.debugLineNum = 567;BA.debugLine="Dim p As Int = rawA.IndexOf(\"{\")";
+_p = _rawa.indexOf("{");
+ //BA.debugLineNum = 568;BA.debugLine="If p > -1 Then rawA = rawA.SubString(p)";
+if (_p>-1) { 
+_rawa = _rawa.substring(_p);};
+ //BA.debugLineNum = 570;BA.debugLine="Dim jp2 As JSONParser";
 _jp2 = new anywheresoftware.b4a.objects.collections.JSONParser();
- //BA.debugLineNum = 566;BA.debugLine="jp2.Initialize(rawA)";
+ //BA.debugLineNum = 571;BA.debugLine="jp2.Initialize(rawA)";
 _jp2.Initialize(_rawa);
- //BA.debugLineNum = 567;BA.debugLine="Try";
-try { //BA.debugLineNum = 568;BA.debugLine="Dim root As Map = jp2.NextObject";
+ //BA.debugLineNum = 572;BA.debugLine="Try";
+try { //BA.debugLineNum = 573;BA.debugLine="Dim root As Map = jp2.NextObject";
 _root = new anywheresoftware.b4a.objects.collections.Map();
 _root = _jp2.NextObject();
- //BA.debugLineNum = 569;BA.debugLine="Dim areaMap As Map";
+ //BA.debugLineNum = 574;BA.debugLine="Dim areaMap As Map";
 mostCurrent._areamap = new anywheresoftware.b4a.objects.collections.Map();
- //BA.debugLineNum = 570;BA.debugLine="If root.ContainsKey(\"data\") Then";
+ //BA.debugLineNum = 575;BA.debugLine="If root.ContainsKey(\"data\") Then";
 if (_root.ContainsKey((Object)("data"))) { 
- //BA.debugLineNum = 571;BA.debugLine="areaMap = root.Get(\"data\")";
+ //BA.debugLineNum = 576;BA.debugLine="areaMap = root.Get(\"data\")";
 mostCurrent._areamap = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.collections.Map(), (java.util.Map)(_root.Get((Object)("data"))));
  }else {
- //BA.debugLineNum = 573;BA.debugLine="areaMap = root";
+ //BA.debugLineNum = 578;BA.debugLine="areaMap = root";
 mostCurrent._areamap = _root;
  };
- //BA.debugLineNum = 576;BA.debugLine="If areaMap.IsInitialized Then";
+ //BA.debugLineNum = 581;BA.debugLine="If areaMap.IsInitialized Then";
 if (mostCurrent._areamap.IsInitialized()) { 
- //BA.debugLineNum = 577;BA.debugLine="If areaMap.ContainsKey(\"Id_Area\") Then";
+ //BA.debugLineNum = 582;BA.debugLine="If areaMap.ContainsKey(\"Id_Area\") Then";
 if (mostCurrent._areamap.ContainsKey((Object)("Id_Area"))) { 
- //BA.debugLineNum = 578;BA.debugLine="idArea = areaMap.Get(\"Id_Area\")";
+ //BA.debugLineNum = 583;BA.debugLine="idArea = areaMap.Get(\"Id_Area\")";
 _idarea = BA.ObjectToString(mostCurrent._areamap.Get((Object)("Id_Area")));
  }else if(mostCurrent._areamap.ContainsKey((Object)("Id"))) { 
- //BA.debugLineNum = 580;BA.debugLine="idArea = areaMap.Get(\"Id\")";
+ //BA.debugLineNum = 585;BA.debugLine="idArea = areaMap.Get(\"Id\")";
 _idarea = BA.ObjectToString(mostCurrent._areamap.Get((Object)("Id")));
  }else if(mostCurrent._areamap.ContainsKey((Object)("IdArea"))) { 
- //BA.debugLineNum = 582;BA.debugLine="idArea = areaMap.Get(\"IdArea\")";
+ //BA.debugLineNum = 587;BA.debugLine="idArea = areaMap.Get(\"IdArea\")";
 _idarea = BA.ObjectToString(mostCurrent._areamap.Get((Object)("IdArea")));
  }else if(mostCurrent._areamap.ContainsKey((Object)("JSON_Area"))) { 
- //BA.debugLineNum = 585;BA.debugLine="Dim innerRaw As String = areaMap.Get(\"JSON_Ar";
+ //BA.debugLineNum = 590;BA.debugLine="Dim innerRaw As String = areaMap.Get(\"JSON_Ar";
 _innerraw = BA.ObjectToString(mostCurrent._areamap.Get((Object)("JSON_Area")));
- //BA.debugLineNum = 586;BA.debugLine="Dim jp3 As JSONParser";
+ //BA.debugLineNum = 592;BA.debugLine="Dim q As Int = innerRaw.IndexOf(\"{\")";
+_q = _innerraw.indexOf("{");
+ //BA.debugLineNum = 593;BA.debugLine="If q > -1 Then innerRaw = innerRaw.SubString(";
+if (_q>-1) { 
+_innerraw = _innerraw.substring(_q);};
+ //BA.debugLineNum = 595;BA.debugLine="Dim jp3 As JSONParser";
 _jp3 = new anywheresoftware.b4a.objects.collections.JSONParser();
- //BA.debugLineNum = 587;BA.debugLine="jp3.Initialize(innerRaw)";
+ //BA.debugLineNum = 596;BA.debugLine="jp3.Initialize(innerRaw)";
 _jp3.Initialize(_innerraw);
- //BA.debugLineNum = 588;BA.debugLine="Try";
-try { //BA.debugLineNum = 589;BA.debugLine="Dim inner As Map = jp3.NextObject";
+ //BA.debugLineNum = 597;BA.debugLine="Try";
+try { //BA.debugLineNum = 598;BA.debugLine="Dim inner As Map = jp3.NextObject";
 _inner = new anywheresoftware.b4a.objects.collections.Map();
 _inner = _jp3.NextObject();
- //BA.debugLineNum = 590;BA.debugLine="If inner.ContainsKey(\"Id_Area\") Then idArea";
+ //BA.debugLineNum = 599;BA.debugLine="If inner.ContainsKey(\"Id_Area\") Then idArea";
 if (_inner.ContainsKey((Object)("Id_Area"))) { 
 _idarea = BA.ObjectToString(_inner.Get((Object)("Id_Area")));};
- //BA.debugLineNum = 591;BA.debugLine="If idArea = \"\" And inner.ContainsKey(\"id\") T";
+ //BA.debugLineNum = 600;BA.debugLine="If idArea = \"\" And inner.ContainsKey(\"id\") T";
 if ((_idarea).equals("") && _inner.ContainsKey((Object)("id"))) { 
 _idarea = BA.ObjectToString(_inner.Get((Object)("id")));};
  } 
-       catch (Exception e62) {
-			processBA.setLastException(e62); //BA.debugLineNum = 593;BA.debugLine="Log(\"No se pudo parsear JSON_Area interno.\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242951","No se pudo parsear JSON_Area interno.",0);
+       catch (Exception e66) {
+			processBA.setLastException(e66); //BA.debugLineNum = 602;BA.debugLine="Log(\"No se pudo parsear JSON_Area interno.\")";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752592","No se pudo parsear JSON_Area interno.",0);
  };
  };
  };
  } 
-       catch (Exception e67) {
-			processBA.setLastException(e67); //BA.debugLineNum = 598;BA.debugLine="Log(\"Error parseando last_area.json\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242956","Error parseando last_area.json",0);
+       catch (Exception e71) {
+			processBA.setLastException(e71); //BA.debugLineNum = 607;BA.debugLine="Log(\"Error parseando last_area.json\")";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752597","Error parseando last_area.json",0);
  };
  }else {
- //BA.debugLineNum = 601;BA.debugLine="Log(\"last_area.json no encontrado\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242959","last_area.json no encontrado",0);
+ //BA.debugLineNum = 610;BA.debugLine="Log(\"last_area.json no encontrado\")";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752600","last_area.json no encontrado",0);
  };
- //BA.debugLineNum = 605;BA.debugLine="If idArea = \"\" Then";
+ //BA.debugLineNum = 614;BA.debugLine="If idArea = \"\" Then";
 if ((_idarea).equals("")) { 
- //BA.debugLineNum = 606;BA.debugLine="Try";
-try { //BA.debugLineNum = 607;BA.debugLine="idArea = Starter.Id_Area";
+ //BA.debugLineNum = 615;BA.debugLine="Try";
+try { //BA.debugLineNum = 616;BA.debugLine="idArea = Starter.Id_Area";
 _idarea = BA.NumberToString(mostCurrent._starter._id_area /*int*/ );
- //BA.debugLineNum = 608;BA.debugLine="Log(\"Usando Starter.Id_Area como fallback: \" &";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242966","Usando Starter.Id_Area como fallback: "+_idarea,0);
+ //BA.debugLineNum = 617;BA.debugLine="Log(\"Usando Starter.Id_Area como fallback: \" &";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752607","Usando Starter.Id_Area como fallback: "+_idarea,0);
  } 
-       catch (Exception e77) {
-			processBA.setLastException(e77); //BA.debugLineNum = 610;BA.debugLine="idArea = \"\"";
+       catch (Exception e81) {
+			processBA.setLastException(e81); //BA.debugLineNum = 619;BA.debugLine="idArea = \"\"";
 _idarea = "";
  };
  };
- //BA.debugLineNum = 615;BA.debugLine="Dim idUsuario As String = \"\"";
+ //BA.debugLineNum = 624;BA.debugLine="Dim idUsuario As String = \"\"";
 _idusuario = "";
- //BA.debugLineNum = 616;BA.debugLine="Try";
-try { //BA.debugLineNum = 617;BA.debugLine="idUsuario = Starter.Id_Usuario";
+ //BA.debugLineNum = 625;BA.debugLine="Try";
+try { //BA.debugLineNum = 626;BA.debugLine="idUsuario = Starter.Id_Usuario";
 _idusuario = BA.NumberToString(mostCurrent._starter._id_usuario /*int*/ );
  } 
-       catch (Exception e84) {
-			processBA.setLastException(e84); //BA.debugLineNum = 619;BA.debugLine="idUsuario = \"\"";
+       catch (Exception e88) {
+			processBA.setLastException(e88); //BA.debugLineNum = 628;BA.debugLine="idUsuario = \"\"";
 _idusuario = "";
  };
- //BA.debugLineNum = 621;BA.debugLine="Log(\"Starter.Id_Usuario: \" & idUsuario)";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242979","Starter.Id_Usuario: "+_idusuario,0);
- //BA.debugLineNum = 624;BA.debugLine="If idArea = \"\" Or idUsuario = \"\" Then";
+ //BA.debugLineNum = 630;BA.debugLine="Log(\"Starter.Id_Usuario: \" & idUsuario)";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752620","Starter.Id_Usuario: "+_idusuario,0);
+ //BA.debugLineNum = 633;BA.debugLine="If idArea = \"\" Or idUsuario = \"\" Then";
 if ((_idarea).equals("") || (_idusuario).equals("")) { 
- //BA.debugLineNum = 625;BA.debugLine="Dim m As String = \"Falta: \"";
+ //BA.debugLineNum = 634;BA.debugLine="Dim m As String = \"Falta: \"";
 _m = "Falta: ";
- //BA.debugLineNum = 626;BA.debugLine="If idArea = \"\" Then m = m & \"Id_Area \"";
+ //BA.debugLineNum = 635;BA.debugLine="If idArea = \"\" Then m = m & \"Id_Area \"";
 if ((_idarea).equals("")) { 
 _m = _m+"Id_Area ";};
- //BA.debugLineNum = 627;BA.debugLine="If idUsuario = \"\" Then m = m & \"Id_Usuario\"";
+ //BA.debugLineNum = 636;BA.debugLine="If idUsuario = \"\" Then m = m & \"Id_Usuario\"";
 if ((_idusuario).equals("")) { 
 _m = _m+"Id_Usuario";};
- //BA.debugLineNum = 628;BA.debugLine="ToastMessageShow(m, True)";
+ //BA.debugLineNum = 637;BA.debugLine="ToastMessageShow(m, True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence(_m),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 629;BA.debugLine="Log(\"No se enviará payload. idArea='\" & idArea &";
-anywheresoftware.b4a.keywords.Common.LogImpl("45242987","No se enviará payload. idArea='"+_idarea+"', idUsuario='"+_idusuario+"'",0);
- //BA.debugLineNum = 630;BA.debugLine="Return";
+ //BA.debugLineNum = 638;BA.debugLine="Log(\"No se enviará payload. idArea='\" & idArea &";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752628","No se enviará payload. idArea='"+_idarea+"', idUsuario='"+_idusuario+"'",0);
+ //BA.debugLineNum = 639;BA.debugLine="Return";
 if (true) return "";
  };
- //BA.debugLineNum = 634;BA.debugLine="DateTime.DateFormat = \"yyyy-MM-dd\"";
+ //BA.debugLineNum = 643;BA.debugLine="DateTime.DateFormat = \"yyyy-MM-dd\"";
 anywheresoftware.b4a.keywords.Common.DateTime.setDateFormat("yyyy-MM-dd");
- //BA.debugLineNum = 635;BA.debugLine="DateTime.TimeFormat = \"HH:mm:ss\"";
+ //BA.debugLineNum = 644;BA.debugLine="DateTime.TimeFormat = \"HH:mm:ss\"";
 anywheresoftware.b4a.keywords.Common.DateTime.setTimeFormat("HH:mm:ss");
- //BA.debugLineNum = 636;BA.debugLine="Dim fecha As String = DateTime.Date(DateTime.Now)";
+ //BA.debugLineNum = 645;BA.debugLine="Dim fecha As String = DateTime.Date(DateTime.Now)";
 _fecha = anywheresoftware.b4a.keywords.Common.DateTime.Date(anywheresoftware.b4a.keywords.Common.DateTime.getNow())+" "+anywheresoftware.b4a.keywords.Common.DateTime.Time(anywheresoftware.b4a.keywords.Common.DateTime.getNow());
- //BA.debugLineNum = 638;BA.debugLine="Dim payload As Map";
+ //BA.debugLineNum = 647;BA.debugLine="Dim payload As Map";
 _payload = new anywheresoftware.b4a.objects.collections.Map();
- //BA.debugLineNum = 639;BA.debugLine="payload.Initialize";
+ //BA.debugLineNum = 648;BA.debugLine="payload.Initialize";
 _payload.Initialize();
- //BA.debugLineNum = 640;BA.debugLine="payload.Put(\"FechaRegistro_Reporte\", fecha)";
+ //BA.debugLineNum = 649;BA.debugLine="payload.Put(\"FechaRegistro_Reporte\", fecha)";
 _payload.Put((Object)("FechaRegistro_Reporte"),(Object)(_fecha));
- //BA.debugLineNum = 641;BA.debugLine="payload.Put(\"FechaModificacion_Reporte\", fecha)";
+ //BA.debugLineNum = 650;BA.debugLine="payload.Put(\"FechaModificacion_Reporte\", fecha)";
 _payload.Put((Object)("FechaModificacion_Reporte"),(Object)(_fecha));
- //BA.debugLineNum = 642;BA.debugLine="payload.Put(\"CARTotal_Reporte\", total)";
+ //BA.debugLineNum = 651;BA.debugLine="payload.Put(\"CARTotal_Reporte\", total)";
 _payload.Put((Object)("CARTotal_Reporte"),(Object)(_total));
- //BA.debugLineNum = 643;BA.debugLine="payload.Put(\"CARRevisadas_Reporte\", revisadas)";
+ //BA.debugLineNum = 652;BA.debugLine="payload.Put(\"CARRevisadas_Reporte\", revisadas)";
 _payload.Put((Object)("CARRevisadas_Reporte"),(Object)(_revisadas));
- //BA.debugLineNum = 644;BA.debugLine="payload.Put(\"Estado_Reporte\", \"COMPLETADO\")";
+ //BA.debugLineNum = 653;BA.debugLine="payload.Put(\"Estado_Reporte\", \"COMPLETADO\")";
 _payload.Put((Object)("Estado_Reporte"),(Object)("COMPLETADO"));
- //BA.debugLineNum = 645;BA.debugLine="payload.Put(\"JSON_Reporte\", reportRaw)";
+ //BA.debugLineNum = 654;BA.debugLine="payload.Put(\"JSON_Reporte\", reportRaw)";
 _payload.Put((Object)("JSON_Reporte"),(Object)(_reportraw));
- //BA.debugLineNum = 646;BA.debugLine="payload.Put(\"Id_Area\", idArea)      ' asegúrate q";
+ //BA.debugLineNum = 655;BA.debugLine="payload.Put(\"Id_Area\", idArea)      ' asegúrate q";
 _payload.Put((Object)("Id_Area"),(Object)(_idarea));
- //BA.debugLineNum = 647;BA.debugLine="payload.Put(\"Id_Usuario\", idUsuario)";
+ //BA.debugLineNum = 656;BA.debugLine="payload.Put(\"Id_Usuario\", idUsuario)";
 _payload.Put((Object)("Id_Usuario"),(Object)(_idusuario));
- //BA.debugLineNum = 650;BA.debugLine="Dim jgTest As JSONGenerator";
+ //BA.debugLineNum = 659;BA.debugLine="Dim jgTest As JSONGenerator";
 _jgtest = new anywheresoftware.b4a.objects.collections.JSONParser.JSONGenerator();
- //BA.debugLineNum = 651;BA.debugLine="jgTest.Initialize(payload)";
+ //BA.debugLineNum = 660;BA.debugLine="jgTest.Initialize(payload)";
 _jgtest.Initialize(_payload);
- //BA.debugLineNum = 652;BA.debugLine="Log(\"Payload a enviar: \" & jgTest.ToString)";
-anywheresoftware.b4a.keywords.Common.LogImpl("45243010","Payload a enviar: "+_jgtest.ToString(),0);
- //BA.debugLineNum = 655;BA.debugLine="ProgressDialogShow(\"Enviando reporte...\")";
+ //BA.debugLineNum = 661;BA.debugLine="Log(\"Payload a enviar: \" & jgTest.ToString)";
+anywheresoftware.b4a.keywords.Common.LogImpl("52752651","Payload a enviar: "+_jgtest.ToString(),0);
+ //BA.debugLineNum = 664;BA.debugLine="ProgressDialogShow(\"Enviando reporte...\")";
 anywheresoftware.b4a.keywords.Common.ProgressDialogShow(mostCurrent.activityBA,BA.ObjectToCharSequence("Enviando reporte..."));
- //BA.debugLineNum = 656;BA.debugLine="Dim job As HttpJob";
+ //BA.debugLineNum = 665;BA.debugLine="Dim job As HttpJob";
 _job = new b4a.example.httpjob();
- //BA.debugLineNum = 657;BA.debugLine="job.Initialize(\"SendReportJob\", Me)";
+ //BA.debugLineNum = 666;BA.debugLine="job.Initialize(\"SendReportJob\", Me)";
 _job._initialize /*String*/ (processBA,"SendReportJob",reportdialog.getObject());
- //BA.debugLineNum = 658;BA.debugLine="Dim serverUrl As String";
+ //BA.debugLineNum = 667;BA.debugLine="Dim serverUrl As String";
 _serverurl = "";
- //BA.debugLineNum = 659;BA.debugLine="serverUrl = BaseUrl & \"/reporte.php\"";
+ //BA.debugLineNum = 668;BA.debugLine="serverUrl = BaseUrl & \"/reporte.php\"";
 _serverurl = _baseurl+"/reporte.php";
- //BA.debugLineNum = 660;BA.debugLine="Dim jg As JSONGenerator";
+ //BA.debugLineNum = 669;BA.debugLine="Dim jg As JSONGenerator";
 _jg = new anywheresoftware.b4a.objects.collections.JSONParser.JSONGenerator();
- //BA.debugLineNum = 661;BA.debugLine="jg.Initialize(payload)";
+ //BA.debugLineNum = 670;BA.debugLine="jg.Initialize(payload)";
 _jg.Initialize(_payload);
- //BA.debugLineNum = 662;BA.debugLine="Dim body As String = jg.ToString";
+ //BA.debugLineNum = 671;BA.debugLine="Dim body As String = jg.ToString";
 _body = _jg.ToString();
- //BA.debugLineNum = 663;BA.debugLine="job.PostString(serverUrl, body)";
+ //BA.debugLineNum = 672;BA.debugLine="job.PostString(serverUrl, body)";
 _job._poststring /*String*/ (_serverurl,_body);
- //BA.debugLineNum = 664;BA.debugLine="End Sub";
+ //BA.debugLineNum = 673;BA.debugLine="End Sub";
 return "";
 }
 public static String  _showcar(int _index,boolean _isfirst) throws Exception{

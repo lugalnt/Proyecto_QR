@@ -568,6 +568,11 @@ Sub SendReportToServer()
 	If File.Exists(File.DirInternal, "last_area.json") Then
 		Dim rawA As String = File.ReadString(File.DirInternal, "last_area.json")
 		Log("last_area.json raw: " & rawA)
+
+		' SANITIZAR: quitar prefijos antes del primer '{' (igual que hiciste en Activity_Create)
+		Dim p As Int = rawA.IndexOf("{")
+		If p > -1 Then rawA = rawA.SubString(p)
+
 		Dim jp2 As JSONParser
 		jp2.Initialize(rawA)
 		Try
@@ -589,6 +594,10 @@ Sub SendReportToServer()
 				Else If areaMap.ContainsKey("JSON_Area") Then
 					' JSON_Area puede ser string con inner JSON
 					Dim innerRaw As String = areaMap.Get("JSON_Area")
+					' SANITIZAR innerRaw también
+					Dim q As Int = innerRaw.IndexOf("{")
+					If q > -1 Then innerRaw = innerRaw.SubString(q)
+
 					Dim jp3 As JSONParser
 					jp3.Initialize(innerRaw)
 					Try
@@ -668,6 +677,7 @@ Sub SendReportToServer()
 	Dim body As String = jg.ToString
 	job.PostString(serverUrl, body)
 End Sub
+
 
 
 ' Maneja respuestas de HttpJob — agrega/ajusta si ya tenés otro JobDone en la Activity.
