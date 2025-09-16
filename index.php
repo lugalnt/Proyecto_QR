@@ -189,7 +189,7 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
             <button class="action-btn" onclick="showDiv('div1')">Usuarios</button>
             <button class="action-btn" onclick="showDiv('div2')">Maquila</button>
             <button class="action-btn" onclick="showDiv('div3')">Area</button>
-            <button class="action-btn" onclick="showDiv('div4')">4</button>
+            <button class="action-btn" onclick="showDiv('div4')">Reportes</button>
         </div>
 
         <?php if ($mensaje): ?>
@@ -502,8 +502,11 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
         </div>
         <!--AREAS/////////////////////////////-->
 
-        <div id="div4" class="content-panel"><h1>4</h1></div>
+        <div id="div4" class="content-panel">
+            <h1>Reportes</h1>
         </div>
+        
+    </div>
 
     <script>
         function showDiv(divId) {

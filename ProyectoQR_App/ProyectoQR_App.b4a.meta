@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=ReportDialog,Globals,22,0,Main,Activity_Create,27,0,ReportDialog,GetFirstString,461,0,menuprincipal,URLEncode,49,0,ReportDialog,ShowCAR,306,6,menuprincipal,Globals,20,0,menuprincipal,BTN_IniciarReporte_Click,67,0,menuprincipal,BTN_EscanearArea_Click,229,0,menuprincipal,Activity_Resume,34,0,menuprincipal,JobDone,192,0
+NavigationStack=login,Activity_Create,22,0,login,Process_Globals,8,0,ReportDialog,JobDone,655,0,ReportDialog,Process_Globals,14,0,ReportDialog,GetFirstString,515,0,ReportDialog,btnSave_Click,500,0,ReportDialog,ShowCAR,388,0,Starter,Process_Globals,10,4,menuprincipal,JobDone,124,6,ReportDialog,SendReportToServer,559,5
 SelectedBuild=0
 VisibleModules=2,5,3,1,4

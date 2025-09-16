@@ -126,6 +126,10 @@ Sub JobDone(Job As HttpJob)
 				Else If data.ContainsKey("NombreArea") Then
 					nombre = data.Get("NombreArea")
 				End If
+				
+				If data.ContainsKey("Id_Area") Then
+					Starter.Id_Area = data.Get("Id_Area")
+				End If
 
 				Dim descripcion As String
 				descripcion = ""

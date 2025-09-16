@@ -14,9 +14,11 @@ Version=13.1
 ' - No guarda Views fuera de Globals.
 ' - If / Else If / Else bien balanceados.
 ' Requiere: librería JSON marcada.
+' DATOS A MANDAR: FECHA DE REGISTRO, ID AREA, ID USUARIO, NUMERO CAR, NUMERO DE CAR REVISADAS, EL JSON
 
 Sub Process_Globals
 	' Vacío a propósito: no colocar aquí Views ni colecciones con Views.
+	Dim BaseUrl As String = "https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api"
 End Sub
 
 Sub Globals
@@ -49,35 +51,76 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.RemoveAllViews
 
-	' ---- UI ----
+	' ---------------- UI dinámico y limpio ----------------
+	' Reemplaza el bloque UI antiguo por este (dentro de Activity_Create)
+
+	' obtener tamaño pantalla relativo
+	Dim screenW As Int = 100%x
+	Dim screenH As Int = 100%y
+
+	' márgenes y zonas
+	Dim outerMargin As Int = 8dip
+	Dim headerH As Int = 12%y        ' altura cabecera (título)
+	Dim footerH As Int = 18%y        ' altura zona de botones
+	Dim contentTop As Int = headerH + outerMargin
+	Dim contentHeight As Int = screenH - headerH - footerH - (outerMargin * 2)
+
+	' medidas para botones
+	Dim btnHeight As Int = 48dip
+	Dim btnGap As Int = 8dip
+	Dim btnCount As Int = 3
+	Dim btnWidth As Int = (screenW - (outerMargin * 2) - (btnGap * (btnCount - 1))) / btnCount
+
+	' panel principal (fondo)
 	pnlMain.Initialize("pnlMain")
-	Activity.AddView(pnlMain, 0, 0, 100%x, 100%y)
+	Activity.AddView(pnlMain, 0, 0, screenW, screenH)
 	pnlMain.Color = Colors.White
 
-	lblTitle.Initialize("")
-	lblTitle.TextSize = 16
+	' título centrado en la cabecera
+	lblTitle.Initialize("lblTitle")
+	lblTitle.Text = "Área / Reporte"
+	lblTitle.TextSize = 18dip
 	lblTitle.TextColor = Colors.Black
-	pnlMain.AddView(lblTitle, 8dip, 8dip, 84%x, 28dip)
+	lblTitle.Gravity = Gravity.CENTER
+	pnlMain.AddView(lblTitle, outerMargin, 4dip, screenW - (outerMargin * 2), headerH - 8dip)
 
+	' panel de contenido (dentro de la pantalla, con padding)
 	pnlContent.Initialize("pnlContent")
-	pnlContent.Color = Colors.White
-	pnlMain.AddView(pnlContent, 0, 44dip, 100%x, 70%y)
+	pnlContent.Color = Colors.ARGB(255, 250, 250, 250) ' leve contraste
+	pnlMain.AddView(pnlContent, outerMargin, contentTop, screenW - (outerMargin * 2), contentHeight)
+	' Opcional: agrega sombra/outline si usas un panel custom (no nativo sin librería)
 
+	' Botones principales (fila)
+	Dim yBtns As Int = screenH - footerH + outerMargin
 	btnPrev.Initialize("btnPrev")
 	btnPrev.Text = "Anterior"
-	pnlMain.AddView(btnPrev, 6dip, 76%y, 30%x - 12dip, 40dip)
+	pnlMain.AddView(btnPrev, outerMargin, yBtns, btnWidth, btnHeight)
 
 	btnNext.Initialize("btnNext")
 	btnNext.Text = "Siguiente"
-	pnlMain.AddView(btnNext, 34%x + 6dip, 76%y, 30%x - 12dip, 40dip)
+	pnlMain.AddView(btnNext, outerMargin + btnWidth + btnGap, yBtns, btnWidth, btnHeight)
 
 	btnSave.Initialize("btnSave")
-	btnSave.Text = "Generar JSON"
-	pnlMain.AddView(btnSave, 62%x + 12dip, 76%y, 36%x - 18dip, 40dip)
+	btnSave.Text = "Guardar Reporte"
+	pnlMain.AddView(btnSave, outerMargin + 2 * (btnWidth + btnGap), yBtns, btnWidth, btnHeight)
 
+	' Botón cancelar (fila inferior, ancho completo con margen)
 	btnCancel.Initialize("btnCancel")
 	btnCancel.Text = "Cancelar"
-	pnlMain.AddView(btnCancel, 6dip, 82%y + 48dip, 88%x, 36dip)
+	Dim yCancel As Int = yBtns + btnHeight + btnGap
+	pnlMain.AddView(btnCancel, outerMargin, yCancel, screenW - (outerMargin * 2), 44dip)
+
+	' Ajustes visuales (opcionales, personaliza colores)
+	btnPrev.Color = Colors.LightGray
+	btnNext.Color = Colors.LightGray
+	btnSave.Color = Colors.RGB(33,150,243) ' azul
+	btnSave.TextColor = Colors.White
+	btnCancel.Color = Colors.RGB(220, 53, 69) ' rojo suave
+	btnCancel.TextColor = Colors.White
+
+
+	' ------------------------------------------------------
+
 
 	' ---- Cargar JSON del área guardado por la pantalla anterior ----
 	If File.Exists(File.DirInternal, "last_area.json") = False Then
@@ -460,8 +503,8 @@ Private Sub btnSave_Click
 	Dim reportJson As String = jg.ToString
 
 	File.WriteString(File.DirInternal, "report.json", reportJson)
-	MsgboxAsync("Reporte generado y guardado en report.json", "OK")
-	Activity.Finish
+	ToastMessageShow("Reporte guardado localmente. Enviando...", False)
+	SendReportToServer
 End Sub
 
 ' ---- Helper: devuelve el primer valor string disponible entre varias claves ----
@@ -478,3 +521,181 @@ Private Sub GetFirstString(data As Map, keys() As String) As String
 	Next
 	Return ""
 End Sub
+
+' ---------------------
+' SendReportToServer (Job estilo Login)
+' ---------------------
+Sub SendReportToServer()
+	If File.Exists(File.DirInternal, "report.json") = False Then
+		ToastMessageShow("No existe report.json", True)
+		Return
+	End If
+
+	Dim reportRaw As String = File.ReadString(File.DirInternal, "report.json")
+
+	' contar CARs y revisadas
+	Dim jp As JSONParser
+	jp.Initialize(reportRaw)
+	Dim reportMap As Map
+	Try
+		reportMap = jp.NextObject
+	Catch
+		reportMap.Initialize
+	End Try
+
+	Dim carReports As List
+	If reportMap.IsInitialized And reportMap.ContainsKey("car_reports") Then
+		carReports = reportMap.Get("car_reports")
+	Else
+		carReports.Initialize
+	End If
+
+	Dim total As Int = carReports.Size
+	Dim revisadas As Int = 0
+	Dim i As Int
+	For i = 0 To carReports.Size - 1
+		If carReports.Get(i) Is Map Then
+			Dim cr As Map = carReports.Get(i)
+			If cr.IsInitialized And cr.ContainsKey("responses") Then
+				Dim resp As Map = cr.Get("responses")
+				If resp.IsInitialized And resp.Size > 0 Then revisadas = revisadas + 1
+			End If
+		End If
+	Next
+
+	' --- Obtener Id_Area robustamente ---
+	Dim idArea As String = ""
+	If File.Exists(File.DirInternal, "last_area.json") Then
+		Dim rawA As String = File.ReadString(File.DirInternal, "last_area.json")
+		Log("last_area.json raw: " & rawA)
+		Dim jp2 As JSONParser
+		jp2.Initialize(rawA)
+		Try
+			Dim root As Map = jp2.NextObject
+			Dim areaMap As Map
+			If root.ContainsKey("data") Then
+				areaMap = root.Get("data")
+			Else
+				areaMap = root
+			End If
+
+			If areaMap.IsInitialized Then
+				If areaMap.ContainsKey("Id_Area") Then
+					idArea = areaMap.Get("Id_Area")
+				Else If areaMap.ContainsKey("Id") Then
+					idArea = areaMap.Get("Id")
+				Else If areaMap.ContainsKey("IdArea") Then
+					idArea = areaMap.Get("IdArea")
+				Else If areaMap.ContainsKey("JSON_Area") Then
+					' JSON_Area puede ser string con inner JSON
+					Dim innerRaw As String = areaMap.Get("JSON_Area")
+					Dim jp3 As JSONParser
+					jp3.Initialize(innerRaw)
+					Try
+						Dim inner As Map = jp3.NextObject
+						If inner.ContainsKey("Id_Area") Then idArea = inner.Get("Id_Area")
+						If idArea = "" And inner.ContainsKey("id") Then idArea = inner.Get("id")
+					Catch
+						Log("No se pudo parsear JSON_Area interno.")
+					End Try
+				End If
+			End If
+		Catch
+			Log("Error parseando last_area.json")
+		End Try
+	Else
+		Log("last_area.json no encontrado")
+	End If
+
+	' fallback: Starter.Id_Area (si lo seteaste en Starter desde la pantalla anterior)
+	If idArea = "" Then
+		Try
+			idArea = Starter.Id_Area
+			Log("Usando Starter.Id_Area como fallback: " & idArea)
+		Catch
+			idArea = ""
+		End Try
+	End If
+
+	' --- Id usuario (desde Starter, como en login) ---
+	Dim idUsuario As String = ""
+	Try
+		idUsuario = Starter.Id_Usuario
+	Catch
+		idUsuario = ""
+	End Try
+	Log("Starter.Id_Usuario: " & idUsuario)
+
+	' Si faltan ids no enviamos y alertamos (evita 400 del servidor)
+	If idArea = "" Or idUsuario = "" Then
+		Dim m As String = "Falta: "
+		If idArea = "" Then m = m & "Id_Area "
+		If idUsuario = "" Then m = m & "Id_Usuario"
+		ToastMessageShow(m, True)
+		Log("No se enviará payload. idArea='" & idArea & "', idUsuario='" & idUsuario & "'")
+		Return
+	End If
+
+	' Construir payload con las claves exactas que espera el controller
+	DateTime.DateFormat = "yyyy-MM-dd"
+	DateTime.TimeFormat = "HH:mm:ss"
+	Dim fecha As String = DateTime.Date(DateTime.Now) & " " & DateTime.Time(DateTime.Now)
+
+	Dim payload As Map
+	payload.Initialize
+	payload.Put("FechaRegistro_Reporte", fecha)
+	payload.Put("FechaModificacion_Reporte", fecha)
+	payload.Put("CARTotal_Reporte", total)
+	payload.Put("CARRevisadas_Reporte", revisadas)
+	payload.Put("Estado_Reporte", "COMPLETADO")
+	payload.Put("JSON_Reporte", reportRaw)
+	payload.Put("Id_Area", idArea)      ' asegúrate que la clave sea exactamente Id_Area
+	payload.Put("Id_Usuario", idUsuario)
+
+	' Log del payload final (útil para depuración)
+	Dim jgTest As JSONGenerator
+	jgTest.Initialize(payload)
+	Log("Payload a enviar: " & jgTest.ToString)
+
+	' Enviar
+	ProgressDialogShow("Enviando reporte...")
+	Dim job As HttpJob
+	job.Initialize("SendReportJob", Me)
+	Dim serverUrl As String
+	serverUrl = BaseUrl & "/reporte.php"
+	Dim jg As JSONGenerator
+	jg.Initialize(payload)
+	Dim body As String = jg.ToString
+	job.PostString(serverUrl, body)
+End Sub
+
+
+' Maneja respuestas de HttpJob — agrega/ajusta si ya tenés otro JobDone en la Activity.
+Sub JobDone(Job As HttpJob)
+	ProgressDialogHide
+	If Job.Success Then
+		Dim res As String = Job.GetString
+		Log("Respuesta SendReport: " & res)
+		Dim parser As JSONParser
+		parser.Initialize(res)
+		Try
+			Dim root As Map = parser.NextObject
+			If root.ContainsKey("success") And root.Get("success") = True Then
+				Dim idRep As Int = 0
+				If root.ContainsKey("Id_Reporte") Then idRep = root.Get("Id_Reporte")
+				ToastMessageShow("Reporte guardado. Id: " & idRep, True)
+				' Opcional: cerrar activity si querés
+				Activity.Finish
+			Else
+				Dim msg As String = root.GetDefault("error", root.GetDefault("message", "Error desconocido"))
+				ToastMessageShow("Error servidor: " & msg, True)
+			End If
+		Catch
+			ToastMessageShow("Respuesta inválida del servidor", True)
+		End Try
+	Else
+		ToastMessageShow("Error de red: " & Job.ErrorMessage, True)
+	End If
+	Job.Release
+End Sub
+

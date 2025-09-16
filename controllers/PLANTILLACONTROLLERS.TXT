@@ -1,0 +1,25 @@
+<?php
+
+require_once __DIR__ . '/baseController.php';
+
+class _ReporteController{
+    private BaseController $base;
+
+    private array $fields = [''];
+
+    public function __construct() {
+        $this->base = new BaseController('NOMBRE TABLA', 'PK', $this->fields);
+    }
+
+    public function registrar($payload){
+
+
+        $data = is_string($payload) ? $payload : (array)$payload;
+         
+        return $this->base->registrar($data);
+
+    }
+
+}
+
+?>
