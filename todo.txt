@@ -1,0 +1,2 @@
+-Hacer lo de los titulos y desc en los QR = LISTO
+-Poner el crud completo de lo que se pueda

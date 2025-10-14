@@ -451,7 +451,7 @@ anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywo
  } 
        catch (Exception e5) {
 			processBA.setLastException(e5); //BA.debugLineNum = 57;BA.debugLine="Log(\"Error guardando last_area.json desde BTN_I";
-anywheresoftware.b4a.keywords.Common.LogImpl("51638406","Error guardando last_area.json desde BTN_IniciarReporte_Click: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("11638406","Error guardando last_area.json desde BTN_IniciarReporte_Click: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 60;BA.debugLine="StartActivity(ReportDialog)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._reportdialog.getObject()));
@@ -521,7 +521,7 @@ _res = "";
  //BA.debugLineNum = 74;BA.debugLine="res = Job.GetString";
 _res = _job._getstring /*String*/ ();
  //BA.debugLineNum = 75;BA.debugLine="Log(\"Respuesta API getArea: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("51703942","Respuesta API getArea: "+_res,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("11703942","Respuesta API getArea: "+_res,0);
  //BA.debugLineNum = 78;BA.debugLine="Dim startIndex As Int";
 _startindex = 0;
  //BA.debugLineNum = 79;BA.debugLine="startIndex = res.IndexOf(\"{\")";
@@ -664,7 +664,7 @@ anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywo
  } 
        catch (Exception e89) {
 			processBA.setLastException(e89); //BA.debugLineNum = 177;BA.debugLine="Log(\"Error guardando last_area.json: \" & La";
-anywheresoftware.b4a.keywords.Common.LogImpl("51704044","Error guardando last_area.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("11704044","Error guardando last_area.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  };
@@ -683,7 +683,7 @@ mostCurrent._et_datosarea.setText(BA.ObjectToCharSequence(_texto));
 			processBA.setLastException(e99); //BA.debugLineNum = 190;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servi";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta inválida del servidor"),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 191;BA.debugLine="Log(\"Error parse JSON getArea: \" & LastExcepti";
-anywheresoftware.b4a.keywords.Common.LogImpl("51704058","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("11704058","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  }else {

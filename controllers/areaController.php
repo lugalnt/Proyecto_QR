@@ -9,6 +9,7 @@ use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -37,7 +38,7 @@ class AreaController {
         } while ($existeCodigo);
 
         $data['Codigo_Area'] = $codigo;
-
+        $textolabel = $data['Nombre_Area'].' '.$data['Descripcion_Area'];
         $writer = new PngWriter();
         $qrCode = new QrCode(
             data: $codigo,
@@ -50,7 +51,12 @@ class AreaController {
             backgroundColor: new Color(255, 255, 255)
         );
 
-        $result = $writer->write($qrCode);
+        $label = new Label(
+            text: $textolabel,
+            textColor: new Color(0, 0, 0)
+        );
+        
+        $result = $writer->write($qrCode,null,$label);
 
         $fileName = __DIR__ . '/../qrcodes/' . $codigo . '.png';
         file_put_contents($fileName, $result->getString());
