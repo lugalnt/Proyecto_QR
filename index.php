@@ -159,6 +159,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if (isset($_POST['Editar_Area']) && $_POST['Editar_Area'] == '1'){
+            // campos permitidos para update (incluye Id_Area)
+        $permitidos = ["Id_Area","Nombre_Area","Descripcion_Area","NumeroCAR_Area","JSON_Area","Id_Maquila"];
+        $payload = array_intersect_key($_POST, array_flip($permitidos));
+        try {
+        $updated = $AreaController->editarArea($payload);
+        // si manejas asignación de maquila con controlador aparte:
+        if (!empty($_POST['Id_Maquila']) && !empty($_POST['Id_Area'])) {
+            try {
+                $MaquilaAreaController->asignarMaquilaArea((int)$_POST['Id_Maquila'], (int)$_POST['Id_Area']);
+            } catch (Exception $e) {
+                // manejar error de asignación, pero la edición ya fue hecha
+                $mensaje = "❌ Error asignando maquila: " . $e->getMessage();
+            }
+        }
+        $_SESSION['mensaje'] = "✅ Area actualizada con éxito";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+        } catch (Exception $e) {
+        $mensaje = "❌ Error: " . $e->getMessage();
+        }
+    }
+
 //AREA/////////////////////////////////////////////
 
 
@@ -168,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $usuarios = $UsuarioController->obtenerTodos();
 $maquilas = $MaquilaController->obtenerTodos();
 if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorMaquila'];}
+if(!isset($_SESSION['areasPorMaquilaQueMaquila'])){$_SESSION['areasPorMaquilaQueMaquila'] = 0;}
 //AGARRES/////////////////////////////////////////
 
 ?>
@@ -390,6 +414,8 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                 <hr />
 
                 <div class="final-row">
+                  <input type="hidden" name="Editar_Area" id="editar_area_input" value="0" />
+                  <input type="hidden" name="Id_Area" id="area_id_input" />
                   <input type="hidden" name="JSON_Area" id="area_json" />
                   <input type="hidden" name="NumeroCAR_Area" id="car_count_input" value="0" />
                   <input type="hidden" name="Registrar_Area" value="1" />
@@ -451,9 +477,10 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                                 ?>
 
                                 <!-- botón que abre el popup; data-area contiene el JSON escapado -->
-                                <button type="button" class="mostrarCarsBtn" data-area="<?= $areaJsonEscaped ?>">
-                                    Mostrar CARS
-                                </button>
+                                <button type="button" class="mostrarCarsBtn" data-area="<?= $areaJsonEscaped ?>">Mostrar CARS</button>
+
+                                <button type="button"class="editarAreaBtn"data-area="<?= $areaJsonEscaped ?>"data-id="<?= htmlspecialchars($areaPorMaquila['Id_Area']) ?>">Editar</button>
+
                                 </td>
                                 <td style="max-width:150px; max-height: 150px">
                                 <a href="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png" download="CodigoQR_Area<?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?>.png">
@@ -467,7 +494,6 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                     <?php endif; ?>
                 </tbody>
                 </table>            
-
 
             </div>
 
@@ -495,7 +521,110 @@ if(!empty($_SESSION['areasPorMaquila'])){$areasPorMaquila = $_SESSION['areasPorM
                   });
                 });
               });
-            </script>            
+            </script>    
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+        // util: decode HTML entities (para JSON escapado en data-area)
+        const decodeHtml = s => {
+            if (!s) return s;
+            const t = document.createElement('textarea');
+            t.innerHTML = s;
+            return t.value;
+        };
+
+        // parse JSON robusto (intenta raw, luego decodeHtml)
+        const parseAreaData = raw => {
+            if (!raw) return {};
+            if (typeof raw === 'object') return raw;
+            try { return JSON.parse(raw); }
+            catch (e) {
+            try { return JSON.parse(decodeHtml(raw)); }
+            catch (e2) { console.error('parseAreaData error', e, e2); return {}; }
+            }
+        };
+
+        // Mostrar C.A.R.s (comportamiento original)
+        const handleMostrarCars = btn => {
+            const area = parseAreaData(btn.getAttribute('data-area'));
+            if (window.CarsPopup?.showCars) window.CarsPopup.showCars(area);
+            else console.warn('CarsPopup no disponible');
+        };
+
+        // Fallback mínimo para rellenar el form si loadAreaForEdit no existe o falla
+        const fallbackLoad = (areaObj = {}, id = null) => {
+            const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v ?? ''; };
+            set('area_name', areaObj.Nombre_Area ?? areaObj.area_name ?? areaObj.Nombre ?? '');
+            set('area_description', areaObj.Descripcion_Area ?? areaObj.area_description ?? areaObj.Descripcion ?? '');
+            const mq = document.getElementById('maquila_id');
+            const candidate = areaObj.Id_Maquila ?? areaObj.maquila_id ?? null;
+            if (mq && (candidate !== null && candidate !== undefined)) { mq.value = String(candidate); mq.dispatchEvent(new Event('change', { bubbles: true })); }
+            set('area_id_input', id ?? areaObj.Id_Area ?? areaObj.id ?? '');
+            // marcar edición
+            const editar = document.getElementById('editar_area_input');
+            if (editar) editar.value = '1';
+            const submit = document.getElementById('submitBtn'); if (submit) submit.textContent = 'Actualizar Area';
+            // actualizar hidden JSON y contador (si no existe UI para cars)
+            const areaJson = document.getElementById('area_json');
+            const carCount = document.getElementById('car_count_input');
+            let incoming = areaObj.cars ?? areaObj.CARS ?? areaObj.Cars ?? [];
+            if (typeof incoming === 'string') {
+            try { incoming = JSON.parse(incoming); } catch(e) { incoming = []; }
+            }
+            if (!Array.isArray(incoming)) incoming = [];
+            if (areaJson) areaJson.value = JSON.stringify({
+            Nombre_Area: document.getElementById('area_name')?.value ?? '',
+            Descripcion_Area: document.getElementById('area_description')?.value ?? '',
+            Id_Maquila: document.getElementById('maquila_id')?.value ?? null,
+            cars: incoming
+            });
+            if (carCount) carCount.value = incoming.length;
+            // scroll al form
+            document.getElementById('areaForm')?.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Editar: delega a loadAreaForEdit si existe, sino fallback
+        const handleEditarArea = btn => {
+            const raw = btn.getAttribute('data-area');
+            const areaObj = parseAreaData(raw);
+            const id = btn.getAttribute('data-id') || areaObj.Id_Area || areaObj.id || null;
+
+            if (typeof window.loadAreaForEdit === 'function') {
+            try {
+                window.loadAreaForEdit(areaObj, id);
+                return;
+            } catch (err) {
+                console.warn('loadAreaForEdit falló, usando fallback', err);
+            }
+            }
+            fallbackLoad(areaObj, id);
+        };
+
+        // Delegación global: cubre botones estáticos y dinámicos
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            if (btn.classList.contains('mostrarCarsBtn')) { e.preventDefault(); handleMostrarCars(btn); }
+            if (btn.classList.contains('editarAreaBtn')) { e.preventDefault(); handleEditarArea(btn); }
+        });
+
+        
+
+        }); // DOMContentLoaded
+    </script>
+
+  
+
+
+
+ 
+            
+            <!-- Script para encganchar los botonos, pero para editar -->
+
+
 
 
 
