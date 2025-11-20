@@ -1,46 +1,129 @@
 <?php
-
 header('Content-Type: application/json; charset=utf-8');
 
-// Ajusta rutas según tu proyecto
-require_once __DIR__ . '/../controllers/UsuarioController.php'; // ruta al controlador
-// Si tu proyecto usa config global y DB::getConnection, asegúrate que config/db.php se carga desde los controladores o agregarlo aquí.
-// require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../controllers/UsuarioController.php';
+require_once __DIR__ . '/../controllers/maquilaController.php';
 
 try {
-    // Obtener POST params (soporta application/x-www-form-urlencoded desde B4A)
+    // Params de POST
     $nombre_usuario = isset($_POST['nombre_usuario']) ? trim($_POST['nombre_usuario']) : null;
     $password = isset($_POST['password']) ? $_POST['password'] : null;
 
     if (empty($nombre_usuario) || empty($password)) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Nombre de usuario y contraseña requeridos.']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Nombre de usuario y contraseña requeridos.'
+        ]);
         exit;
     }
 
-    // Instanciar controlador (ajusta si tu constructor pide argumentos)
-    $uc = new UsuarioController();
+    /*
+    |--------------------------------------------------------------------------
+    | 1) INTENTAR LOGIN COMO USUARIO NORMAL
+    |--------------------------------------------------------------------------
+    */
+    $usuarioController = new UsuarioController();
+    $usuarioId = null;
 
-    // Llamar al nuevo método que devuelve datos y token
-    $result = $uc->loginConToken($nombre_usuario, $password);
+    try {
+        // login() EXISTE en UsuarioController
+        $usuarioId = $usuarioController->login($nombre_usuario, $password);
+    } catch (\Throwable $e) {
+        // ignoramos aquí, pasamos a maquila
+        $usuarioId = null;
+    }
 
-    // Responder
-    echo json_encode($result);
+    if ($usuarioId !== null) {
+        // obtener datos del usuario (obtenerPor SÍ existe)
+        $usuarios = $usuarioController->obtenerPor('Id_Usuario', $usuarioId);
+
+        if (!$usuarios || count($usuarios) === 0) {
+            throw new \RuntimeException('Error interno: usuario no encontrado después del login.');
+        }
+
+        $usuario = $usuarios[0];
+
+        $token = bin2hex(random_bytes(16));
+
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'role' => 'usuario',
+                'token' => $token,
+                'Id_Usuario' => (int)$usuario['Id_Usuario'],
+                'Nombre_Usuario' => $usuario['Nombre_Usuario'],
+                'Puesto_Usuario' => $usuario['Puesto_Usuario'] ?? null,
+                'Telefono_Usuario' => $usuario['Telefono_Usuario'] ?? null
+            ]
+        ]);
+        exit;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 2) INTENTAR LOGIN COMO MAQUILA
+    |--------------------------------------------------------------------------
+    */
+
+    $maquilaController = new MaquilaController();
+    $maquilaId = null;
+
+    try {
+        // login() EXISTE en MaquilaController
+        $maquilaId = $maquilaController->login($nombre_usuario, $password);
+    } catch (\Throwable $e) {
+        $maquilaId = null;
+    }
+
+    if ($maquilaId !== null) {
+        // Obtener datos reales de maquila
+        $maquilas = $maquilaController->obtenerPor('Id_Maquila', $maquilaId);
+
+        if (!$maquilas || count($maquilas) === 0) {
+            throw new \RuntimeException('Error interno: maquila no encontrada después del login.');
+        }
+
+        $maquila = $maquilas[0];
+
+        $token = bin2hex(random_bytes(16));
+
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'role' => 'maquila',
+                'token' => $token,
+                'Id_Maquila' => (int)$maquila['Id_Maquila'],
+                'Nombre_Maquila' => $maquila['Nombre_Maquila']
+            ]
+        ]);
+        exit;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 3) SI NO ES NI USUARIO NI MAQUILA
+    |--------------------------------------------------------------------------
+    */
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Credenciales incorrectas o usuario no registrado.'
+    ]);
     exit;
 
+
 } catch (\InvalidArgumentException $e) {
-    // Errores esperados de validación / login
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     exit;
+
 } catch (\Throwable $e) {
-    // Errores inesperados
     http_response_code(500);
-    // En producción no mostrar $e->getMessage() directamente, usar un mensaje genérico y loggear el detalle.
     echo json_encode(['success' => false, 'message' => 'Error en el servidor.']);
-    // Opcional: loggear $e->getMessage()
     exit;
 }
-
-
-?>

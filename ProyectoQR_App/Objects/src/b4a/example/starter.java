@@ -140,16 +140,23 @@ public static int _id_usuario = 0;
 public static int _id_area = 0;
 public static String _nombre_usuario = "";
 public static String _puesto_usuario = "";
+public static boolean _is_maquila = false;
+public static int _id_maquila = 0;
+public static String _nombre_maquila = "";
+public static String _token = "";
 public b4a.example.main _main = null;
-public b4a.example.login _login = null;
 public b4a.example.menuprincipal _menuprincipal = null;
 public b4a.example.reportdialog _reportdialog = null;
+public b4a.example.login _login = null;
+public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
+public b4a.example.reportsbyarea _reportsbyarea = null;
+public b4a.example.reportdetail _reportdetail = null;
 public b4a.example.httputils2service _httputils2service = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
- //BA.debugLineNum = 31;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
- //BA.debugLineNum = 32;BA.debugLine="Return True";
+ //BA.debugLineNum = 40;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
+ //BA.debugLineNum = 41;BA.debugLine="Return True";
 if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 33;BA.debugLine="End Sub";
+ //BA.debugLineNum = 42;BA.debugLine="End Sub";
 return false;
 }
 public static String  _process_globals() throws Exception{
@@ -162,29 +169,43 @@ _id_area = 0;
 _nombre_usuario = "";
  //BA.debugLineNum = 13;BA.debugLine="Public Puesto_Usuario As String";
 _puesto_usuario = "";
- //BA.debugLineNum = 14;BA.debugLine="End Sub";
+ //BA.debugLineNum = 14;BA.debugLine="Public Is_Maquila As Boolean";
+_is_maquila = false;
+ //BA.debugLineNum = 15;BA.debugLine="Public Id_Usuario As Int";
+_id_usuario = 0;
+ //BA.debugLineNum = 16;BA.debugLine="Public Nombre_Usuario As String";
+_nombre_usuario = "";
+ //BA.debugLineNum = 17;BA.debugLine="Public Puesto_Usuario As String";
+_puesto_usuario = "";
+ //BA.debugLineNum = 19;BA.debugLine="Public Id_Maquila As Int";
+_id_maquila = 0;
+ //BA.debugLineNum = 20;BA.debugLine="Public Nombre_Maquila As String";
+_nombre_maquila = "";
+ //BA.debugLineNum = 22;BA.debugLine="Public Token As String";
+_token = "";
+ //BA.debugLineNum = 23;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{
- //BA.debugLineNum = 16;BA.debugLine="Sub Service_Create";
- //BA.debugLineNum = 20;BA.debugLine="End Sub";
+ //BA.debugLineNum = 25;BA.debugLine="Sub Service_Create";
+ //BA.debugLineNum = 29;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_destroy() throws Exception{
- //BA.debugLineNum = 35;BA.debugLine="Sub Service_Destroy";
- //BA.debugLineNum = 37;BA.debugLine="End Sub";
+ //BA.debugLineNum = 44;BA.debugLine="Sub Service_Destroy";
+ //BA.debugLineNum = 46;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 22;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 23;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
+ //BA.debugLineNum = 31;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
+ //BA.debugLineNum = 32;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
 mostCurrent._service.StopAutomaticForeground();
- //BA.debugLineNum = 24;BA.debugLine="End Sub";
+ //BA.debugLineNum = 33;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_taskremoved() throws Exception{
- //BA.debugLineNum = 26;BA.debugLine="Sub Service_TaskRemoved";
- //BA.debugLineNum = 28;BA.debugLine="End Sub";
+ //BA.debugLineNum = 35;BA.debugLine="Sub Service_TaskRemoved";
+ //BA.debugLineNum = 37;BA.debugLine="End Sub";
 return "";
 }
 }

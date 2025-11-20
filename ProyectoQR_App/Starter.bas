@@ -17,6 +17,15 @@ Sub Process_Globals
 	Public Id_Area As Int
 	Public Nombre_Usuario As String
 	Public Puesto_Usuario As String
+	Public Is_Maquila As Boolean
+	Public Id_Usuario As Int
+	Public Nombre_Usuario As String
+	Public Puesto_Usuario As String
+
+	Public Id_Maquila As Int
+	Public Nombre_Maquila As String
+
+	Public Token As String
 End Sub
 
 Sub Service_Create

@@ -343,6 +343,9 @@ public b4a.example.main _main = null;
 public b4a.example.starter _starter = null;
 public b4a.example.menuprincipal _menuprincipal = null;
 public b4a.example.reportdialog _reportdialog = null;
+public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
+public b4a.example.reportsbyarea _reportsbyarea = null;
+public b4a.example.reportdetail _reportdetail = null;
 public b4a.example.httputils2service _httputils2service = null;
 
 public static void initializeProcessGlobals() {
@@ -354,19 +357,19 @@ public static void initializeProcessGlobals() {
 }
 public static String  _activity_create(boolean _firsttime) throws Exception{
  //BA.debugLineNum = 22;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
- //BA.debugLineNum = 25;BA.debugLine="Activity.LoadLayout(\"loginscreen\")";
+ //BA.debugLineNum = 23;BA.debugLine="Activity.LoadLayout(\"loginscreen\")";
 mostCurrent._activity.LoadLayout("loginscreen",mostCurrent.activityBA);
- //BA.debugLineNum = 27;BA.debugLine="End Sub";
+ //BA.debugLineNum = 24;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 33;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 35;BA.debugLine="End Sub";
+ //BA.debugLineNum = 30;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 32;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 29;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 31;BA.debugLine="End Sub";
+ //BA.debugLineNum = 26;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 28;BA.debugLine="End Sub";
 return "";
 }
 public static String  _button_submit_click() throws Exception{
@@ -374,31 +377,31 @@ String _usuario = "";
 String _pass = "";
 b4a.example.httpjob _job = null;
 String _body = "";
- //BA.debugLineNum = 46;BA.debugLine="Private Sub Button_Submit_Click";
- //BA.debugLineNum = 47;BA.debugLine="Dim usuario As String = Nombre_Usuario.Text.Trim";
+ //BA.debugLineNum = 43;BA.debugLine="Private Sub Button_Submit_Click";
+ //BA.debugLineNum = 44;BA.debugLine="Dim usuario As String = Nombre_Usuario.Text.Trim";
 _usuario = mostCurrent._nombre_usuario.getText().trim();
- //BA.debugLineNum = 48;BA.debugLine="Dim pass As String = Password_Usuario.Text";
+ //BA.debugLineNum = 45;BA.debugLine="Dim pass As String = Password_Usuario.Text";
 _pass = mostCurrent._password_usuario.getText();
- //BA.debugLineNum = 50;BA.debugLine="If usuario = \"\" Or pass = \"\" Then";
+ //BA.debugLineNum = 47;BA.debugLine="If usuario = \"\" Or pass = \"\" Then";
 if ((_usuario).equals("") || (_pass).equals("")) { 
- //BA.debugLineNum = 51;BA.debugLine="ToastMessageShow(\"Completa ambos campos\", True)";
+ //BA.debugLineNum = 48;BA.debugLine="ToastMessageShow(\"Completa ambos campos\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Completa ambos campos"),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 52;BA.debugLine="Return";
+ //BA.debugLineNum = 49;BA.debugLine="Return";
 if (true) return "";
  };
- //BA.debugLineNum = 55;BA.debugLine="ProgressDialogShow(\"Iniciando sesión...\")";
+ //BA.debugLineNum = 52;BA.debugLine="ProgressDialogShow(\"Iniciando sesión...\")";
 anywheresoftware.b4a.keywords.Common.ProgressDialogShow(mostCurrent.activityBA,BA.ObjectToCharSequence("Iniciando sesión..."));
- //BA.debugLineNum = 57;BA.debugLine="Dim job As HttpJob";
+ //BA.debugLineNum = 54;BA.debugLine="Dim job As HttpJob";
 _job = new b4a.example.httpjob();
- //BA.debugLineNum = 58;BA.debugLine="job.Initialize(\"LoginJob\", Me)";
+ //BA.debugLineNum = 55;BA.debugLine="job.Initialize(\"LoginJob\", Me)";
 _job._initialize /*String*/ (processBA,"LoginJob",login.getObject());
- //BA.debugLineNum = 59;BA.debugLine="Dim body As String";
+ //BA.debugLineNum = 56;BA.debugLine="Dim body As String";
 _body = "";
- //BA.debugLineNum = 60;BA.debugLine="body = \"nombre_usuario=\" & URLEncode(usuario) & \"";
+ //BA.debugLineNum = 57;BA.debugLine="body = \"nombre_usuario=\" & URLEncode(usuario) & \"";
 _body = "nombre_usuario="+_urlencode(_usuario)+"&password="+_urlencode(_pass);
- //BA.debugLineNum = 61;BA.debugLine="job.PostString(BaseUrl & \"/login.php\", body)";
+ //BA.debugLineNum = 58;BA.debugLine="job.PostString(BaseUrl & \"/login.php\", body)";
 _job._poststring /*String*/ (_baseurl+"/login.php",_body);
- //BA.debugLineNum = 62;BA.debugLine="End Sub";
+ //BA.debugLineNum = 59;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
@@ -416,90 +419,161 @@ anywheresoftware.b4a.objects.collections.JSONParser _parser = null;
 anywheresoftware.b4a.objects.collections.Map _root = null;
 anywheresoftware.b4a.objects.collections.Map _data = null;
 String _token = "";
+String _rol = "";
+anywheresoftware.b4a.objects.collections.Map _sessionmap = null;
 int _idusuario = 0;
 String _nombre = "";
 String _puesto = "";
-anywheresoftware.b4a.objects.collections.Map _sessionmap = null;
-anywheresoftware.b4a.objects.collections.JSONParser.JSONGenerator _jg = null;
+String _telefono = "";
+int _idmaquila = 0;
+String _nombremaquila = "";
 String _msg = "";
- //BA.debugLineNum = 64;BA.debugLine="Sub JobDone(Job As HttpJob)";
- //BA.debugLineNum = 65;BA.debugLine="ProgressDialogHide";
+ //BA.debugLineNum = 61;BA.debugLine="Sub JobDone(Job As HttpJob)";
+ //BA.debugLineNum = 62;BA.debugLine="ProgressDialogHide";
 anywheresoftware.b4a.keywords.Common.ProgressDialogHide();
- //BA.debugLineNum = 66;BA.debugLine="If Job.Success Then";
+ //BA.debugLineNum = 63;BA.debugLine="If Job.Success Then";
 if (_job._success /*boolean*/ ) { 
- //BA.debugLineNum = 67;BA.debugLine="Dim res As String = Job.GetString";
+ //BA.debugLineNum = 64;BA.debugLine="Dim res As String = Job.GetString";
 _res = _job._getstring /*String*/ ();
- //BA.debugLineNum = 68;BA.debugLine="Log(\"Respuesta login: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("1786436","Respuesta login: "+_res,0);
- //BA.debugLineNum = 69;BA.debugLine="Dim parser As JSONParser";
+ //BA.debugLineNum = 65;BA.debugLine="Log(\"Respuesta login: \" & res)";
+anywheresoftware.b4a.keywords.Common.LogImpl("72818052","Respuesta login: "+_res,0);
+ //BA.debugLineNum = 66;BA.debugLine="Dim parser As JSONParser";
 _parser = new anywheresoftware.b4a.objects.collections.JSONParser();
- //BA.debugLineNum = 70;BA.debugLine="parser.Initialize(res)";
+ //BA.debugLineNum = 67;BA.debugLine="parser.Initialize(res)";
 _parser.Initialize(_res);
- //BA.debugLineNum = 71;BA.debugLine="Try";
-try { //BA.debugLineNum = 72;BA.debugLine="Dim root As Map = parser.NextObject";
+ //BA.debugLineNum = 68;BA.debugLine="Try";
+try { //BA.debugLineNum = 69;BA.debugLine="Dim root As Map = parser.NextObject";
 _root = new anywheresoftware.b4a.objects.collections.Map();
 _root = _parser.NextObject();
- //BA.debugLineNum = 73;BA.debugLine="If root.ContainsKey(\"success\") And root.Get(\"su";
+ //BA.debugLineNum = 70;BA.debugLine="If root.ContainsKey(\"success\") And root.Get(\"su";
 if (_root.ContainsKey((Object)("success")) && (_root.Get((Object)("success"))).equals((Object)(anywheresoftware.b4a.keywords.Common.True))) { 
- //BA.debugLineNum = 74;BA.debugLine="Dim data As Map = root.Get(\"data\")";
+ //BA.debugLineNum = 71;BA.debugLine="Dim data As Map = root.Get(\"data\")";
 _data = new anywheresoftware.b4a.objects.collections.Map();
 _data = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.collections.Map(), (java.util.Map)(_root.Get((Object)("data"))));
- //BA.debugLineNum = 76;BA.debugLine="Dim token As String = data.Get(\"token\")";
-_token = BA.ObjectToString(_data.Get((Object)("token")));
- //BA.debugLineNum = 77;BA.debugLine="Dim idUsuario As Int = data.Get(\"Id_Usuario\")";
-_idusuario = (int)(BA.ObjectToNumber(_data.Get((Object)("Id_Usuario"))));
- //BA.debugLineNum = 78;BA.debugLine="Dim nombre As String = data.Get(\"Nombre_Usuari";
-_nombre = BA.ObjectToString(_data.Get((Object)("Nombre_Usuario")));
- //BA.debugLineNum = 79;BA.debugLine="Dim puesto As String = data.Get(\"Puesto_Usuari";
-_puesto = BA.ObjectToString(_data.Get((Object)("Puesto_Usuario")));
+ //BA.debugLineNum = 74;BA.debugLine="Dim token As String = \"\"";
+_token = "";
+ //BA.debugLineNum = 75;BA.debugLine="If data.ContainsKey(\"token\") Then token = data";
+if (_data.ContainsKey((Object)("token"))) { 
+_token = BA.ObjectToString(_data.Get((Object)("token")));};
+ //BA.debugLineNum = 78;BA.debugLine="Dim rol As String = \"usuario\"";
+_rol = "usuario";
+ //BA.debugLineNum = 79;BA.debugLine="If data.ContainsKey(\"role\") Then rol = data.Ge";
+if (_data.ContainsKey((Object)("role"))) { 
+_rol = BA.ObjectToString(_data.Get((Object)("role")));};
  //BA.debugLineNum = 82;BA.debugLine="Dim sessionMap As Map";
 _sessionmap = new anywheresoftware.b4a.objects.collections.Map();
  //BA.debugLineNum = 83;BA.debugLine="sessionMap.Initialize";
 _sessionmap.Initialize();
- //BA.debugLineNum = 84;BA.debugLine="sessionMap.Put(\"Id_Usuario\", idUsuario)";
+ //BA.debugLineNum = 85;BA.debugLine="If rol = \"usuario\" Then";
+if ((_rol).equals("usuario")) { 
+ //BA.debugLineNum = 87;BA.debugLine="Dim idUsuario As Int = 0";
+_idusuario = (int) (0);
+ //BA.debugLineNum = 88;BA.debugLine="Dim nombre As String = \"\"";
+_nombre = "";
+ //BA.debugLineNum = 89;BA.debugLine="Dim puesto As String = \"\"";
+_puesto = "";
+ //BA.debugLineNum = 90;BA.debugLine="Dim telefono As String = \"\"";
+_telefono = "";
+ //BA.debugLineNum = 92;BA.debugLine="If data.ContainsKey(\"Id_Usuario\") Then idUsua";
+if (_data.ContainsKey((Object)("Id_Usuario"))) { 
+_idusuario = (int)(BA.ObjectToNumber(_data.Get((Object)("Id_Usuario"))));};
+ //BA.debugLineNum = 93;BA.debugLine="If data.ContainsKey(\"Nombre_Usuario\") Then no";
+if (_data.ContainsKey((Object)("Nombre_Usuario"))) { 
+_nombre = BA.ObjectToString(_data.Get((Object)("Nombre_Usuario")));};
+ //BA.debugLineNum = 94;BA.debugLine="If data.ContainsKey(\"Puesto_Usuario\") Then pu";
+if (_data.ContainsKey((Object)("Puesto_Usuario"))) { 
+_puesto = BA.ObjectToString(_data.Get((Object)("Puesto_Usuario")));};
+ //BA.debugLineNum = 95;BA.debugLine="If data.ContainsKey(\"Telefono_Usuario\") Then";
+if (_data.ContainsKey((Object)("Telefono_Usuario"))) { 
+_telefono = BA.ObjectToString(_data.Get((Object)("Telefono_Usuario")));};
+ //BA.debugLineNum = 98;BA.debugLine="sessionMap.Put(\"role\", \"usuario\")";
+_sessionmap.Put((Object)("role"),(Object)("usuario"));
+ //BA.debugLineNum = 99;BA.debugLine="sessionMap.Put(\"Id_Usuario\", idUsuario)";
 _sessionmap.Put((Object)("Id_Usuario"),(Object)(_idusuario));
- //BA.debugLineNum = 85;BA.debugLine="sessionMap.Put(\"Nombre_Usuario\", nombre)";
+ //BA.debugLineNum = 100;BA.debugLine="sessionMap.Put(\"Nombre_Usuario\", nombre)";
 _sessionmap.Put((Object)("Nombre_Usuario"),(Object)(_nombre));
- //BA.debugLineNum = 86;BA.debugLine="sessionMap.Put(\"Telefono_Usuario\", data.Get(\"T";
-_sessionmap.Put((Object)("Telefono_Usuario"),_data.Get((Object)("Telefono_Usuario")));
- //BA.debugLineNum = 87;BA.debugLine="sessionMap.Put(\"Puesto_Usuario\", data.Get(\"Pue";
-_sessionmap.Put((Object)("Puesto_Usuario"),_data.Get((Object)("Puesto_Usuario")));
- //BA.debugLineNum = 88;BA.debugLine="sessionMap.Put(\"token\", token)";
+ //BA.debugLineNum = 101;BA.debugLine="sessionMap.Put(\"Puesto_Usuario\", puesto)";
+_sessionmap.Put((Object)("Puesto_Usuario"),(Object)(_puesto));
+ //BA.debugLineNum = 102;BA.debugLine="sessionMap.Put(\"Telefono_Usuario\", telefono)";
+_sessionmap.Put((Object)("Telefono_Usuario"),(Object)(_telefono));
+ //BA.debugLineNum = 103;BA.debugLine="sessionMap.Put(\"token\", token)";
 _sessionmap.Put((Object)("token"),(Object)(_token));
- //BA.debugLineNum = 90;BA.debugLine="Dim jg As JSONGenerator";
-_jg = new anywheresoftware.b4a.objects.collections.JSONParser.JSONGenerator();
- //BA.debugLineNum = 91;BA.debugLine="jg.Initialize(sessionMap)";
-_jg.Initialize(_sessionmap);
- //BA.debugLineNum = 93;BA.debugLine="ToastMessageShow(\"Bienvenido, \" & nombre, Fals";
-anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Bienvenido, "+_nombre),anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 96;BA.debugLine="Starter.Id_Usuario = idUsuario";
+ //BA.debugLineNum = 106;BA.debugLine="Starter.Is_Maquila = False";
+mostCurrent._starter._is_maquila /*boolean*/  = anywheresoftware.b4a.keywords.Common.False;
+ //BA.debugLineNum = 107;BA.debugLine="Starter.Id_Usuario = idUsuario";
 mostCurrent._starter._id_usuario /*int*/  = _idusuario;
- //BA.debugLineNum = 97;BA.debugLine="Starter.Nombre_Usuario = nombre";
+ //BA.debugLineNum = 108;BA.debugLine="Starter.Nombre_Usuario = nombre";
 mostCurrent._starter._nombre_usuario /*String*/  = _nombre;
- //BA.debugLineNum = 98;BA.debugLine="Starter.Puesto_Usuario = puesto";
+ //BA.debugLineNum = 109;BA.debugLine="Starter.Puesto_Usuario = puesto";
 mostCurrent._starter._puesto_usuario /*String*/  = _puesto;
- //BA.debugLineNum = 100;BA.debugLine="StartActivity(menuprincipal)";
+ //BA.debugLineNum = 110;BA.debugLine="Starter.Token = token";
+mostCurrent._starter._token /*String*/  = _token;
+ //BA.debugLineNum = 113;BA.debugLine="ToastMessageShow(\"Bienvenido, \" & nombre, Fal";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Bienvenido, "+_nombre),anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 116;BA.debugLine="StartActivity(menuprincipal)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._menuprincipal.getObject()));
- //BA.debugLineNum = 101;BA.debugLine="Activity.Finish";
+ //BA.debugLineNum = 117;BA.debugLine="Activity.Finish";
+mostCurrent._activity.Finish();
+ }else if((_rol).equals("maquila")) { 
+ //BA.debugLineNum = 121;BA.debugLine="Dim idMaquila As Int = 0";
+_idmaquila = (int) (0);
+ //BA.debugLineNum = 122;BA.debugLine="Dim nombreMaquila As String = \"\"";
+_nombremaquila = "";
+ //BA.debugLineNum = 124;BA.debugLine="If data.ContainsKey(\"Id_Maquila\") Then idMaqu";
+if (_data.ContainsKey((Object)("Id_Maquila"))) { 
+_idmaquila = (int)(BA.ObjectToNumber(_data.Get((Object)("Id_Maquila"))));};
+ //BA.debugLineNum = 125;BA.debugLine="If data.ContainsKey(\"Nombre_Maquila\") Then no";
+if (_data.ContainsKey((Object)("Nombre_Maquila"))) { 
+_nombremaquila = BA.ObjectToString(_data.Get((Object)("Nombre_Maquila")));};
+ //BA.debugLineNum = 128;BA.debugLine="sessionMap.Put(\"role\", \"maquila\")";
+_sessionmap.Put((Object)("role"),(Object)("maquila"));
+ //BA.debugLineNum = 129;BA.debugLine="sessionMap.Put(\"Id_Maquila\", idMaquila)";
+_sessionmap.Put((Object)("Id_Maquila"),(Object)(_idmaquila));
+ //BA.debugLineNum = 130;BA.debugLine="sessionMap.Put(\"Nombre_Maquila\", nombreMaquil";
+_sessionmap.Put((Object)("Nombre_Maquila"),(Object)(_nombremaquila));
+ //BA.debugLineNum = 131;BA.debugLine="sessionMap.Put(\"token\", token)";
+_sessionmap.Put((Object)("token"),(Object)(_token));
+ //BA.debugLineNum = 134;BA.debugLine="Starter.Is_Maquila = True";
+mostCurrent._starter._is_maquila /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
+ //BA.debugLineNum = 135;BA.debugLine="Starter.Id_Maquila = idMaquila";
+mostCurrent._starter._id_maquila /*int*/  = _idmaquila;
+ //BA.debugLineNum = 136;BA.debugLine="Starter.Nombre_Maquila = nombreMaquila";
+mostCurrent._starter._nombre_maquila /*String*/  = _nombremaquila;
+ //BA.debugLineNum = 137;BA.debugLine="Starter.Token = token";
+mostCurrent._starter._token /*String*/  = _token;
+ //BA.debugLineNum = 140;BA.debugLine="ToastMessageShow(\"Bienvenido (maquila), \" & n";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Bienvenido (maquila), "+_nombremaquila),anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 143;BA.debugLine="StartActivity(menuprincipal_maquilas)";
+anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._menuprincipal_maquilas.getObject()));
+ //BA.debugLineNum = 144;BA.debugLine="Activity.Finish";
 mostCurrent._activity.Finish();
  }else {
- //BA.debugLineNum = 104;BA.debugLine="Dim msg As String = root.Get(\"message\")";
-_msg = BA.ObjectToString(_root.Get((Object)("message")));
- //BA.debugLineNum = 105;BA.debugLine="ToastMessageShow(msg, True)";
+ //BA.debugLineNum = 148;BA.debugLine="ToastMessageShow(\"Tipo de usuario desconocido";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Tipo de usuario desconocido."),anywheresoftware.b4a.keywords.Common.True);
+ };
+ }else {
+ //BA.debugLineNum = 157;BA.debugLine="Dim msg As String = \"\"";
+_msg = "";
+ //BA.debugLineNum = 158;BA.debugLine="If root.ContainsKey(\"message\") Then msg = root";
+if (_root.ContainsKey((Object)("message"))) { 
+_msg = BA.ObjectToString(_root.Get((Object)("message")));}
+else {
+_msg = "Error en autenticación";};
+ //BA.debugLineNum = 159;BA.debugLine="ToastMessageShow(msg, True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence(_msg),anywheresoftware.b4a.keywords.Common.True);
  };
  } 
-       catch (Exception e35) {
-			processBA.setLastException(e35); //BA.debugLineNum = 108;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servid";
+       catch (Exception e65) {
+			processBA.setLastException(e65); //BA.debugLineNum = 162;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servid";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta inválida del servidor"),anywheresoftware.b4a.keywords.Common.True);
  };
  }else {
- //BA.debugLineNum = 111;BA.debugLine="ToastMessageShow(\"Error de red: \" & Job.ErrorMes";
+ //BA.debugLineNum = 165;BA.debugLine="ToastMessageShow(\"Error de red: \" & Job.ErrorMes";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error de red: "+_job._errormessage /*String*/ ),anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 113;BA.debugLine="Job.Release";
+ //BA.debugLineNum = 167;BA.debugLine="Job.Release";
 _job._release /*String*/ ();
- //BA.debugLineNum = 114;BA.debugLine="End Sub";
+ //BA.debugLineNum = 168;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
@@ -512,18 +586,18 @@ return "";
 public static String  _urlencode(String _s) throws Exception{
 anywheresoftware.b4j.object.JavaObject _jo = null;
 String _result = "";
- //BA.debugLineNum = 37;BA.debugLine="Sub URLEncode(s As String) As String";
- //BA.debugLineNum = 38;BA.debugLine="Dim jo As JavaObject";
+ //BA.debugLineNum = 34;BA.debugLine="Sub URLEncode(s As String) As String";
+ //BA.debugLineNum = 35;BA.debugLine="Dim jo As JavaObject";
 _jo = new anywheresoftware.b4j.object.JavaObject();
- //BA.debugLineNum = 39;BA.debugLine="jo.InitializeStatic(\"java.net.URLEncoder\")";
+ //BA.debugLineNum = 36;BA.debugLine="jo.InitializeStatic(\"java.net.URLEncoder\")";
 _jo.InitializeStatic("java.net.URLEncoder");
- //BA.debugLineNum = 40;BA.debugLine="Dim result As String";
+ //BA.debugLineNum = 37;BA.debugLine="Dim result As String";
 _result = "";
- //BA.debugLineNum = 41;BA.debugLine="result = jo.RunMethod(\"encode\", Array(s, \"UTF-8\")";
+ //BA.debugLineNum = 38;BA.debugLine="result = jo.RunMethod(\"encode\", Array(s, \"UTF-8\")";
 _result = BA.ObjectToString(_jo.RunMethod("encode",new Object[]{(Object)(_s),(Object)("UTF-8")}));
- //BA.debugLineNum = 42;BA.debugLine="Return result";
+ //BA.debugLineNum = 39;BA.debugLine="Return result";
 if (true) return _result;
- //BA.debugLineNum = 43;BA.debugLine="End Sub";
+ //BA.debugLineNum = 40;BA.debugLine="End Sub";
 return "";
 }
 }

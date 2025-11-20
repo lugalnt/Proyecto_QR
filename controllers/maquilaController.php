@@ -67,7 +67,7 @@ class MaquilaController {
         if (empty($Contraseña)) throw new \InvalidArgumentException('Contraseña requerido');
 
         $maquilas = $this->obtenerPor("Nombre_Maquila", $NombreMaquila);
-        echo '<script>console.log('.json_encode($maquilas).')</script>'; //<---QUITAR!
+//<---QUITAR!
 
         if ($maquilas && count($maquilas) > 0) 
         {

@@ -359,6 +359,66 @@ class ReporteController{
         }
     }
 
+    public function getByArea($areaIdentifier, int $limit = 100): array {
+    try {
+        $limit = max(1, (int)$limit);
+
+        // subquery para obtener un usuario responsable (igual que en otros métodos)
+        $respSubquery = "(
+            SELECT ur1.Id_Reporte, ur1.Id_Usuario
+            FROM usuario_reporte ur1
+            JOIN (
+                SELECT Id_Reporte, MIN(FechaRegistro_Reporte) AS minf
+                FROM usuario_reporte
+                WHERE (deleted_at IS NULL OR deleted_at = '')
+                GROUP BY Id_Reporte
+            ) urmin
+            ON ur1.Id_Reporte = urmin.Id_Reporte AND ur1.FechaRegistro_Reporte = urmin.minf
+            WHERE (ur1.deleted_at IS NULL OR ur1.deleted_at = '')
+        )";
+
+        // decidir si es numeric -> tratar como Id_Area, si no -> tratar como Codigo_Area
+        if (is_numeric($areaIdentifier)) {
+            $idArea = (int)$areaIdentifier;
+            $sql = "SELECT DISTINCT r.*,
+                        resp.Id_Usuario AS Resp_Id_Usuario,
+                        u.Nombre_Usuario AS Resp_Nombre
+                    FROM reporte r
+                    INNER JOIN area_reporte ar ON ar.Id_Reporte = r.Id_Reporte
+                        AND ar.Id_Area = ? AND (ar.deleted_at IS NULL OR ar.deleted_at = '')
+                    LEFT JOIN {$respSubquery} resp ON resp.Id_Reporte = r.Id_Reporte
+                    LEFT JOIN usuario u ON u.Id_Usuario = resp.Id_Usuario AND (u.deleted_at IS NULL OR u.deleted_at = '')
+                    WHERE (r.deleted_at IS NULL OR r.deleted_at = '')
+                    ORDER BY r.FechaRegistro_Reporte DESC
+                    LIMIT {$limit}";
+
+            $rows = $this->base->ejecutarConsulta($sql, [$idArea]);
+        } else {
+            $code = (string)$areaIdentifier;
+            // Unir con area para filtrar por Codigo_Area
+            $sql = "SELECT DISTINCT r.*,
+                        resp.Id_Usuario AS Resp_Id_Usuario,
+                        u.Nombre_Usuario AS Resp_Nombre
+                    FROM reporte r
+                    INNER JOIN area_reporte ar ON ar.Id_Reporte = r.Id_Reporte
+                        AND (ar.deleted_at IS NULL OR ar.deleted_at = '')
+                    INNER JOIN area a ON a.Id_Area = ar.Id_Area AND a.Codigo_Area = ?
+                        AND (a.deleted_at IS NULL OR a.deleted_at = '')
+                    LEFT JOIN {$respSubquery} resp ON resp.Id_Reporte = r.Id_Reporte
+                    LEFT JOIN usuario u ON u.Id_Usuario = resp.Id_Usuario AND (u.deleted_at IS NULL OR u.deleted_at = '')
+                    WHERE (r.deleted_at IS NULL OR r.deleted_at = '')
+                    ORDER BY r.FechaRegistro_Reporte DESC
+                    LIMIT {$limit}";
+
+            $rows = $this->base->ejecutarConsulta($sql, [$code]);
+        }
+
+        return ['success' => true, 'data' => $rows];
+    } catch (\Throwable $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+    }
+
 
 
 

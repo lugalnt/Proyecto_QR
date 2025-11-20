@@ -337,18 +337,24 @@ public class main extends Activity implements B4AActivity{
 
 public anywheresoftware.b4a.keywords.Common __c = null;
 public static anywheresoftware.b4a.objects.B4XViewWrapper.XUI _xui = null;
-public b4a.example.login _login = null;
 public b4a.example.starter _starter = null;
 public b4a.example.menuprincipal _menuprincipal = null;
 public b4a.example.reportdialog _reportdialog = null;
+public b4a.example.login _login = null;
+public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
+public b4a.example.reportsbyarea _reportsbyarea = null;
+public b4a.example.reportdetail _reportdetail = null;
 public b4a.example.httputils2service _httputils2service = null;
 
 public static boolean isAnyActivityVisible() {
     boolean vis = false;
 vis = vis | (main.mostCurrent != null);
-vis = vis | (login.mostCurrent != null);
 vis = vis | (menuprincipal.mostCurrent != null);
 vis = vis | (reportdialog.mostCurrent != null);
+vis = vis | (login.mostCurrent != null);
+vis = vis | (menuprincipal_maquilas.mostCurrent != null);
+vis = vis | (reportsbyarea.mostCurrent != null);
+vis = vis | (reportdetail.mostCurrent != null);
 return vis;}
 public static String  _activity_create(boolean _firsttime) throws Exception{
  //BA.debugLineNum = 28;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
@@ -384,10 +390,13 @@ public static void initializeProcessGlobals() {
 	    main.processGlobalsRun = true;
 		try {
 		        main._process_globals();
-login._process_globals();
 starter._process_globals();
 menuprincipal._process_globals();
 reportdialog._process_globals();
+login._process_globals();
+menuprincipal_maquilas._process_globals();
+reportsbyarea._process_globals();
+reportdetail._process_globals();
 httputils2service._process_globals();
 		
         } catch (Exception e) {

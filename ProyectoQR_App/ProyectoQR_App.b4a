@@ -2,9 +2,11 @@
 File1=Layout.bal
 File2=loginscreen.bal
 File3=menuprincipal.bal
+File4=menuprincipal_maquilas.bal
 FileGroup1=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
+FileGroup4=Default Group
 Group=Default Group
 Library1=camera
 Library2=camera2
@@ -17,11 +19,14 @@ ManifestCode='This code will be applied to the manifest file during compilation.
 Module1=GoogleCodeScanner
 Module2=login
 Module3=menuprincipal
-Module4=ReportDialog
-Module5=Starter
-NumberOfFiles=3
+Module4=menuprincipal_maquilas
+Module5=ReportDetail
+Module6=ReportDialog
+Module7=ReportsByArea
+Module8=Starter
+NumberOfFiles=4
 NumberOfLibraries=7
-NumberOfModules=5
+NumberOfModules=8
 Version=13.1
 @EndOfDesignText@
 #Region  Project Attributes 

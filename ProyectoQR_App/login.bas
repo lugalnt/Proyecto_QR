@@ -26,10 +26,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	'Do not forget to load the layout file created with the visual designer. For example:
-	'Activity.LoadLayout("Layout1")
 	Activity.LoadLayout("loginscreen")
-	
 End Sub
 
 Sub Activity_Resume
@@ -44,7 +41,7 @@ Sub URLEncode(s As String) As String
 	Dim jo As JavaObject
 	jo.InitializeStatic("java.net.URLEncoder")
 	Dim result As String
-	result = jo.RunMethod("encode", Array(s, "UTF-8")) 
+	result = jo.RunMethod("encode", Array(s, "UTF-8"))
 	Return result
 End Sub
 
@@ -78,36 +75,93 @@ Sub JobDone(Job As HttpJob)
 			Dim root As Map = parser.NextObject
 			If root.ContainsKey("success") And root.Get("success") = True Then
 				Dim data As Map = root.Get("data")
-				' Extraer valores
-				Dim token As String = data.Get("token")
-				Dim idUsuario As Int = data.Get("Id_Usuario")
-				Dim nombre As String = data.Get("Nombre_Usuario")
-				Dim puesto As String = data.Get("Puesto_Usuario")
-
-				' Guardar sesión como JSON válido usando JSONGenerator
+				
+				' token (si viene)
+				Dim token As String = ""
+				If data.ContainsKey("token") Then token = data.Get("token")
+				
+				' role: "usuario" o "maquila" (si no viene, asumimos usuario)
+				Dim rol As String = "usuario"
+				If data.ContainsKey("role") Then rol = data.Get("role")
+				
+				' Map para sesión — lo iremos llenando según rol
 				Dim sessionMap As Map
 				sessionMap.Initialize
-				sessionMap.Put("Id_Usuario", idUsuario)
-				sessionMap.Put("Nombre_Usuario", nombre)
-				sessionMap.Put("Telefono_Usuario", data.Get("Telefono_Usuario"))
-				sessionMap.Put("Puesto_Usuario", data.Get("Puesto_Usuario"))
-				sessionMap.Put("token", token)
-
-				Dim jg As JSONGenerator
-				jg.Initialize(sessionMap)
-
-				ToastMessageShow("Bienvenido, " & nombre, False)
-				' StartActivity(Main)  ' Descomenta si quieres abrir Main
 				
-				Starter.Id_Usuario = idUsuario
-				Starter.Nombre_Usuario = nombre
-				Starter.Puesto_Usuario = puesto
+				If rol = "usuario" Then
+					' Extraer campos de usuario de forma segura
+					Dim idUsuario As Int = 0
+					Dim nombre As String = ""
+					Dim puesto As String = ""
+					Dim telefono As String = ""
+					
+					If data.ContainsKey("Id_Usuario") Then idUsuario = data.Get("Id_Usuario")
+					If data.ContainsKey("Nombre_Usuario") Then nombre = data.Get("Nombre_Usuario")
+					If data.ContainsKey("Puesto_Usuario") Then puesto = data.Get("Puesto_Usuario")
+					If data.ContainsKey("Telefono_Usuario") Then telefono = data.Get("Telefono_Usuario")
+					
+					' Llenar sessionMap
+					sessionMap.Put("role", "usuario")
+					sessionMap.Put("Id_Usuario", idUsuario)
+					sessionMap.Put("Nombre_Usuario", nombre)
+					sessionMap.Put("Puesto_Usuario", puesto)
+					sessionMap.Put("Telefono_Usuario", telefono)
+					sessionMap.Put("token", token)
+					
+					' Guardar en Starter (variables globales compartidas)
+					Starter.Is_Maquila = False
+					Starter.Id_Usuario = idUsuario
+					Starter.Nombre_Usuario = nombre
+					Starter.Puesto_Usuario = puesto
+					Starter.Token = token
+					
+					' Mensaje al usuario
+					ToastMessageShow("Bienvenido, " & nombre, False)
+					
+					' Abrir menú principal (misma Activity para usuario)
+					StartActivity(menuprincipal)
+					Activity.Finish
+					
+				Else If rol = "maquila" Then
+					' Extraer campos de maquila de forma segura
+					Dim idMaquila As Int = 0
+					Dim nombreMaquila As String = ""
+					
+					If data.ContainsKey("Id_Maquila") Then idMaquila = data.Get("Id_Maquila")
+					If data.ContainsKey("Nombre_Maquila") Then nombreMaquila = data.Get("Nombre_Maquila")
+					
+					' Llenar sessionMap
+					sessionMap.Put("role", "maquila")
+					sessionMap.Put("Id_Maquila", idMaquila)
+					sessionMap.Put("Nombre_Maquila", nombreMaquila)
+					sessionMap.Put("token", token)
+					
+					' Guardar en Starter (variables globales compartidas)
+					Starter.Is_Maquila = True
+					Starter.Id_Maquila = idMaquila
+					Starter.Nombre_Maquila = nombreMaquila
+					Starter.Token = token
+					
+					' Mensaje al usuario (maquila)
+					ToastMessageShow("Bienvenido (maquila), " & nombreMaquila, False)
+					
+					' Abrir menú principal (puedes abrir Activity distinta si la maquila tiene UI propia)
+					StartActivity(menuprincipal_maquilas)
+					Activity.Finish
+					
+				Else
+					' Rol inesperado: mostrar mensaje genérico
+					ToastMessageShow("Tipo de usuario desconocido.", True)
+				End If
 				
-				StartActivity(menuprincipal)
-				Activity.Finish
+				' Si quieres persistir la sesión en archivo/sharedprefs:
+				' Dim jg As JSONGenerator
+				' jg.Initialize(sessionMap)
+				' File.WriteString(File.DirInternal, "session.json", jg.ToString)
 				
 			Else
-				Dim msg As String = root.Get("message")
+				Dim msg As String = ""
+				If root.ContainsKey("message") Then msg = root.Get("message") Else msg = "Error en autenticación"
 				ToastMessageShow(msg, True)
 			End If
 		Catch
