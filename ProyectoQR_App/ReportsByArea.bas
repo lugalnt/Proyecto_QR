@@ -94,6 +94,8 @@ Sub FetchReports(BaseUrl As String, AreaCode As String)
 End Sub
 
 ' Robust JobDone: limpia prefijos, detecta HTML, intenta parsear varias veces.
+' Reemplaza tu JobDone por este y añade la función ExtractFirstJson (debajo)
+' JobDone — versión consolidada y robusta
 Sub JobDone(Job As HttpJob)
 	ProgressDialogHide
 	If Job.Success = False Then
@@ -105,11 +107,11 @@ Sub JobDone(Job As HttpJob)
 
 	Dim res As String = Job.GetString
 	If res = Null Then res = ""
-	' eliminar BOM invisibles
+	' quitar BOM si existiera
 	Try
 		res = res.Replace(Chr(65279), "")
 	Catch
-		Log("JobDone: BOM replace failed: " & LastException.Message)
+		Log("BOM replace error: " & LastException.Message)
 	End Try
 	res = res.Trim
 
@@ -120,76 +122,108 @@ Sub JobDone(Job As HttpJob)
 		Return
 	End If
 
-	' Detectar HTML (si el primer caracter significativo es '<')
-	Dim firstNonSpace As Int = -1
-	For i = 0 To res.Length - 1
-		Dim c As String = res.SubString2(i, i + 1)
-		If c <> " " And c <> Chr(10) And c <> Chr(13) And c <> Chr(9) Then
-			firstNonSpace = i
-			Exit
-		End If
-	Next
-	If firstNonSpace >= 0 Then
-		Dim c2 As String = res.SubString2(firstNonSpace, firstNonSpace + 1)
-		If c2 = "<" Then
-			ToastMessageShow("Respuesta HTML recibida en lugar de JSON (ver logs).", True)
-			Log("JobDone: HTML response snippet: " & res.SubString2(0, Min(res.Length, 500)))
-			Job.Release
-			Return
-		End If
-	End If
-
-	' localizar inicio JSON
-	Dim idxObj As Int = res.IndexOf("{")
-	Dim idxArr As Int = res.IndexOf("[")
-	Dim startIdx As Int = -1
-	If idxObj = -1 Then
-		startIdx = idxArr
-	Else
-		If idxArr = -1 Then
-			startIdx = idxObj
-		Else
-			startIdx = Min(idxObj, idxArr)
-		End If
-	End If
-
-	Dim resToParse As String
-	If startIdx > 0 Then
-		resToParse = res.SubString(startIdx)
-		Log("JobDone: trimming response before first JSON char. trimmed snippet: " & resToParse.SubString2(0, Min(resToParse.Length, 200)))
-	Else
-		resToParse = res
-	End If
-
-	Dim parser As JSONParser
-	parser.Initialize(resToParse)
-	Dim root As Object
+	' Guardar respuesta cruda para depuración
 	Try
-		root = parser.NextValue
+		File.WriteString(File.DirInternal, "reports_response_debug.json", res)
+		Log("Saved raw response to: " & File.Combine(File.DirInternal, "reports_response_debug.json"))
 	Catch
-		Log("JobDone parse error first attempt: " & LastException.Message)
-		' segundo intento con respuesta original
-		Try
-			parser.Initialize(res)
-			root = parser.NextValue
-		Catch
-			Log("JobDone parse error second attempt: " & LastException.Message)
-			Dim low As String = res.ToLowerCase
-			If low = "null" Or low = "true" Or low = "false" Or IsNumber(res) Then
-				ToastMessageShow("Respuesta válida pero no es un objeto/array JSON esperado.", True)
-				Log("JobDone: primitive response: " & res)
-				Job.Release
-				Return
-			End If
-			Dim snippet As String = res.SubString2(0, Min(res.Length, 800))
-			ToastMessageShow("No se pudo parsear JSON (mira logs).", True)
-			Log("JobDone final parse fail. Response snippet: " & snippet)
-			Job.Release
-			Return
-		End Try
+		Log("Error writing debug file: " & LastException.Message)
 	End Try
 
-	' --- root parseado ---
+	' Extraer el primer bloque JSON completo (objeto o array)
+	Dim extracted As String = ExtractFirstJson(res)
+	If extracted = "" Then
+		Log("ExtractFirstJson returned empty. Response may be malformed. Response snippet: " & res.SubString2(0, Min(res.Length, 1000)))
+		ToastMessageShow("No se detectó un bloque JSON completo en la respuesta (ver logs).", True)
+		Job.Release
+		Return
+	End If
+
+	' Guardar extracted para inspección (opcional)
+	Try
+		File.WriteString(File.DirInternal, "reports_response_extracted.json", extracted)
+		Log("Saved extracted JSON to: " & File.Combine(File.DirInternal, "reports_response_extracted.json"))
+	Catch
+		Log("Error writing extracted debug file: " & LastException.Message)
+	End Try
+
+	' Limpiar controles invisibles: eliminar controles < 32 excepto tab(9),LF(10),CR(13)
+	Dim sb As StringBuilder
+	sb.Initialize
+	For i = 0 To extracted.Length - 1
+		Dim ch As String = extracted.SubString2(i, i + 1)
+		Dim b() As Byte = ch.GetBytes("UTF8")
+		Dim code As Int = 32
+		If b.Length > 0 Then
+			code = b(0)
+			If code < 0 Then code = code + 256
+		End If
+		If code >= 32 Or code = 9 Or code = 10 Or code = 13 Then
+			sb.Append(ch)
+		Else
+			' Ignorar caracteres de control problemáticos
+		End If
+	Next
+	Dim cleaned As String = sb.ToString
+
+	If cleaned <> extracted Then
+		Log("EXTRACTED cleaned: length from " & extracted.Length & " -> " & cleaned.Length)
+	End If
+
+	' Guardar cleaned para inspección
+	Try
+		File.WriteString(File.DirInternal, "reports_response_cleaned.json", cleaned)
+		Log("Saved cleaned JSON to: " & File.Combine(File.DirInternal, "reports_response_cleaned.json"))
+	Catch
+		Log("Could not write cleaned JSON file: " & LastException.Message)
+	End Try
+
+	' ------------------------------------
+	' Parsear UNA vez el JSON limpio (determinista)
+	' ------------------------------------
+	Dim parser As JSONParser
+	Dim root As Object
+	Try
+		parser.Initialize(cleaned)
+		If cleaned.StartsWith("{") Then
+			Try
+				root = parser.NextObject
+				Log("Parsed cleaned as JSON Object")
+			Catch
+				Log("Parser NextObject failed: " & LastException.Message)
+				root = Null
+			End Try
+		Else If cleaned.StartsWith("[") Then
+			Try
+				root = parser.NextArray
+				Log("Parsed cleaned as JSON Array")
+			Catch
+				Log("Parser NextArray failed: " & LastException.Message)
+				root = Null
+			End Try
+		Else
+			Log("Cleaned does not start with { or [, cannot parse.")
+			root = Null
+		End If
+	Catch
+		Log("Parser initialize error: " & LastException.Message)
+		root = Null
+	End Try
+
+	If root = Null Then
+		Try
+			Dim snippet As String = cleaned
+			If snippet.Length > 2000 Then snippet = snippet.SubString2(0, 2000)
+			Log("FINAL_PARSE_FAILED_SNIPPET: " & snippet)
+		Catch
+			Log("Could not produce FINAL_PARSE_FAILED_SNIPPET")
+		End Try
+		ToastMessageShow("No se pudo parsear la respuesta (ver Logcat).", True)
+		Job.Release
+		Return
+	End If
+
+	' --- root parseado correctamente ---
 	Dim list As List
 	list.Initialize
 
@@ -212,9 +246,9 @@ Sub JobDone(Job As HttpJob)
 						Exit
 					End If
 				Next
-				' si no encontramos lista, quizá la respuesta es un solo reporte con keys 'area'/'car_reports'
+				' si no encontramos lista, quizá la respuesta es un solo reporte con keys 'area'/'car_reports'/'JSON_Reporte'
 				If (list.IsInitialized = False Or list.Size = 0) Then
-					If mp.ContainsKey("area") Or mp.ContainsKey("car_reports") Then
+					If mp.ContainsKey("area") Or mp.ContainsKey("car_reports") Or mp.ContainsKey("JSON_Reporte") Then
 						list.Initialize
 						list.Add(mp)
 					End If
@@ -239,39 +273,46 @@ Sub JobDone(Job As HttpJob)
 
 		If rawItem Is Map Then
 			Dim candidate As Map = rawItem
-			If candidate.ContainsKey("area") Or candidate.ContainsKey("car_reports") Then
-				reportContent = candidate
-			Else
-				Dim possibleFields As List
-				possibleFields = Array As String("JSON_Reporte","JSON","reporte_json","Contenido","Reporte","data")
-				For Each f As String In possibleFields
-					If candidate.ContainsKey(f) Then
-						Try
-							Dim s As String = candidate.Get(f)
-							If s <> "" Then
-								Dim p2 As JSONParser
-								p2.Initialize(s)
-								Dim maybe As Object
-								maybe = p2.NextValue
-								If maybe Is Map Then
-									reportContent = maybe
-									Exit
-								End If
-								If maybe Is List Then
-									Dim l2 As List = maybe
-									If l2.Size > 0 And l2.Get(0) Is Map Then
-										reportContent = l2.Get(0)
-										Exit
-									End If
-								End If
-							End If
-						Catch
-							Log("Ignored parse error for field " & f & ": " & LastException.Message)
-						End Try
+
+			' Preferimos JSON_Reporte_parsed que devuelve la API (si existe)
+			If candidate.ContainsKey("JSON_Reporte_parsed") Then
+				Dim parsedObj As Object = candidate.Get("JSON_Reporte_parsed")
+				If parsedObj Is Map Then
+					reportContent = parsedObj
+				Else If parsedObj Is List Then
+					Dim pl As List = parsedObj
+					If pl.Size > 0 And pl.Get(0) Is Map Then reportContent = pl.Get(0)
+				End If
+			End If
+
+			' Si no viene parsed, intentar decodificar JSON_Reporte string
+			If reportContent = Null And candidate.ContainsKey("JSON_Reporte") Then
+				Try
+					Dim sjson As String = candidate.Get("JSON_Reporte")
+					If sjson <> "" Then
+						Dim p As JSONParser
+						p.Initialize(sjson)
+						Dim maybe As Object = p.NextValue
+						If maybe Is Map Then
+							reportContent = maybe
+						Else If maybe Is List Then
+							Dim ltmp As List = maybe
+							If ltmp.Size > 0 And ltmp.Get(0) Is Map Then reportContent = ltmp.Get(0)
+						End If
 					End If
-				Next
+				Catch
+					Log("Error parsing JSON_Reporte: " & LastException.Message)
+				End Try
+			End If
+
+			' Si sigue null, ver si el propio candidate tiene area/car_reports directamente
+			If reportContent = Null Then
+				If candidate.ContainsKey("area") Or candidate.ContainsKey("car_reports") Then
+					reportContent = candidate
+				End If
 			End If
 		Else
+			' rawItem no es Map -> intentar parsearlo como JSON string
 			Try
 				Dim s2 As String = rawItem
 				Dim p3 As JSONParser
@@ -305,10 +346,12 @@ Sub JobDone(Job As HttpJob)
 		If title = "" Then
 			If reportContent.ContainsKey("Id_Reporte") Then
 				title = "Reporte " & reportContent.Get("Id_Reporte")
-			Else If reportContent.ContainsKey("id") Then
-				title = "Reporte " & reportContent.Get("id")
 			Else
-				title = "Reporte " & (i + 1)
+				If reportContent.ContainsKey("id") Then
+					title = "Reporte " & reportContent.Get("id")
+				Else
+					title = "Reporte " & (i + 1)
+				End If
 			End If
 		End If
 
@@ -319,6 +362,73 @@ Sub JobDone(Job As HttpJob)
 	If lv.Size = 0 Then ToastMessageShow("No se encontraron reportes para el área.", False)
 	Job.Release
 End Sub
+
+
+
+' Extrae el primer bloque JSON completo (objeto o array) de una cadena.
+' Maneja comillas y escapes para no confundir llaves dentro de strings.
+' Extrae el primer bloque JSON completo (objeto o array) de una cadena.
+' Maneja comillas y escapes para no confundir llaves dentro de strings.
+Sub ExtractFirstJson(s As String) As String
+	If s = Null Then Return ""
+	s = s.Trim
+	Dim len As Int = s.Length
+	If len = 0 Then Return ""
+
+	' buscar el primer '{' o '['
+	Dim firstObj As Int = s.IndexOf("{")
+	Dim firstArr As Int = s.IndexOf("[")
+	Dim start As Int
+	If firstObj = -1 And firstArr = -1 Then Return ""
+	If firstObj = -1 Then
+		start = firstArr
+	Else If firstArr = -1 Then
+		start = firstObj
+	Else
+		If firstObj < firstArr Then
+			start = firstObj
+		Else
+			start = firstArr
+		End If
+	End If
+
+	Dim depth As Int = 0
+	Dim inString As Boolean = False
+	Dim escaped As Boolean = False
+
+	For i = start To len - 1
+		Dim ch As String = s.SubString2(i, i + 1)
+		If escaped Then
+			escaped = False
+			Continue
+		End If
+		If ch = "\" Then
+			escaped = True
+			Continue
+		End If
+		If ch = """" Then
+			inString = Not(inString)
+			Continue
+		End If
+
+		If Not(inString) Then
+			If ch = "{" Or ch = "[" Then
+				depth = depth + 1
+			Else If ch = "}" Or ch = "]" Then
+				depth = depth - 1
+				If depth = 0 Then
+					' devolvemos desde start hasta i inclusive
+					Return s.SubString2(start, i + 1)
+				End If
+			End If
+		End If
+	Next
+
+	Return "" ' no se encontró un bloque completo
+End Sub
+
+
+
 
 ' Click en la lista -> guardar JSON temporal y abrir detalle
 Sub lv_ItemClick (Position As Int, Value As Object)

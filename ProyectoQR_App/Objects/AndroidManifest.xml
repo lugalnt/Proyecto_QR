@@ -92,7 +92,15 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".reportdialog"
+			android:name=".reportsbyarea"
+			android:label="B4A Example"
+			android:screenOrientation="unspecified"
+			android:exported="true">
+		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".reportdetail"
 			android:label="B4A Example"
 			android:screenOrientation="unspecified"
 			android:exported="true">
@@ -116,15 +124,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".reportsbyarea"
-			android:label="B4A Example"
-			android:screenOrientation="unspecified"
-			android:exported="true">
-		</activity>
-		<activity
-			android:windowSoftInputMode="stateHidden"
-			android:launchMode="singleTop"
-			android:name=".reportdetail"
+			android:name=".reportdialog"
 			android:label="B4A Example"
 			android:screenOrientation="unspecified"
 			android:exported="true">

@@ -1,7 +1,8 @@
 <?php
-// api/get_reports_by_area.php
-// Devuelve JSON: { success: true, data: [ ... ] }
-// Parámetros: GET|POST 'area' (id numérico o código de área), opcional 'limit' (int)
+// api/get_reports_by_area.php (robusto, agrega JSON_Reporte_parsed)
+declare(strict_types=1);
+ini_set('display_errors', '0');
+error_reporting(0);
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -14,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 try {
-    // Ajusta la ruta si tu carpeta controllers está en otro lugar
+    // Ajuste: ruta al controller
     require_once __DIR__ . '/../controllers/reporteController.php';
 
     $areaParam = null;
-    if (isset($_GET['area']) && $_GET['area'] !== '') $areaParam = trim($_GET['area']);
-    if ((empty($areaParam) || $areaParam === '') && isset($_POST['area'])) $areaParam = trim($_POST['area']);
+    if (isset($_GET['area']) && $_GET['area'] !== '') $areaParam = trim((string)$_GET['area']);
+    if (($areaParam === null || $areaParam === '') && isset($_POST['area'])) $areaParam = trim((string)$_POST['area']);
 
     $limit = 100;
     if (isset($_GET['limit'])) $limit = max(1, (int)$_GET['limit']);
@@ -31,21 +32,33 @@ try {
     }
 
     $reporteCtrl = new ReporteController();
-
-    // El controller getByArea acepta tanto Id_Area (numérico) como Codigo_Area (string)
     $result = $reporteCtrl->getByArea($areaParam, $limit);
 
-    // Asegurar un formato mínimo de salida
-    if (!is_array($result)) {
-        echo json_encode(['success' => false, 'error' => 'Controller returned unexpected result']);
-        exit;
+    // Si la estructura es la esperada y trae 'data', agregamos JSON_Reporte_parsed para cada fila
+    if (is_array($result) && isset($result['data']) && is_array($result['data'])) {
+        foreach ($result['data'] as $i => $row) {
+            // proteger si JSON_Reporte existe y es string
+            if (isset($row['JSON_Reporte']) && is_string($row['JSON_Reporte']) && $row['JSON_Reporte'] !== '') {
+                $decoded = json_decode($row['JSON_Reporte'], true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $result['data'][$i]['JSON_Reporte_parsed'] = $decoded;
+                } else {
+                    // Si falla el parseo, dejar null (no interrumpir)
+                    $result['data'][$i]['JSON_Reporte_parsed'] = null;
+                }
+            } else {
+                $result['data'][$i]['JSON_Reporte_parsed'] = null;
+            }
+        }
     }
 
-    echo json_encode($result);
+    // Forzar JSON_UNESCAPED_UNICODE (legible) y evitar errores de codificación
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
 
 } catch (\Throwable $e) {
     http_response_code(500);
+    // NO imprimir $e->getTrace() ni debug en producción
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     exit;
 }

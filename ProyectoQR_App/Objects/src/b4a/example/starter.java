@@ -146,11 +146,11 @@ public static String _nombre_maquila = "";
 public static String _token = "";
 public b4a.example.main _main = null;
 public b4a.example.menuprincipal _menuprincipal = null;
-public b4a.example.reportdialog _reportdialog = null;
-public b4a.example.login _login = null;
-public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
 public b4a.example.reportsbyarea _reportsbyarea = null;
 public b4a.example.reportdetail _reportdetail = null;
+public b4a.example.login _login = null;
+public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
+public b4a.example.reportdialog _reportdialog = null;
 public b4a.example.httputils2service _httputils2service = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
  //BA.debugLineNum = 40;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
