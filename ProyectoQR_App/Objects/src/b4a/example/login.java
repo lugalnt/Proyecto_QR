@@ -436,7 +436,7 @@ if (_job._success /*boolean*/ ) {
  //BA.debugLineNum = 64;BA.debugLine="Dim res As String = Job.GetString";
 _res = _job._getstring /*String*/ ();
  //BA.debugLineNum = 65;BA.debugLine="Log(\"Respuesta login: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("63080196","Respuesta login: "+_res,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("53801092","Respuesta login: "+_res,0);
  //BA.debugLineNum = 66;BA.debugLine="Dim parser As JSONParser";
 _parser = new anywheresoftware.b4a.objects.collections.JSONParser();
  //BA.debugLineNum = 67;BA.debugLine="parser.Initialize(res)";

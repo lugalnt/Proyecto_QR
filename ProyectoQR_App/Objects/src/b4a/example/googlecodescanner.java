@@ -43,8 +43,8 @@ public b4a.example.starter _starter = null;
 public b4a.example.menuprincipal _menuprincipal = null;
 public b4a.example.reportsbyarea _reportsbyarea = null;
 public b4a.example.reportdetail _reportdetail = null;
-public b4a.example.login _login = null;
 public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
+public b4a.example.login _login = null;
 public b4a.example.reportdialog _reportdialog = null;
 public b4a.example.httputils2service _httputils2service = null;
 public static class _scannerresult{

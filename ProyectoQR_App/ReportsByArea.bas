@@ -237,15 +237,15 @@ Sub JobDone(Job As HttpJob)
 			Else If mp.ContainsKey("reportes") And mp.Get("reportes") Is List Then
 				list = mp.Get("reportes")
 			Else
-				' intentar encontrar primer arreglo dentro del map
-				Dim keys As List = mp.Keys
-				For Each k As String In keys
-					Dim v As Object = mp.Get(k)
+				' intentar encontrar primer arreglo dentro del map (iterar Keys sin castear a List)
+				For Each k As String In mp.Keys
+				Dim v As Object = mp.Get(k)
 					If v Is List Then
-						list = v
+					list = v
 						Exit
-					End If
-				Next
+						End If
+					Next
+				
 				' si no encontramos lista, quizá la respuesta es un solo reporte con keys 'area'/'car_reports'/'JSON_Reporte'
 				If (list.IsInitialized = False Or list.Size = 0) Then
 					If mp.ContainsKey("area") Or mp.ContainsKey("car_reports") Or mp.ContainsKey("JSON_Reporte") Then
@@ -356,7 +356,18 @@ Sub JobDone(Job As HttpJob)
 		End If
 
 		lv.AddSingleLine2(title, i)
-		reportsMap.Put(i, reportContent)
+
+		' Guardar un map con parsed + raw para no perder la fila completa
+		Dim stored As Map
+		stored.Initialize
+		stored.Put("parsed", reportContent) ' Map (puede ser Null)
+		If rawItem Is Map Then
+			stored.Put("raw", rawItem) ' fila original devuelta por el servidor
+		Else
+			stored.Put("raw", Null)
+		End If
+		reportsMap.Put(i, stored)
+
 	Next
 
 	If lv.Size = 0 Then ToastMessageShow("No se encontraron reportes para el área.", False)
@@ -431,24 +442,164 @@ End Sub
 
 
 ' Click en la lista -> guardar JSON temporal y abrir detalle
-Sub lv_ItemClick (Position As Int, Value As Object)
+Sub lvReports_ItemClick (Position As Int, Value As Object)
 	Dim idx As Int = Value
-	Dim rep As Map = reportsMap.Get(idx)
-	If rep = Null Then
+	Log("lvReports_ItemClick fired. idx=" & idx)
+	ToastMessageShow("Click: " & idx, False) ' confirma visualmente
+
+	If reportsMap.IsInitialized = False Then
+		Log("lvReports_ItemClick: reportsMap no inicializado")
+		MsgboxAsync("Mapa de reportes no inicializado", "Error")
+		Return
+	End If
+
+	If reportsMap.ContainsKey(idx) = False Then
+		Log("lvReports_ItemClick: reportsMap no contiene idx=" & idx)
+		MsgboxAsync("Reporte no encontrado", "Error")
+		Return
+	End If
+
+	Dim stored As Map
+	stored = Null
+	Try
+		stored = reportsMap.Get(idx)
+	Catch
+		Log("lvReports_ItemClick: error al obtener stored: " & LastException.Message)
+		MsgboxAsync("Reporte inválido", "Error")
+		Return
+	End Try
+
+	If stored = Null Then
+		Log("lvReports_ItemClick: stored es Null")
 		MsgboxAsync("Reporte inválido", "Error")
 		Return
 	End If
 
+	' Extraer parsed y raw de forma segura
+	Dim parsed As Map = Null
+	Dim raw As Map = Null
+	Try
+		If stored.ContainsKey("parsed") Then
+			Dim tmpParsed As Object = stored.Get("parsed")
+			If tmpParsed Is Map Then parsed = tmpParsed
+		End If
+	Catch
+		Log("lvReports_ItemClick: error leyendo parsed: " & LastException.Message)
+	End Try
+
+	Try
+		If stored.ContainsKey("raw") Then
+			Dim tmpRaw As Object = stored.Get("raw")
+			If tmpRaw Is Map Then raw = tmpRaw
+		End If
+	Catch
+		Log("lvReports_ItemClick: error leyendo raw: " & LastException.Message)
+	End Try
+
+	' Si no hay parsed, usar raw
+	If parsed = Null And raw Is Map Then parsed = raw
+
+	If parsed = Null Then
+		Log("lvReports_ItemClick: no hay parsed ni raw útiles")
+		MsgboxAsync("No hay datos válidos para este reporte.", "Error")
+		Return
+	End If
+
+	' Construir out con area y car_reports (busca en parsed, luego en raw.JSON_Reporte_parsed, luego en raw.JSON_Reporte)
+	Dim out As Map
+	out.Initialize
+
+	Try
+		If parsed.ContainsKey("area") Then out.Put("area", parsed.Get("area"))
+	Catch
+		Log("lvReports_ItemClick: error copiando parsed.area: " & LastException.Message)
+	End Try
+	Try
+		If parsed.ContainsKey("car_reports") Then out.Put("car_reports", parsed.Get("car_reports"))
+	Catch
+		Log("lvReports_ItemClick: error copiando parsed.car_reports: " & LastException.Message)
+	End Try
+
+	If (out.ContainsKey("area") = False Or out.ContainsKey("car_reports") = False) Then
+		If raw Is Map Then
+			' JSON_Reporte_parsed directo
+			If raw.ContainsKey("JSON_Reporte_parsed") Then
+				Try
+					Dim jrMap As Map = raw.Get("JSON_Reporte_parsed")
+					If jrMap <> Null Then
+						If out.ContainsKey("area") = False And jrMap.ContainsKey("area") Then
+							out.Put("area", jrMap.Get("area"))
+						End If
+						If out.ContainsKey("car_reports") = False And jrMap.ContainsKey("car_reports") Then
+							out.Put("car_reports", jrMap.Get("car_reports"))
+						End If
+					End If
+				Catch
+					Log("lvReports_ItemClick: raw.JSON_Reporte_parsed no es Map o error: " & LastException.Message)
+				End Try
+			End If
+
+			' JSON_Reporte string (parsear)
+			If (out.ContainsKey("area") = False Or out.ContainsKey("car_reports") = False) And raw.ContainsKey("JSON_Reporte") Then
+				Try
+					Dim s As String = raw.Get("JSON_Reporte")
+					If s <> "" Then
+						Dim p As JSONParser
+						p.Initialize(s)
+						Dim maybe As Object = p.NextValue
+						If maybe Is Map Then
+							Dim m As Map = maybe
+							If out.ContainsKey("area") = False And m.ContainsKey("area") Then out.Put("area", m.Get("area"))
+							If out.ContainsKey("car_reports") = False And m.ContainsKey("car_reports") Then out.Put("car_reports", m.Get("car_reports"))
+						End If
+					End If
+				Catch
+					Log("lvReports_ItemClick: error parseando JSON_Reporte: " & LastException.Message)
+				End Try
+			End If
+		End If
+	End If
+
+	' Copiar metadatos desde raw
+	If raw Is Map Then
+		Try
+			For Each k As String In raw.Keys
+			Try
+				If out.ContainsKey(k) = False Then out.Put(k, raw.Get(k))
+					Catch
+				Log("lvReports_ItemClick: no pudo copiar key " & k & ": " & LastException.Message)
+					End Try
+				Next
+			Catch
+		Log("lvReports_ItemClick: error iterando keys raw: " & LastException.Message)
+			End Try
+		End If
+	
+
+	' Asegurar Id_Reporte
+	If out.ContainsKey("Id_Reporte") = False Then
+		If raw Is Map And raw.ContainsKey("Id_Reporte") Then out.Put("Id_Reporte", raw.Get("Id_Reporte"))
+	End If
+
+	' Guardar y hacer log del JSON final (snippet)
 	Try
 		Dim gen As JSONGenerator
-		gen.Initialize(rep)
+		gen.Initialize(out)
 		Dim jsonStr As String = gen.ToString
 		File.WriteString(File.DirInternal, "current_report.json", jsonStr)
+		Log("lvReports_ItemClick: wrote current_report.json length=" & jsonStr.Length)
+		Log("lvReports_ItemClick snippet: " & jsonStr.SubString2(0, Min(800, jsonStr.Length)))
 	Catch
-		Log("Error writing current_report.json: " & LastException.Message)
+		Log("lvReports_ItemClick: Error writing current_report.json: " & LastException.Message)
 		MsgboxAsync("No se pudo preparar el detalle del reporte.", "Error")
 		Return
 	End Try
 
-	StartActivity(ReportDetail) ' ReportDetail debe existir en el proyecto y leer current_report.json
+	StartActivity(ReportDetail)
 End Sub
+
+
+
+
+
+

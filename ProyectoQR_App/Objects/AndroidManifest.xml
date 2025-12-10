@@ -108,7 +108,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".login"
+			android:name=".menuprincipal_maquilas"
 			android:label="B4A Example"
 			android:screenOrientation="unspecified"
 			android:exported="true">
@@ -116,7 +116,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".menuprincipal_maquilas"
+			android:name=".login"
 			android:label="B4A Example"
 			android:screenOrientation="unspecified"
 			android:exported="true">

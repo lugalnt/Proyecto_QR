@@ -25,6 +25,6 @@ ModuleClosedNodes5=
 ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
-NavigationStack=ReportDetail,EstimateLabelHeight,217,0,ReportsByArea,lv_ItemClick,336,0,ReportsByArea,Globals,19,0,ReportsByArea,Activity_Create,29,0,menuprincipal_maquilas,Globals,15,0,ReportsByArea,FetchReports,85,0,ReportsByArea,btnRefresh_Click,69,0,ReportsByArea,ExtractFirstJson,317,0,menuprincipal_maquilas,JobDone,78,0,ReportsByArea,JobDone,344,3
+NavigationStack=ReportsByArea,FetchReports,85,0,ReportsByArea,btnRefresh_Click,69,0,ReportsByArea,ExtractFirstJson,317,0,menuprincipal_maquilas,JobDone,78,0,ReportDetail,Activity_Pause,79,0,ReportDetail,Activity_Create,25,0,ReportDetail,EstimateLabelHeight,400,0,ReportDetail,RenderReport,319,0,ReportsByArea,JobDone,234,3,ReportsByArea,lvReports_ItemClick,556,0
 SelectedBuild=0
 VisibleModules=8,3,7,5,4
