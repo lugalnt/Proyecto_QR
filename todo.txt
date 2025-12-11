@@ -1,2 +1,4 @@
--Hacer lo de los titulos y desc en los QR = LISTO
--Poner el crud completo de lo que se pueda
+Ya casi con lo que las maquilas vean los reportes en el telefono solo que no se ven las incidencias y observaciones pero el resto yies
+mas pruebas de eso
+
+Thug out lo de editar los reportes jajajajaj

@@ -7,6 +7,7 @@ Version=13.1
 ' ReportDetail.bas
 ' Activity que muestra el contenido de un reporte (area + car_reports)
 ' Versión robusta: parseo tolerante y normalización automática.
+' Mejoras: muestra observaciones/incidencias de forma fiable y traduce booleans a "Correcto"/"No correcto".
 
 #Region  Activity Attributes
     #FullScreen: False
@@ -247,7 +248,9 @@ Sub ExtractFirstJson(s As String) As String
 End Sub
 
 ' -------------------------------------------------------
-' Renderiza el mapa del reporte (tu rutina original, con mínimos ajustes)
+' Renderiza el mapa del reporte (mejorado)
+' - ahora separa responses y extras en etiquetas distintas
+' - traduce booleanos a "Correcto"/"No correcto"
 ' -------------------------------------------------------
 Sub RenderReport(rp As Map)
 	Dim y As Int = 10dip
@@ -311,7 +314,7 @@ Sub RenderReport(rp As Map)
 				Dim hCarName As Int = EstimateLabelHeight(lblCar.Text, lblCar.TextSize, w - 16dip)
 				card.AddView(lblCar, 8dip, 4dip, w - 16dip, hCarName)
 
-				' Responses (formatted)
+				' Responses (formatted) - ahora usando FormatValue para traducir booleans
 				Dim responsesText As String = ""
 				If c.ContainsKey("responses") Then
 					Try
@@ -319,7 +322,8 @@ Sub RenderReport(rp As Map)
 						For Each k As String In respMap.Keys
 							Try
 								Dim v As Object = respMap.Get(k)
-								responsesText = responsesText & k & ": " & v & CRLF
+								Dim vs As String = FormatValue(v)
+								responsesText = responsesText & k & ": " & vs & CRLF
 							Catch
 								Log("RenderReport: error leyendo responses key '" & k & "': " & LastException.Message)
 							End Try
@@ -330,26 +334,118 @@ Sub RenderReport(rp As Map)
 					End Try
 				End If
 
-				' Observacion / incidencia
-				Dim extras As String = ""
-				If c.ContainsKey("observacion") Then extras = extras & "Observación: " & c.Get("observacion") & CRLF
-				If c.ContainsKey("incidencia") Then extras = extras & "Incidencia: " & c.Get("incidencia") & CRLF
+				' Observacion / incidencia (busca variantes y serializa si hace falta) -> almacena en extrasText
+				Dim extrasText As String = ""
 
-				Dim details As String = ""
-				If responsesText <> "" Then details = details & responsesText
-				If extras <> "" Then details = details & extras
-				If details = "" Then details = "(sin detalles)"
+				' helpers: listas de variantes de claves
+				Dim obsKeys As List
+				obsKeys.Initialize
+				obsKeys.AddAll(Array As String("observacion","observación","Observacion","Observación","observaciones","Observaciones","obs"))
 
+				Dim incKeys As List
+				incKeys.Initialize
+				incKeys.AddAll(Array As String("incidencia","Incidencia","incidencias","Incidencias","incid","incidencias_text"))
+
+				' buscar observación
+				For Each k As String In obsKeys
+					If c.ContainsKey(k) Then
+						Try
+							Dim vv As Object = c.Get(k)
+							Dim sVal As String = FormatValue(vv)
+							If sVal <> "" Then
+								extrasText = extrasText & "Observación: " & sVal & CRLF
+								Log("RenderReport: found observacion key '" & k & "': " & sVal.SubString2(0, Min(200, sVal.Length)))
+								Exit
+							End If
+						Catch
+							Log("RenderReport: error leyendo observacion key '" & k & "': " & LastException.Message)
+						End Try
+					End If
+				Next
+
+				' buscar incidencia
+				For Each k As String In incKeys
+					If c.ContainsKey(k) Then
+						Try
+							Dim vv2 As Object = c.Get(k)
+							Dim sVal2 As String = FormatValue(vv2)
+							If sVal2 <> "" Then
+								extrasText = extrasText & "Incidencia: " & sVal2 & CRLF
+								Log("RenderReport: found incidencia key '" & k & "': " & sVal2.SubString2(0, Min(200, sVal2.Length)))
+								Exit
+							End If
+						Catch
+							Log("RenderReport: error leyendo incidencia key '" & k & "': " & LastException.Message)
+						End Try
+					End If
+				Next
+
+				' Si no encontramos nada, buscar en responses (a veces viene ahí)
+				If extrasText = "" And c.ContainsKey("responses") Then
+					Try
+						Dim respMap2 As Map = c.Get("responses")
+						' check same obs/inc keys inside responses
+						For Each k As String In obsKeys
+							If respMap2.ContainsKey(k) Then
+								Try
+									Dim vv As Object = respMap2.Get(k)
+									Dim sVal As String = FormatValue(vv)
+									extrasText = extrasText & "Observación: " & sVal & CRLF
+									Log("RenderReport: found observacion inside responses key '" & k & "': " & sVal.SubString2(0, Min(200, sVal.Length)))
+									Exit
+								Catch
+									Log("RenderReport: error leyendo observacion inside responses key '" & k & "': " & LastException.Message)
+								End Try
+							End If
+						Next
+
+						If extrasText = "" Then
+							For Each k As String In incKeys
+								If respMap2.ContainsKey(k) Then
+									Try
+										Dim vv4 As Object = respMap2.Get(k)
+										Dim sVal2 As String = FormatValue(vv4)
+										extrasText = extrasText & "Incidencia: " & sVal2 & CRLF
+										Log("RenderReport: found incidencia inside responses key '" & k & "': " & sVal2.SubString2(0, Min(200, sVal2.Length)))
+										Exit
+									Catch
+										Log("RenderReport: error leyendo incidencia inside responses key '" & k & "': " & LastException.Message)
+									End Try
+								End If
+							Next
+						End If
+					Catch
+						Log("RenderReport: error buscando observ/incid en responses: " & LastException.Message)
+					End Try
+				End If
+
+				' Ahora renderizamos: primero responses, luego extras (cada uno en su Label separado)
+				Dim detailsResp As String = responsesText
+				Dim detailsExtras As String = extrasText
+
+				If detailsResp = "" Then detailsResp = "(sin respuestas)"
+				If detailsExtras = "" Then detailsExtras = "" ' si no hay extras no mostramos etiqueta extra
+
+				' Label responses
 				Dim lblResp As Label
 				lblResp.Initialize("lblResp" & i)
-				lblResp.Text = details
+				lblResp.Text = detailsResp
 				lblResp.TextSize = 13
 				Dim hResp As Int = EstimateLabelHeight(lblResp.Text, lblResp.TextSize, w - 16dip)
-
 				card.AddView(lblResp, 8dip, 4dip + hCarName, w - 16dip, hResp)
 
+				Dim hExtras As Int = 0
+				If detailsExtras <> "" Then
+					Dim lblExtras As Label
+					lblExtras.Initialize("lblExtras" & i)
+					lblExtras.Text = detailsExtras
+					lblExtras.TextSize = 13
+					hExtras = EstimateLabelHeight(lblExtras.Text, lblExtras.TextSize, w - 16dip)
+					card.AddView(lblExtras, 8dip, 4dip + hCarName + hResp, w - 16dip, hExtras)
+				End If
+
 				' ajustar altura del card según contenido
-				Dim hCard As Int = hCarName + hResp + 12dip
+				Dim hCard As Int = hCarName + hResp + hExtras + 16dip
 				card.SetLayout(card.Left, card.Top, card.Width, hCard)
 				y = y + hCard + 8dip
 			Next
@@ -383,6 +479,35 @@ Sub RenderReport(rp As Map)
 	End If
 
 	pnl.Height = y + 20dip
+End Sub
+
+' -------------------------------------------------------
+' Formatea cualquier valor a String legible:
+' - booleanos -> "Correcto"/"No correcto"
+' - Map/List -> JSON string
+' - null -> ""
+' - números/strings -> su representación
+' -------------------------------------------------------
+Sub FormatValue(v As Object) As String
+	If v = Null Then Return ""
+	Try
+		' booleanos
+		If v = True Then Return "Correcto"
+		If v = False Then Return "No correcto"
+
+		' Map o List -> serializar
+		If v Is Map Or v Is List Then
+			Dim jg As JSONGenerator
+			jg.Initialize(v)
+			Return jg.ToString
+		End If
+
+		' por defecto: convertir a string
+		Return v
+	Catch
+		Log("FormatValue error: " & LastException.Message)
+		Return ""
+	End Try
 End Sub
 
 ' -------------------------------------------------------
