@@ -16,6 +16,7 @@ Version=13.1
 
 Sub Process_Globals
 	Public ReportJson As String ' opcional: si se asigna externamente
+	Public AllowEdit As Boolean = False
 End Sub
 
 Sub Globals
@@ -128,6 +129,7 @@ Sub LoadAndRenderCurrentReport
 			If snippet.Length > 2000 Then snippet = snippet.SubString2(0, 2000)
 			Log("ReportDetail: FINAL_PARSE_FAILED_SNIPPET: " & snippet)
 		Catch
+			Log(LastException.Message)
 		End Try
 		ToastMessageShow("No se pudo parsear detalle (ver Logcat).", True)
 		Return
@@ -160,7 +162,7 @@ Sub LoadAndRenderCurrentReport
 			If maybeParsed Is Map Then rp = maybeParsed
 		End If
 	Catch
-		' ignorar
+		Log(LastException.Message)
 	End Try
 
 	' Si rp no tiene 'area' pero tiene JSON_Reporte (string), intentar parsearlo
@@ -479,6 +481,188 @@ Sub RenderReport(rp As Map)
 	End If
 
 	pnl.Height = y + 20dip
+	
+	' Agregar botones de acción al final SOLO si está permitido
+	If AllowEdit Then
+		AddActionButtons(y + 30dip)
+	End If
+End Sub
+
+Sub AddActionButtons(top As Int)
+	Dim btnEdit As Button
+	btnEdit.Initialize("btnEdit")
+	btnEdit.Text = "Editar Reporte"
+	btnEdit.Color = Colors.RGB(255, 193, 7) ' Amber/Orange
+	btnEdit.TextColor = Colors.Black
+	pnl.AddView(btnEdit, 10dip, top, 45%x, 50dip)
+
+	Dim btnDelete As Button
+	btnDelete.Initialize("btnDelete")
+	btnDelete.Text = "Eliminar"
+	btnDelete.Color = Colors.RGB(220, 53, 69) ' Red
+	btnDelete.TextColor = Colors.White
+	pnl.AddView(btnDelete, 55%x, top, 40%x, 50dip)
+
+	pnl.Height = top + 70dip
+End Sub
+
+Sub btnEdit_Click
+	Dim jsonRaw As String = File.ReadString(File.DirInternal, "current_report.json")
+	Dim parser As JSONParser
+	parser.Initialize(jsonRaw)
+	Dim report As Map = parser.NextObject
+
+	If report.ContainsKey("Id_Reporte") = False Or report.ContainsKey("area") = False Then
+		ToastMessageShow("Datos incompletos para editar.", True)
+		Return
+	End If
+
+	' Chequear si el snapshot del área tiene los CARs
+	Dim areaMap As Map = report.Get("area")
+	
+	If areaMap.ContainsKey("cars") And IsListValid(areaMap.Get("cars")) Then
+		' Todo bien, procedemos directo
+		OpenEditDialog(report)
+	Else
+		' Faltan los CARs (reporte viejo o guardado sin definición). Intentar obtener del backend.
+		If report.ContainsKey("Id_Area") Then
+			Dim idArea As Int = report.Get("Id_Reporte") ' Error potential: check keys
+			If report.ContainsKey("Id_Area") Then idArea = report.Get("Id_Area")
+			
+			ProgressDialogShow("Obteniendo datos del área para editar...")
+			FetchAreaForEdit(idArea, report)
+		Else
+			ToastMessageShow("No se puede editar: falta información de área y CARs.", True)
+		End If
+	End If
+End Sub
+
+Sub IsListValid(l As Object) As Boolean
+	If l Is List Then
+		Dim lst As List = l
+		Return lst.Size > 0
+	End If
+	Return False
+End Sub
+
+Sub FetchAreaForEdit(idArea As Int, reportMap As Map)
+	Dim job As HttpJob
+	job.Initialize("GetAreaForEdit", Me)
+	' Guardamos el mapa del reporte en la propiedad Tag para recuperarlo en JobDone
+	job.Tag = reportMap
+	Dim body As String = "codigo=" & idArea ' getArea.php busca por codigo/id
+	job.PostString("https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api/getArea.php", body)
+End Sub
+
+Sub OpenEditDialog(report As Map)
+	Dim areaMap As Map = report.Get("area")
+	' Envolver en data/success como espera ReportDialog (simular respuesta API getArea)
+	Dim areaWrapper As Map
+	areaWrapper.Initialize
+	areaWrapper.Put("success", True)
+	areaWrapper.Put("data", areaMap)
+	Dim jg As JSONGenerator
+	jg.Initialize(areaWrapper)
+	File.WriteString(File.DirInternal, "last_area.json", jg.ToString)
+
+	' Configurar ReportDialog
+	ReportDialog.IsEditing = True
+	ReportDialog.EditReportId = report.Get("Id_Reporte")
+	ReportDialog.PreloadedReport = report ' Pasamos todo el mapa (contiene car_reports)
+
+	StartActivity(ReportDialog)
+	Activity.Finish
+End Sub
+
+Sub btnDelete_Click
+	Msgbox2Async("¿Seguro que deseas eliminar este reporte?", "Eliminar", "Sí", "Cancelar", "", Null, True)
+	Wait For Msgbox_Result (Result As Int)
+	If Result = DialogResponse.POSITIVE Then
+		Dim jsonRaw As String = File.ReadString(File.DirInternal, "current_report.json")
+		Dim parser As JSONParser
+		parser.Initialize(jsonRaw)
+		Dim report As Map = parser.NextObject
+		
+		If report.ContainsKey("Id_Reporte") Then
+			Dim id As Int = report.Get("Id_Reporte")
+			DeleteReport(id)
+		Else
+			ToastMessageShow("No se encontró Id_Reporte.", True)
+		End If
+	End If
+End Sub
+
+Sub DeleteReport(id As Int)
+	Dim job As HttpJob
+	job.Initialize("DeleteJob", Me)
+	Dim url As String = "https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api/delete_report.php"
+	Dim json As JSONGenerator
+	Dim m As Map
+	m.Initialize
+	m.Put("Id_Reporte", id)
+	json.Initialize(m)
+	job.PostString(url, json.ToString)
+End Sub
+
+Sub JobDone(Job As HttpJob)
+	If Job.JobName = "DeleteJob" Then
+		If Job.Success Then
+			ToastMessageShow("Reporte eliminado.", True)
+			Activity.Finish
+		Else
+			ToastMessageShow("Error eliminando: " & Job.ErrorMessage, True)
+		End If
+	Else If Job.JobName = "GetAreaForEdit" Then
+		ProgressDialogHide
+		If Job.Success Then
+			Dim res As String = Job.GetString
+			' Parsear respuesta getArea
+			Dim parser As JSONParser
+			parser.Initialize(res)
+			Try
+				Dim root As Map = parser.NextObject
+				' Extraer data
+				Dim areaData As Map
+				If root.ContainsKey("success") And root.Get("success") = True Then
+					areaData = root.Get("data")
+				Else
+					areaData = root
+				End If
+				
+				' Validar si tiene cars
+				If areaData.IsInitialized = False Or (areaData.ContainsKey("cars") = False And areaData.ContainsKey("json_area") = False) Then
+					ToastMessageShow("El área no tiene definición de CARs válida.", True)
+				Else
+					' Parse JSON_Area if needed (getArea often returns it as string inside data)
+					If areaData.ContainsKey("JSON_Area") Then
+						Try
+							Dim jas As String = areaData.Get("JSON_Area")
+							Dim jp As JSONParser
+							jp.Initialize(jas)
+							Dim fullArea As Map = jp.NextObject
+							' Merge cars from fullArea into areaData if needed
+							If fullArea.ContainsKey("cars") Then areaData.Put("cars", fullArea.Get("cars"))
+						Catch
+							Log("Error parsing JSON_Area for edit: " & LastException.Message)
+						End Try
+					End If
+					
+					' Ahora inyectamos esta nueva definición de área en el reporte (solo en memoria)
+					Dim originalReport As Map = Job.Tag
+					originalReport.Put("area", areaData)
+					
+					' Y abrimos el editor
+					OpenEditDialog(originalReport)
+				End If
+			Catch
+				Log("Error parsing GetAreaForEdit response: " & LastException.Message)
+				ToastMessageShow("Error procesando datos del área.", True)
+			End Try
+		Else
+			ToastMessageShow("No se pudo obtener datos del área: " & Job.ErrorMessage, True)
+		End If
+	End If
+	Job.Release
 End Sub
 
 ' -------------------------------------------------------

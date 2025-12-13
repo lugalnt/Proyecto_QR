@@ -129,6 +129,14 @@
 			android:screenOrientation="unspecified"
 			android:exported="true">
 		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".reportsbyuser"
+			android:label="B4A Example"
+			android:screenOrientation="unspecified"
+			android:exported="true">
+		</activity>
 		<receiver
 			android:name=".httputils2service"
 			android:exported="true">

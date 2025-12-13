@@ -911,6 +911,7 @@ C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\R.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$1.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$B4AMenuItemsClickListener.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$HandleKeyDelayed.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$ResumableSub_btnDelete_Click.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$ResumeMessage.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail$WaitForLayout.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportdetail.dex
@@ -926,6 +927,12 @@ C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyar
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyarea$ResumeMessage.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyarea$WaitForLayout.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyarea.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser$1.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser$B4AMenuItemsClickListener.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser$HandleKeyDelayed.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser$ResumeMessage.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser$WaitForLayout.dex
+C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\reportsbyuser.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$1.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$2.dex
 C:\xampp\htdocs\Proyecto_QR\ProyectoQR_App\Objects\dexed\b4a\example\starter$starter_BR.dex

@@ -5,7 +5,8 @@ require_once __DIR__ . '/usuario_reporteController.php';
 require_once __DIR__ . '/area_reporteController.php';
 
 
-class ReporteController{
+class ReporteController
+{
     private BaseController $base;
 
     private array $fields = [
@@ -17,19 +18,21 @@ class ReporteController{
         'JSON_Reporte'
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->base = new BaseController('reporte', 'Id_Reporte', $this->fields);
     }
 
-    public function registrar($payload) {
+    public function registrar($payload)
+    {
         try {
             // -------------------------------
             // Normalizar payload de forma segura
             // -------------------------------
             // Función recursiva para convertir stdClass->array y arrays; NO decodifica JSON_Reporte.
-            $normalize = function($v) use (&$normalize) {
+            $normalize = function ($v) use (&$normalize) {
                 if ($v instanceof \stdClass) {
-                    $v = (array)$v;
+                    $v = (array) $v;
                 }
                 if (is_array($v)) {
                     $res = [];
@@ -52,9 +55,9 @@ class ReporteController{
                 }
             }
             if (is_object($orig)) {
-                $orig = (array)$orig;
+                $orig = (array) $orig;
             }
-            $origArr = is_array($orig) ? $normalize($orig) : (array)$orig;
+            $origArr = is_array($orig) ? $normalize($orig) : (array) $orig;
 
             // Si 'data' viene como string JSON, parsearlo a array
             if (isset($origArr['data']) && is_string($origArr['data'])) {
@@ -75,7 +78,7 @@ class ReporteController{
             // -------------------------------
             // Helper para buscar claves
             // -------------------------------
-            $findKey = function(array $arr, array $candidates) {
+            $findKey = function (array $arr, array $candidates) {
                 foreach ($candidates as $k) {
                     if (array_key_exists($k, $arr) && $arr[$k] !== null && $arr[$k] !== '') {
                         return $arr[$k];
@@ -87,8 +90,8 @@ class ReporteController{
             // -------------------------------
             // Extraer Id_Area y Id_Usuario
             // -------------------------------
-            $idArea = $findKey($origArr, ['Id_Area','IdArea','id_area','idArea','id']);
-            $idUsuario = $findKey($origArr, ['Id_Usuario','IdUsuario','id_usuario','idUsuario','IdUser','Id_User','user_id','usuario_id']);
+            $idArea = $findKey($origArr, ['Id_Area', 'IdArea', 'id_area', 'idArea', 'id']);
+            $idUsuario = $findKey($origArr, ['Id_Usuario', 'IdUsuario', 'id_usuario', 'idUsuario', 'IdUser', 'Id_User', 'user_id', 'usuario_id']);
 
             // Buscar en 'data' si falta alguno
             if ($idArea === null || $idUsuario === null) {
@@ -97,7 +100,7 @@ class ReporteController{
                 // received_sample: solo algunas claves útiles (evita devolver todo JSON_Reporte completo)
                 $receivedKeys = array_keys($origArr);
                 $sample = [];
-                foreach (['Id_Area','Id_Usuario','JSON_Reporte','data'] as $k) {
+                foreach (['Id_Area', 'Id_Usuario', 'JSON_Reporte', 'data'] as $k) {
                     if (array_key_exists($k, $origArr)) {
                         $sample[$k] = $origArr[$k];
                     }
@@ -113,12 +116,12 @@ class ReporteController{
 
             // Buscar en JSON_AREA_PARSED si existe
             if ($idArea === null && isset($origArr['JSON_AREA_PARSED']) && is_array($origArr['JSON_AREA_PARSED'])) {
-                $idArea = $findKey($origArr['JSON_AREA_PARSED'], ['Id_Area','IdArea','id_area','id','maquila_id']);
+                $idArea = $findKey($origArr['JSON_AREA_PARSED'], ['Id_Area', 'IdArea', 'id_area', 'id', 'maquila_id']);
             }
 
             // Normalizar a enteros (si viene vacio -> null)
-            $idArea = ($idArea !== null && $idArea !== '') ? (int)$idArea : null;
-            $idUsuario = ($idUsuario !== null && $idUsuario !== '') ? (int)$idUsuario : null;
+            $idArea = ($idArea !== null && $idArea !== '') ? (int) $idArea : null;
+            $idUsuario = ($idUsuario !== null && $idUsuario !== '') ? (int) $idUsuario : null;
 
             if ($idArea === null || $idUsuario === null) {
                 return ['success' => false, 'error' => 'Faltan Id_Area o Id_Usuario en el payload'];
@@ -151,13 +154,13 @@ class ReporteController{
 
             // obtener Id_Reporte (soporta retorno array o id simple)
             if (is_array($exitoR_Reporte)) {
-                $idReporte = isset($exitoR_Reporte['Id_Reporte']) ? (int)$exitoR_Reporte['Id_Reporte'] : null;
+                $idReporte = isset($exitoR_Reporte['Id_Reporte']) ? (int) $exitoR_Reporte['Id_Reporte'] : null;
             } else {
-                $idReporte = is_numeric($exitoR_Reporte) ? (int)$exitoR_Reporte : null;
+                $idReporte = is_numeric($exitoR_Reporte) ? (int) $exitoR_Reporte : null;
 
                 if ($idReporte === 0 || $idReporte === null) {
                     if (isset($data['Id_Reporte']) && is_numeric($data['Id_Reporte'])) {
-                        $idReporte = (int)$data['Id_Reporte'];
+                        $idReporte = (int) $data['Id_Reporte'];
                     } else {
                         return ['success' => false, 'error' => 'No se pudo obtener Id_Reporte tras la inserción'];
                     }
@@ -169,7 +172,7 @@ class ReporteController{
             // -------------------------------
             $payloadArea = array_merge($data, [
                 'Id_Reporte' => $idReporte,
-                'Id_Area'    => $idArea
+                'Id_Area' => $idArea
             ]);
 
             $payloadUsuario = array_merge($data, [
@@ -178,41 +181,42 @@ class ReporteController{
             ]);
 
             $usuario_ReporteController = new Usuario_ReporteController();
-            $area_ReporteController    = new Area_ReporteController();
+            $area_ReporteController = new Area_ReporteController();
 
-            $okArea    = $area_ReporteController->registrar($payloadArea);
+            $okArea = $area_ReporteController->registrar($payloadArea);
             $okUsuario = $usuario_ReporteController->registrar($payloadUsuario);
 
-            $okAreaSuccess    = ($okArea !== false && $okArea !== null);
+            $okAreaSuccess = ($okArea !== false && $okArea !== null);
             $okUsuarioSuccess = ($okUsuario !== false && $okUsuario !== null);
 
             $success = ($okAreaSuccess && $okUsuarioSuccess);
 
             return [
-                'success'     => (bool)$success,
-                'Id_Reporte'  => $idReporte,
-                'areaResult'  => $okArea,
-                'userResult'  => $okUsuario
+                'success' => (bool) $success,
+                'Id_Reporte' => $idReporte,
+                'areaResult' => $okArea,
+                'userResult' => $okUsuario
             ];
 
         } catch (\Throwable $e) {
             return [
                 'success' => false,
-                'error'   => $e->getMessage()
+                'error' => $e->getMessage()
             ];
         }
     }
 
-        // ---------- Métodos basados en BaseController::ejecutarConsulta ----------
+    // ---------- Métodos basados en BaseController::ejecutarConsulta ----------
 
     /**
      * Devuelve los últimos $limit reportes (ordenados por FechaRegistro_Reporte desc).
-        * @param int $limit
-        * @return array
-        */
-    public function getLatest(int $limit = 10): array {
+     * @param int $limit
+     * @return array
+     */
+    public function getLatest(int $limit = 10): array
+    {
         try {
-            $limit = max(1, (int)$limit);
+            $limit = max(1, (int) $limit);
 
             $sql = "SELECT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
@@ -247,10 +251,11 @@ class ReporteController{
      * Devuelve reportes relacionados con las áreas de una maquila (maquila_area -> area_reporte -> reporte).
      * Añade Resp_Id_Usuario y Resp_Nombre.
      */
-    public function getByMaquila(int $idMaquila, int $limit = 100): array {
+    public function getByMaquila(int $idMaquila, int $limit = 100): array
+    {
         try {
-            $idMaquila = (int)$idMaquila;
-            $limit = max(1, (int)$limit);
+            $idMaquila = (int) $idMaquila;
+            $limit = max(1, (int) $limit);
 
             $sql = "SELECT DISTINCT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
@@ -287,10 +292,11 @@ class ReporteController{
      * Devuelve reportes asociados a un usuario (vía usuario_reporte).
      * Incluye Resp_Id_Usuario y Resp_Nombre (responsable; puede ser el mismo u otro).
      */
-    public function getByUsuario(int $idUsuario, int $limit = 100): array {
+    public function getByUsuario(int $idUsuario, int $limit = 100): array
+    {
         try {
-            $idUsuario = (int)$idUsuario;
-            $limit = max(1, (int)$limit);
+            $idUsuario = (int) $idUsuario;
+            $limit = max(1, (int) $limit);
 
             $sql = "SELECT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
@@ -325,10 +331,11 @@ class ReporteController{
     /**
      * Devuelve reportes por estado exacto. Añade Resp_Id_Usuario y Resp_Nombre.
      */
-    public function getByEstado(string $estado, int $limit = 100): array {
+    public function getByEstado(string $estado, int $limit = 100): array
+    {
         try {
-            $estado = (string)$estado;
-            $limit = max(1, (int)$limit);
+            $estado = (string) $estado;
+            $limit = max(1, (int) $limit);
 
             $sql = "SELECT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
@@ -359,12 +366,13 @@ class ReporteController{
         }
     }
 
-    public function getByArea($areaIdentifier, int $limit = 100): array {
-    try {
-        $limit = max(1, (int)$limit);
+    public function getByArea($areaIdentifier, int $limit = 100): array
+    {
+        try {
+            $limit = max(1, (int) $limit);
 
-        // subquery para obtener un usuario responsable (igual que en otros métodos)
-        $respSubquery = "(
+            // subquery para obtener un usuario responsable (igual que en otros métodos)
+            $respSubquery = "(
             SELECT ur1.Id_Reporte, ur1.Id_Usuario
             FROM usuario_reporte ur1
             JOIN (
@@ -377,10 +385,10 @@ class ReporteController{
             WHERE (ur1.deleted_at IS NULL OR ur1.deleted_at = '')
         )";
 
-        // decidir si es numeric -> tratar como Id_Area, si no -> tratar como Codigo_Area
-        if (is_numeric($areaIdentifier)) {
-            $idArea = (int)$areaIdentifier;
-            $sql = "SELECT DISTINCT r.*,
+            // decidir si es numeric -> tratar como Id_Area, si no -> tratar como Codigo_Area
+            if (is_numeric($areaIdentifier)) {
+                $idArea = (int) $areaIdentifier;
+                $sql = "SELECT DISTINCT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
                         u.Nombre_Usuario AS Resp_Nombre
                     FROM reporte r
@@ -392,11 +400,11 @@ class ReporteController{
                     ORDER BY r.FechaRegistro_Reporte DESC
                     LIMIT {$limit}";
 
-            $rows = $this->base->ejecutarConsulta($sql, [$idArea]);
-        } else {
-            $code = (string)$areaIdentifier;
-            // Unir con area para filtrar por Codigo_Area
-            $sql = "SELECT DISTINCT r.*,
+                $rows = $this->base->ejecutarConsulta($sql, [$idArea]);
+            } else {
+                $code = (string) $areaIdentifier;
+                // Unir con area para filtrar por Codigo_Area
+                $sql = "SELECT DISTINCT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
                         u.Nombre_Usuario AS Resp_Nombre
                     FROM reporte r
@@ -410,18 +418,141 @@ class ReporteController{
                     ORDER BY r.FechaRegistro_Reporte DESC
                     LIMIT {$limit}";
 
-            $rows = $this->base->ejecutarConsulta($sql, [$code]);
+                $rows = $this->base->ejecutarConsulta($sql, [$code]);
+            }
+
+            return ['success' => true, 'data' => $rows];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
-
-        return ['success' => true, 'data' => $rows];
-    } catch (\Throwable $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
-    }
     }
 
 
 
 
+    public function actualizar($id, array $data): bool
+    {
+        return $this->base->actualizar($id, $data);
+    }
+
+    public function eliminar($id): bool
+    {
+        // Soft delete: update deleted_at
+        $now = date('Y-m-d H:i:s');
+        return $this->base->actualizar($id, ['deleted_at' => $now]);
+    }
+    // ---------- Método unificado de búsqueda ----------
+
+    /**
+     * Busca reportes con filtros combinados.
+     * Filtros aguantados: 'id_maquila', 'id_area', 'id_usuario', 'estado', 'fecha_inicio', 'fecha_fin'
+     */
+    public function buscar(array $filtros, int $limit = 100): array
+    {
+        try {
+            $limit = max(1, (int) $limit);
+            $params = [];
+            $conditions = ["(r.deleted_at IS NULL OR r.deleted_at = '')"];
+
+            // Subquery para responsable
+            $respSubquery = "(
+                SELECT ur1.Id_Reporte, ur1.Id_Usuario
+                FROM usuario_reporte ur1
+                JOIN (
+                    SELECT Id_Reporte, MIN(FechaRegistro_Reporte) AS minf
+                    FROM usuario_reporte
+                    WHERE (deleted_at IS NULL OR deleted_at = '')
+                    GROUP BY Id_Reporte
+                ) urmin
+                ON ur1.Id_Reporte = urmin.Id_Reporte AND ur1.FechaRegistro_Reporte = urmin.minf
+                WHERE (ur1.deleted_at IS NULL OR ur1.deleted_at = '')
+            )";
+
+            // Joins dinámicos? Siempre hacemos JOIN con area_reporte y usuario_reporte para poder filtrar o mostrar info?
+            // Para optimizar, podríamos hacer LEFT JOINs generales, pero si filtramos por maquila/area, necesitamos INNER o WHERE
+
+            // Base joins
+            // Nota: Usamos DISTINCT porque un reporte podría tener múltiples usuarios (aunque aquí filtramos por responsable, el join normal puede duplicar)
+            $sql = "SELECT DISTINCT r.*, 
+                        resp.Id_Usuario AS Resp_Id_Usuario, 
+                        u.Nombre_Usuario AS Resp_Nombre,
+                        a.Nombre_Area,
+                        m.Nombre_Maquila
+                    FROM reporte r
+                    LEFT JOIN {$respSubquery} resp ON resp.Id_Reporte = r.Id_Reporte
+                    LEFT JOIN usuario u ON u.Id_Usuario = resp.Id_Usuario AND (u.deleted_at IS NULL OR u.deleted_at = '')
+                    
+                    -- Join con Area (via area_reporte) para obtener nombre area y filtrar
+                    LEFT JOIN area_reporte ar ON ar.Id_Reporte = r.Id_Reporte AND (ar.deleted_at IS NULL OR ar.deleted_at = '')
+                    LEFT JOIN area a ON a.Id_Area = ar.Id_Area AND (a.deleted_at IS NULL OR a.deleted_at = '')
+                    
+                    -- Join con Maquila (via maquila_area) para filtrar
+                    LEFT JOIN maquila_area ma ON ma.Id_Area = a.Id_Area AND (ma.deleted_at IS NULL OR ma.deleted_at = '')
+                    LEFT JOIN maquila m ON m.Id_Maquila = ma.Id_Maquila AND (m.deleted_at IS NULL OR m.deleted_at = '')
+                    
+                    -- Join con Usuario (todos los participantes) por si filtramos por 'algun usuario participante'
+                    -- Si el filtro es SOLO por responsable, ya lo tenemos. Asumiremos filtro por 'algun usuario' si viene 'id_usuario'
+                    LEFT JOIN usuario_reporte ur_filter ON ur_filter.Id_Reporte = r.Id_Reporte AND (ur_filter.deleted_at IS NULL OR ur_filter.deleted_at = '')
+                    
+                    WHERE 1=1 ";
+
+            // --- Filtros ---
+
+            // Maquila
+            if (!empty($filtros['id_maquila'])) {
+                $conditions[] = "m.Id_Maquila = ?";
+                $params[] = $filtros['id_maquila'];
+            }
+
+            // Area
+            if (!empty($filtros['id_area'])) {
+                $conditions[] = "a.Id_Area = ?";
+                $params[] = $filtros['id_area'];
+            }
+
+            // Usuario (participante)
+            if (!empty($filtros['id_usuario'])) {
+                $conditions[] = "ur_filter.Id_Usuario = ?";
+                $params[] = $filtros['id_usuario'];
+            }
+
+            // Estado
+            if (!empty($filtros['estado'])) {
+                $conditions[] = "r.Estado_Reporte = ?";
+                $params[] = $filtros['estado'];
+            }
+
+            // Rango fechas
+            if (!empty($filtros['fecha_inicio'])) {
+                $conditions[] = "r.FechaRegistro_Reporte >= ?";
+                $params[] = $filtros['fecha_inicio'] . ' 00:00:00';
+            }
+            if (!empty($filtros['fecha_fin'])) {
+                $conditions[] = "r.FechaRegistro_Reporte <= ?";
+                $params[] = $filtros['fecha_fin'] . ' 23:59:59';
+            }
+
+            // ID Reporte directo
+            if (!empty($filtros['id_reporte'])) {
+                $conditions[] = "r.Id_Reporte LIKE ?";
+                $params[] = "%" . $filtros['id_reporte'] . "%";
+            }
+
+
+            // Concatenar condiciones
+            if (!empty($conditions)) {
+                $sql .= " AND " . implode(" AND ", $conditions);
+            }
+
+            $sql .= " ORDER BY r.FechaRegistro_Reporte DESC LIMIT {$limit}";
+
+            $rows = $this->base->ejecutarConsulta($sql, $params);
+            return ['success' => true, 'data' => $rows];
+
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 }
 
 ?>

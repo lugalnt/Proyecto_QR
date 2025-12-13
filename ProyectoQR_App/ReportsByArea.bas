@@ -45,6 +45,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Activity.AddView(btnRefresh, 2%x, 10%y + 4dip, 30%x, 8%y)
 
 	lv.Initialize("lvReports")
+	lv.SingleLineLayout.Label.TextColor = Colors.Black
 	Activity.AddView(lv, 0, 18%y, screenW, 72%y)
 
 	reportsMap.Initialize
@@ -270,6 +271,14 @@ Sub JobDone(Job As HttpJob)
 		Dim rawItem As Object = list.Get(i)
 		Dim reportContent As Map
 		reportContent = Null
+		
+		' Intentar sacar fecha del rawItem si es mapa
+		Dim dateStr As String = ""
+		If rawItem Is Map Then
+			Dim rm As Map = rawItem
+			If rm.ContainsKey("FechaRegistro_Reporte") Then dateStr = rm.Get("FechaRegistro_Reporte")
+			If dateStr = "" And rm.ContainsKey("created_at") Then dateStr = rm.Get("created_at")
+		End If
 
 		If rawItem Is Map Then
 			Dim candidate As Map = rawItem
@@ -353,6 +362,11 @@ Sub JobDone(Job As HttpJob)
 					title = "Reporte " & (i + 1)
 				End If
 			End If
+		End If
+		
+		' Agregar fecha al título para diferenciar
+		If dateStr <> "" Then
+			title = dateStr & " - " & title
 		End If
 
 		lv.AddSingleLine2(title, i)
@@ -595,6 +609,7 @@ Sub lvReports_ItemClick (Position As Int, Value As Object)
 		Return
 	End Try
 
+	ReportDetail.AllowEdit = False
 	StartActivity(ReportDetail)
 End Sub
 

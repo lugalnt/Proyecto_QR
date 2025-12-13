@@ -247,3 +247,70 @@ button.secondary{background:#999}
 .report-table th, .report-table td { border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top; }
 .report-table th { background:#f7f7f7; }
 .btn-small { padding:6px 10px; font-size:13px; cursor:pointer; }
+
+
+/* Reportes y Filtros */
+.filters-container {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+.filter-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+.filter-group select, .filter-group input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 150px;
+}
+.filter-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.filter-btn:hover { background-color: #0056b3; }
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.report-table thead {
+    background-color: #e9ecef;
+    color: #000;
+    font-weight: bold;
+}
+.report-table th, .report-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+.report-table tbody tr:hover { background-color: #f1f1f1; }
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.badge-open { background-color: #e9ecef; color: #495057; }
+.badge-ok { background-color: #d4edda; color: #155724; }
+.badge-err { background-color: #f8d7da; color: #721c24; }

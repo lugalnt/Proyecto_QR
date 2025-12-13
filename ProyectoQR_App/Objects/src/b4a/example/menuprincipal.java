@@ -349,6 +349,7 @@ public b4a.example.reportdetail _reportdetail = null;
 public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
 public b4a.example.login _login = null;
 public b4a.example.reportdialog _reportdialog = null;
+public b4a.example.reportsbyuser _reportsbyuser = null;
 public b4a.example.httputils2service _httputils2service = null;
 
 public static void initializeProcessGlobals() {
@@ -454,7 +455,7 @@ anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywo
  } 
        catch (Exception e5) {
 			processBA.setLastException(e5); //BA.debugLineNum = 57;BA.debugLine="Log(\"Error guardando last_area.json desde BTN_I";
-anywheresoftware.b4a.keywords.Common.LogImpl("81114118","Error guardando last_area.json desde BTN_IniciarReporte_Click: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("31114118","Error guardando last_area.json desde BTN_IniciarReporte_Click: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 60;BA.debugLine="StartActivity(ReportDialog)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._reportdialog.getObject()));
@@ -463,6 +464,23 @@ anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurren
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("Escanea un área primero"),BA.ObjectToCharSequence("Reporte"),processBA);
  };
  //BA.debugLineNum = 64;BA.debugLine="End Sub";
+return "";
+}
+public static String  _btn_misreportes_click() throws Exception{
+ //BA.debugLineNum = 225;BA.debugLine="Private Sub BTN_MisReportes_Click";
+ //BA.debugLineNum = 228;BA.debugLine="If Starter.Id_Usuario <> 0 Then";
+if (mostCurrent._starter._id_usuario /*int*/ !=0) { 
+ //BA.debugLineNum = 229;BA.debugLine="ReportsByUser.UserToShow = Starter.Id_Usuario";
+mostCurrent._reportsbyuser._usertoshow /*String*/  = BA.NumberToString(mostCurrent._starter._id_usuario /*int*/ );
+ //BA.debugLineNum = 230;BA.debugLine="ReportsByUser.BaseUrlToUse = \"https://humane-pel";
+mostCurrent._reportsbyuser._baseurltouse /*String*/  = "https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api/get_reports_by_user.php?user={user}";
+ //BA.debugLineNum = 231;BA.debugLine="StartActivity(ReportsByUser)";
+anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._reportsbyuser.getObject()));
+ }else {
+ //BA.debugLineNum = 233;BA.debugLine="ToastMessageShow(\"No hay usuario identificado.\",";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("No hay usuario identificado."),anywheresoftware.b4a.keywords.Common.True);
+ };
+ //BA.debugLineNum = 235;BA.debugLine="End Sub";
 return "";
 }
 public static String  _consultararea(String _codigo) throws Exception{
@@ -524,7 +542,7 @@ _res = "";
  //BA.debugLineNum = 74;BA.debugLine="res = Job.GetString";
 _res = _job._getstring /*String*/ ();
  //BA.debugLineNum = 75;BA.debugLine="Log(\"Respuesta API getArea: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("81179654","Respuesta API getArea: "+_res,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("31179654","Respuesta API getArea: "+_res,0);
  //BA.debugLineNum = 78;BA.debugLine="Dim startIndex As Int";
 _startindex = 0;
  //BA.debugLineNum = 79;BA.debugLine="startIndex = res.IndexOf(\"{\")";
@@ -667,7 +685,7 @@ anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywo
  } 
        catch (Exception e89) {
 			processBA.setLastException(e89); //BA.debugLineNum = 177;BA.debugLine="Log(\"Error guardando last_area.json: \" & La";
-anywheresoftware.b4a.keywords.Common.LogImpl("81179756","Error guardando last_area.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("31179756","Error guardando last_area.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  };
@@ -686,7 +704,7 @@ mostCurrent._et_datosarea.setText(BA.ObjectToCharSequence(_texto));
 			processBA.setLastException(e99); //BA.debugLineNum = 190;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servi";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta inválida del servidor"),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 191;BA.debugLine="Log(\"Error parse JSON getArea: \" & LastExcepti";
-anywheresoftware.b4a.keywords.Common.LogImpl("81179770","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("31179770","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  }else {

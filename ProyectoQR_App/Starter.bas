@@ -18,9 +18,7 @@ Sub Process_Globals
 	Public Nombre_Usuario As String
 	Public Puesto_Usuario As String
 	Public Is_Maquila As Boolean
-	Public Id_Usuario As Int
-	Public Nombre_Usuario As String
-	Public Puesto_Usuario As String
+
 
 	Public Id_Maquila As Int
 	Public Nombre_Maquila As String

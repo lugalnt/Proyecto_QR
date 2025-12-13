@@ -228,6 +228,18 @@ Private Sub BTN_EscanearArea_Click
 	End If
 End Sub
 
+Private Sub BTN_MisReportes_Click
+	' Abrir actividad de reportes del usuario
+	' Starter.Id_Usuario debería tener el ID del usuario logueado
+	If Starter.Id_Usuario <> 0 Then
+		ReportsByUser.UserToShow = Starter.Id_Usuario
+		ReportsByUser.BaseUrlToUse = "https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api/get_reports_by_user.php?user={user}"
+		StartActivity(ReportsByUser)
+	Else
+		ToastMessageShow("No hay usuario identificado.", True)
+	End If
+End Sub
+
 
 
 

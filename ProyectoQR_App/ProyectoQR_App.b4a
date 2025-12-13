@@ -23,10 +23,11 @@ Module4=menuprincipal_maquilas
 Module5=ReportDetail
 Module6=ReportDialog
 Module7=ReportsByArea
-Module8=Starter
+Module8=ReportsByUser
+Module9=Starter
 NumberOfFiles=4
 NumberOfLibraries=7
-NumberOfModules=8
+NumberOfModules=9
 Version=13.1
 @EndOfDesignText@
 #Region  Project Attributes 

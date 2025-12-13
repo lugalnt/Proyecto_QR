@@ -344,6 +344,7 @@ public b4a.example.reportdetail _reportdetail = null;
 public b4a.example.menuprincipal_maquilas _menuprincipal_maquilas = null;
 public b4a.example.login _login = null;
 public b4a.example.reportdialog _reportdialog = null;
+public b4a.example.reportsbyuser _reportsbyuser = null;
 public b4a.example.httputils2service _httputils2service = null;
 
 public static boolean isAnyActivityVisible() {
@@ -355,6 +356,7 @@ vis = vis | (reportdetail.mostCurrent != null);
 vis = vis | (menuprincipal_maquilas.mostCurrent != null);
 vis = vis | (login.mostCurrent != null);
 vis = vis | (reportdialog.mostCurrent != null);
+vis = vis | (reportsbyuser.mostCurrent != null);
 return vis;}
 public static String  _activity_create(boolean _firsttime) throws Exception{
  //BA.debugLineNum = 28;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
@@ -397,6 +399,7 @@ reportdetail._process_globals();
 menuprincipal_maquilas._process_globals();
 login._process_globals();
 reportdialog._process_globals();
+reportsbyuser._process_globals();
 httputils2service._process_globals();
 		
         } catch (Exception e) {

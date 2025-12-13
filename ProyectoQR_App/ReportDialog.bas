@@ -19,6 +19,9 @@ Version=13.1
 Sub Process_Globals
 	' Vacío a propósito: no colocar aquí Views ni colecciones con Views.
 	Dim BaseUrl As String = "https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api"
+	Public PreloadedReport As Map
+	Public IsEditing As Boolean
+	Public EditReportId As Int
 End Sub
 
 Sub Globals
@@ -198,6 +201,20 @@ Sub Activity_Create(FirstTime As Boolean)
 		answersList.Add(tmp)
 	Next
 
+	If IsEditing And PreloadedReport.IsInitialized Then
+		Try
+			lblTitle.Text = "Editar Reporte (" & EditReportId & ")"
+			Dim preList As List = PreloadedReport.Get("car_reports")
+			If preList.Size > 0 Then
+				For i = 0 To Min(preList.Size - 1, answersList.Size - 1)
+					answersList.Set(i, preList.Get(i))
+				Next
+			End If
+		Catch
+			Log("Error loading preloaded report: " & LastException.Message)
+		End Try
+	End If
+
 	' Inicializa colecciones de la pantalla actual
 	curEditTexts.Initialize
 	curCheckBoxes.Initialize
@@ -285,6 +302,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 				Try
 					dflt = savedResp.Get(label)
 				Catch
+					Log(LastException.Message)
 				End Try
 			End If
 			cb.Checked = dflt
@@ -322,6 +340,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 				Try
 					txt = savedResp.Get(label)
 				Catch
+					Log(LastException.Message)
 				End Try
 			End If
 			etN.Text = txt
@@ -466,6 +485,8 @@ Private Sub btnSave_Click
 	areaSummary.Initialize
 	areaSummary.Put("area_name", GetFirstString(areaMap, Array As String("area_name","Nombre_Area","name")))
 	areaSummary.Put("area_description", GetFirstString(areaMap, Array As String("area_description","Descripcion_Area","description")))
+	' IMPORTANT: Save the CARs definition so we can reconstruct the form later for editing
+	areaSummary.Put("cars", carsList)
 	report.Put("area", areaSummary)
 
 	Dim carReports As List
@@ -658,8 +679,19 @@ Sub SendReportToServer()
 	payload.Put("CARRevisadas_Reporte", revisadas)
 	payload.Put("Estado_Reporte", "COMPLETADO")
 	payload.Put("JSON_Reporte", reportRaw)
+	' ... (payload construction logic above remains) ...
 	payload.Put("Id_Area", idArea)      ' asegúrate que la clave sea exactamente Id_Area
 	payload.Put("Id_Usuario", idUsuario)
+
+	Dim serverUrl As String
+	If IsEditing Then
+		payload.Put("Id_Reporte", EditReportId)
+		serverUrl = BaseUrl & "/update_report.php"
+		ProgressDialogShow("Actualizando reporte...")
+	Else
+		serverUrl = BaseUrl & "/reporte.php"
+		ProgressDialogShow("Enviando reporte...")
+	End If
 
 	' Log del payload final (útil para depuración)
 	Dim jgTest As JSONGenerator
@@ -667,11 +699,8 @@ Sub SendReportToServer()
 	Log("Payload a enviar: " & jgTest.ToString)
 
 	' Enviar
-	ProgressDialogShow("Enviando reporte...")
 	Dim job As HttpJob
 	job.Initialize("SendReportJob", Me)
-	Dim serverUrl As String
-	serverUrl = BaseUrl & "/reporte.php"
 	Dim jg As JSONGenerator
 	jg.Initialize(payload)
 	Dim body As String = jg.ToString
