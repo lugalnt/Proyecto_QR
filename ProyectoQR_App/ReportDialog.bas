@@ -206,8 +206,24 @@ Sub Activity_Create(FirstTime As Boolean)
 			lblTitle.Text = "Editar Reporte (" & EditReportId & ")"
 			Dim preList As List = PreloadedReport.Get("car_reports")
 			If preList.Size > 0 Then
-				For i = 0 To Min(preList.Size - 1, answersList.Size - 1)
-					answersList.Set(i, preList.Get(i))
+				' MATCHING INTELIGENTE POR NOMBRE
+				For i = 0 To carsList.Size - 1
+					Dim currentCarMap As Map = carsList.Get(i)
+					Dim currentName As String = GetFirstString(currentCarMap, Array As String("name","nombre","Nombre"))
+					If currentName = "" Then Continue
+					
+					' Buscar este nombre en el preList
+					For k = 0 To preList.Size - 1
+						Dim oldItem As Map = preList.Get(k)
+						Dim oldName As String = ""
+						If oldItem.ContainsKey("car_name") Then oldName = oldItem.Get("car_name")
+						
+						If oldName = currentName Then
+							' Encontrado! Usar estos datos para el índice i
+							answersList.Set(i, oldItem)
+							Exit ' deja de buscar, pasa al siguiente currentCar
+						End If
+					Next
 				Next
 			End If
 		Catch

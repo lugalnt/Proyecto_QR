@@ -19,17 +19,43 @@ try {
     require_once __DIR__ . '/../controllers/reporteController.php';
 
     $areaParam = null;
-    if (isset($_GET['area']) && $_GET['area'] !== '') $areaParam = trim((string)$_GET['area']);
-    if (($areaParam === null || $areaParam === '') && isset($_POST['area'])) $areaParam = trim((string)$_POST['area']);
+    if (isset($_GET['area']) && $_GET['area'] !== '')
+        $areaParam = trim((string) $_GET['area']);
+    if (($areaParam === null || $areaParam === '') && isset($_POST['area']))
+        $areaParam = trim((string) $_POST['area']);
 
     $limit = 100;
-    if (isset($_GET['limit'])) $limit = max(1, (int)$_GET['limit']);
-    if (isset($_POST['limit'])) $limit = max(1, (int)$_POST['limit']);
+    if (isset($_GET['limit']))
+        $limit = max(1, (int) $_GET['limit']);
+    if (isset($_POST['limit']))
+        $limit = max(1, (int) $_POST['limit']);
 
     if ($areaParam === null || $areaParam === '') {
         echo json_encode(['success' => false, 'error' => 'Missing parameter: area']);
         exit;
     }
+
+    // --- SEGURIDAD: CHECKEO DE MAQUILA (si viene el parámetro) ---
+    // El usuario pidió: "pon un simple checkeo"
+    $idMaquilaSeguridad = null;
+    if (isset($_GET['id_maquila']))
+        $idMaquilaSeguridad = (int) $_GET['id_maquila'];
+    elseif (isset($_POST['id_maquila']))
+        $idMaquilaSeguridad = (int) $_POST['id_maquila'];
+
+    if ($idMaquilaSeguridad) {
+        require_once __DIR__ . '/../controllers/maquilaareaController.php';
+        $maControl = new MaquilaAreaController();
+        // Verificamos si esta area pertenece a la maquila que solicita
+        $esValido = $maControl->verificarRelacion($idMaquilaSeguridad, (int) $areaParam);
+
+        if (!$esValido) {
+            // No autorizada
+            echo json_encode(['success' => false, 'error' => 'Esta área no pertenece a su maquila.']);
+            exit;
+        }
+    }
+    // -------------------------------------------------------------
 
     $reporteCtrl = new ReporteController();
     $result = $reporteCtrl->getByArea($areaParam, $limit);

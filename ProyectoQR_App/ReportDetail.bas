@@ -172,7 +172,15 @@ Sub LoadAndRenderCurrentReport
 			If sj <> "" Then
 				Dim p2 As JSONParser
 				p2.Initialize(sj)
-				Dim inner As Object = p2.NextValue
+				Dim inner As Object
+				Dim sjTrim As String = sj.Trim
+				If sjTrim.StartsWith("{") Then
+					inner = p2.NextObject
+				Else If sjTrim.StartsWith("[") Then
+					inner = p2.NextArray
+				Else
+					inner = p2.NextValue
+				End If
 				If inner Is Map Then rp = inner
 			End If
 		End If
@@ -512,27 +520,40 @@ Sub btnEdit_Click
 	parser.Initialize(jsonRaw)
 	Dim report As Map = parser.NextObject
 
-	If report.ContainsKey("Id_Reporte") = False Or report.ContainsKey("area") = False Then
-		ToastMessageShow("Datos incompletos para editar.", True)
+	' Chequear si tenemos Id_Reporte
+	If report.ContainsKey("Id_Reporte") = False Then
+		ToastMessageShow("Datos incompletos: falta Id_Reporte.", True)
 		Return
 	End If
-
-	' Chequear si el snapshot del área tiene los CARs
-	Dim areaMap As Map = report.Get("area")
 	
-	If areaMap.ContainsKey("cars") And IsListValid(areaMap.Get("cars")) Then
-		' Todo bien, procedemos directo
+	' Chequear si tenemos definición completa de área (con cars)
+	Dim hasLocalArea As Boolean = False
+	If report.ContainsKey("area") Then
+		Dim aMap As Map = report.Get("area")
+		If aMap.IsInitialized And aMap.ContainsKey("cars") And IsListValid(aMap.Get("cars")) Then
+			hasLocalArea = True
+		End If
+	End If
+
+	If hasLocalArea Then
+		' Todo bien, tenemos definición local, abrir editor
 		OpenEditDialog(report)
 	Else
-		' Faltan los CARs (reporte viejo o guardado sin definición). Intentar obtener del backend.
-		If report.ContainsKey("Id_Area") Then
-			Dim idArea As Int = report.Get("Id_Reporte") ' Error potential: check keys
-			If report.ContainsKey("Id_Area") Then idArea = report.Get("Id_Area")
-			
+		' Falta definición local. Buscar si tenemos un Id_Area para pedirla.
+		Dim idAreaToFetch As String = ""
+		If report.ContainsKey("Id_Area") Then 
+			idAreaToFetch = report.Get("Id_Area")
+		Else If report.ContainsKey("area") Then
+			Dim partialArea As Map = report.Get("area")
+			If partialArea.ContainsKey("Id_Area") Then idAreaToFetch = partialArea.Get("Id_Area")
+			If idAreaToFetch = "" And partialArea.ContainsKey("id") Then idAreaToFetch = partialArea.Get("id")
+		End If
+		
+		If idAreaToFetch <> "" Then
 			ProgressDialogShow("Obteniendo datos del área para editar...")
-			FetchAreaForEdit(idArea, report)
+			FetchAreaForEdit(idAreaToFetch, report)
 		Else
-			ToastMessageShow("No se puede editar: falta información de área y CARs.", True)
+			ToastMessageShow("No se puede editar: falta información de área (Id_Area) y CARs.", True)
 		End If
 	End If
 End Sub
@@ -550,7 +571,7 @@ Sub FetchAreaForEdit(idArea As Int, reportMap As Map)
 	job.Initialize("GetAreaForEdit", Me)
 	' Guardamos el mapa del reporte en la propiedad Tag para recuperarlo en JobDone
 	job.Tag = reportMap
-	Dim body As String = "codigo=" & idArea ' getArea.php busca por codigo/id
+	Dim body As String = "id=" & idArea ' getArea.php busca por codigo/id
 	job.PostString("https://humane-pelican-briefly.ngrok-free.app/Proyecto_QR/api/getArea.php", body)
 End Sub
 
@@ -616,6 +637,8 @@ Sub JobDone(Job As HttpJob)
 		ProgressDialogHide
 		If Job.Success Then
 			Dim res As String = Job.GetString
+			Log("GetAreaForEdit RAW: " & res) ' <--- DEBUG LOG
+			
 			' Parsear respuesta getArea
 			Dim parser As JSONParser
 			parser.Initialize(res)
@@ -629,24 +652,40 @@ Sub JobDone(Job As HttpJob)
 					areaData = root
 				End If
 				
+				Log("GetAreaForEdit areaData keys: " & areaData.Keys) ' <--- DEBUG LOG
+				
 				' Validar si tiene cars
-				If areaData.IsInitialized = False Or (areaData.ContainsKey("cars") = False And areaData.ContainsKey("json_area") = False) Then
+				Dim hasCars As Boolean = False
+				If areaData.ContainsKey("cars") Then
+					Dim cObj As Object = areaData.Get("cars")
+					If IsListValid(cObj) Then 
+						hasCars = True
+						Log("Found 'cars' direct list. Size: " & AsList(cObj).Size)
+					End If
+				End If
+				
+				If hasCars = False And areaData.ContainsKey("JSON_Area") Then
+					Log("Checking JSON_Area for cars...")
+					Try
+						Dim jas As String = areaData.Get("JSON_Area")
+						Log("JSON_Area string: " & jas)
+						Dim jp As JSONParser
+						jp.Initialize(jas)
+						Dim fullArea As Map = jp.NextObject
+						If fullArea.ContainsKey("cars") Then 
+							areaData.Put("cars", fullArea.Get("cars"))
+							hasCars = True
+							Log("Recovered cars from JSON_Area. List valid? " & IsListValid(areaData.Get("cars")))
+						End If
+					Catch
+						Log("Error parsing JSON_Area for edit: " & LastException.Message)
+					End Try
+				End If
+				
+				If hasCars = False Then
+					Log("ERROR: No valid cars found in areaData.")
 					ToastMessageShow("El área no tiene definición de CARs válida.", True)
 				Else
-					' Parse JSON_Area if needed (getArea often returns it as string inside data)
-					If areaData.ContainsKey("JSON_Area") Then
-						Try
-							Dim jas As String = areaData.Get("JSON_Area")
-							Dim jp As JSONParser
-							jp.Initialize(jas)
-							Dim fullArea As Map = jp.NextObject
-							' Merge cars from fullArea into areaData if needed
-							If fullArea.ContainsKey("cars") Then areaData.Put("cars", fullArea.Get("cars"))
-						Catch
-							Log("Error parsing JSON_Area for edit: " & LastException.Message)
-						End Try
-					End If
-					
 					' Ahora inyectamos esta nueva definición de área en el reporte (solo en memoria)
 					Dim originalReport As Map = Job.Tag
 					originalReport.Put("area", areaData)
@@ -711,4 +750,9 @@ Sub EstimateLabelHeight(text As String, textSize As Int, width As Int) As Int
 	If lineHeight < 14 Then lineHeight = 14
 	Dim result As Int = lines * lineHeight + 6dip
 	Return result
+End Sub
+
+Sub AsList(l As Object) As List
+	Dim res As List = l
+	Return res
 End Sub

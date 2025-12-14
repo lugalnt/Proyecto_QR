@@ -300,9 +300,16 @@ class ReporteController
 
             $sql = "SELECT r.*,
                         resp.Id_Usuario AS Resp_Id_Usuario,
-                        u.Nombre_Usuario AS Resp_Nombre
+                        u.Nombre_Usuario AS Resp_Nombre,
+                        a.Id_Area,
+                        a.Nombre_Area
                     FROM reporte r
                     INNER JOIN usuario_reporte urfilter ON urfilter.Id_Reporte = r.Id_Reporte AND (urfilter.deleted_at IS NULL OR urfilter.deleted_at = '')
+                    
+                    -- Join para obtener datos del área
+                    LEFT JOIN area_reporte ar ON ar.Id_Reporte = r.Id_Reporte AND (ar.deleted_at IS NULL OR ar.deleted_at = '')
+                    LEFT JOIN area a ON a.Id_Area = ar.Id_Area AND (a.deleted_at IS NULL OR a.deleted_at = '')
+
                     LEFT JOIN (
                         SELECT ur1.Id_Reporte, ur1.Id_Usuario
                         FROM usuario_reporte ur1
@@ -318,7 +325,7 @@ class ReporteController
                     LEFT JOIN usuario u ON u.Id_Usuario = resp.Id_Usuario AND (u.deleted_at IS NULL OR u.deleted_at = '')
                     WHERE urfilter.Id_Usuario = ?
                     AND (r.deleted_at IS NULL OR r.deleted_at = '')
-                    ORDER BY r.FechaRegistro_Reporte DESC
+                    ORDER BY a.Nombre_Area ASC, r.FechaRegistro_Reporte DESC
                     LIMIT {$limit}";
 
             $rows = $this->base->ejecutarConsulta($sql, [$idUsuario]);

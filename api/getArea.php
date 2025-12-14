@@ -11,17 +11,23 @@ try {
         exit;
     }
 
+    $id = isset($_POST['id']) ? trim($_POST['id']) : null;
     $codigo = isset($_POST['codigo']) ? trim($_POST['codigo']) : null;
-    if (!$codigo) {
+
+    if (!$id && !$codigo) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Código no proporcionado']);
+        echo json_encode(['success' => false, 'message' => 'ID o Código no proporcionado']);
         exit;
     }
 
     $ctrl = new AreaController();
+    $result = null;
 
-    // usar obtenerPor con el campo real de la tabla
-    $result = $ctrl->obtenerPor('Codigo_Area', $codigo);
+    if ($id) {
+        $result = $ctrl->obtenerPor('Id_Area', $id);
+    } elseif ($codigo) {
+        $result = $ctrl->obtenerPor('Codigo_Area', $codigo);
+    }
 
     // $result puede ser array vacío o false si no existe
     if ($result && is_array($result) && count($result) > 0) {

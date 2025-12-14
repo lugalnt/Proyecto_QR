@@ -28,6 +28,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=ReportDetail,Activity_Create,25,0,ReportsByArea,JobDone,234,3,ReportsByArea,lvReports_ItemClick,556,0,ReportDetail,RenderReport,410,0,ReportDetail,EstimateLabelHeight,522,0,ReportDetail,btnEdit_Click,522,0,Main,Activity_Create,28,0,Visual Designer,menuprincipal.bal,-100,2,menuprincipal,BTN_MisReportes_Click,224,0,menuprincipal,JobDone,140,0
+NavigationStack=ReportDetail,Activity_Create,25,0,ReportsByArea,JobDone,234,3,ReportsByArea,lvReports_ItemClick,556,0,ReportDetail,RenderReport,410,0,ReportDetail,EstimateLabelHeight,522,0,ReportDetail,btnEdit_Click,522,0,Main,Activity_Create,28,0,Visual Designer,menuprincipal.bal,-100,2,menuprincipal,BTN_MisReportes_Click,224,0,menuprincipal,JobDone,106,0
 SelectedBuild=0
 VisibleModules=9,3,7,5,4

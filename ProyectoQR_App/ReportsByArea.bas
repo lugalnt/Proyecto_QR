@@ -78,15 +78,21 @@ End Sub
 ' Build URL and call API
 Sub FetchReports(BaseUrl As String, AreaCode As String)
 	Dim url As String = BaseUrl
-	If url.Contains("{area}") Then
-		url = url.Replace("{area}", AreaCode)
-	Else
-		If url.Contains("?") Then
-			url = url & "&area=" & AreaCode
-		Else
-			url = url & "?area=" & AreaCode
-		End If
-	End If
+    If url.Contains("{area}") Then
+        url = url.Replace("{area}", AreaCode)
+    Else
+        If url.Contains("?") Then
+            url = url & "&area=" & AreaCode
+        Else
+            url = url & "?area=" & AreaCode
+        End If
+    End If
+    
+    ' --- SEGURIDAD: Enviar Id_Maquila si estamos logueados como maquila ---
+    If Starter.Is_Maquila Then
+        url = url & "&id_maquila=" & Starter.Id_Maquila
+    End If
+    ' ----------------------------------------------------------------------
 
 	ProgressDialogShow("Cargando reportes...")
 	Dim j As HttpJob

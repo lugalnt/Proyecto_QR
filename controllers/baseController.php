@@ -3,13 +3,15 @@
 require_once __DIR__ . '/../config/db.php';
 use Config\DB;
 
-class BaseController {
+class BaseController
+{
     protected \PDO $pdo;
     protected $table;        // string
     protected $primaryKey;   // string o array
     protected array $fields;
 
-    public function __construct(string $table, $primaryKey = 'id', array $fields = []) {
+    public function __construct(string $table, $primaryKey = 'id', array $fields = [])
+    {
         $this->pdo = DB::getConnection();
         $this->table = $table;
         // aceptar string o array para primaryKey
@@ -17,7 +19,12 @@ class BaseController {
         $this->fields = $fields;
     }
 
-    public function registrar($payload) {
+    /**
+     * @param mixed $payload
+     * @return mixed
+     */
+    public function registrar($payload)
+    {
         if (is_string($payload)) {
             if (empty($this->fields)) {
                 throw new \InvalidArgumentException("Para CSV debe definir fields en el constructor.");
@@ -33,7 +40,8 @@ class BaseController {
             throw new \InvalidArgumentException('Payload inválido: string CSV o array requerido.');
         }
 
-        $data = array_filter($data, function($v) { return $v !== null; });
+        $data = array_filter($data, function ($v) {
+            return $v !== null; });
 
         $cols = array_keys($data);
         $placeholders = array_fill(0, count($cols), '?');
@@ -44,7 +52,7 @@ class BaseController {
 
         // Si PK es simple y hay auto_increment, devolver lastInsertId
         if (is_string($this->primaryKey)) {
-            $id = (int)$this->pdo->lastInsertId();
+            $id = (int) $this->pdo->lastInsertId();
             // si lastInsertId=0, intentar devolver la columna si estaba en $data
             if ($id === 0 && isset($data[$this->primaryKey])) {
                 return $data[$this->primaryKey];
@@ -60,15 +68,18 @@ class BaseController {
         }
     }
 
-    public function obtenerTodos(string $where = '', array $params = []): array {
+    public function obtenerTodos(string $where = '', array $params = []): array
+    {
         $sql = "SELECT * FROM `{$this->table}`";
-        if ($where !== '') $sql .= " WHERE $where";
+        if ($where !== '')
+            $sql .= " WHERE $where";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
-    public function obtenerPor(string $campo, $valor): array {
+    public function obtenerPor(string $campo, $valor): array
+    {
         $sql = "SELECT * FROM `{$this->table}` WHERE `$campo` = ? LIMIT 1000";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$valor]);
@@ -76,7 +87,8 @@ class BaseController {
     }
 
     // helper: construir where y params desde PK o par clave=>valor
-    protected function buildWhereFromPk($id): array {
+    protected function buildWhereFromPk($id): array
+    {
         // devuelve [ $whereSql, $paramsArray ]
         if (is_string($this->primaryKey)) {
             return ["`{$this->primaryKey}` = ?", [$id]];
@@ -86,7 +98,7 @@ class BaseController {
                 // permitir asociativo ['Id_Maquila'=>1,'Id_Area'=>2] o array indexado [1,2] (mismo orden que primaryKey)
                 $params = [];
                 $parts = [];
-                $isAssoc = array_keys($id) !== range(0, count($id)-1);
+                $isAssoc = array_keys($id) !== range(0, count($id) - 1);
                 if ($isAssoc) {
                     foreach ($this->primaryKey as $pkCol) {
                         if (!array_key_exists($pkCol, $id)) {
@@ -112,8 +124,10 @@ class BaseController {
         }
     }
 
-    public function actualizar($id, array $data): bool {
-        if (empty($data)) return false;
+    public function actualizar($id, array $data): bool
+    {
+        if (empty($data))
+            return false;
         $sets = [];
         foreach ($data as $col => $val) {
             $sets[] = "`$col` = ?";
@@ -126,14 +140,16 @@ class BaseController {
         return $stmt->execute($params);
     }
 
-    public function eliminar($id): bool {
+    public function eliminar($id): bool
+    {
         list($where, $params) = $this->buildWhereFromPk($id);
         $sql = "DELETE FROM `{$this->table}` WHERE $where";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
     }
 
-    public function ejecutarConsulta(string $sql, array $params = []): array {
+    public function ejecutarConsulta(string $sql, array $params = []): array
+    {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();

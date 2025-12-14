@@ -122,7 +122,7 @@ _req.InitializeDelete(_link);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 266;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97733253",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97798789",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 267;BA.debugLine="req.InitializeDelete(InvalidURL)";
 _req.InitializeDelete(_invalidurl);
  };
@@ -141,7 +141,7 @@ _req.InitializeDelete(_escapelink(_link,_parameters));
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 277;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97798789",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97864325",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 278;BA.debugLine="req.InitializeDelete(escapeLink(InvalidURL, Para";
 _req.InitializeDelete(_escapelink(_invalidurl,_parameters));
  };
@@ -160,7 +160,7 @@ _req.InitializeGet(_link);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 224;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97536645",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97602181",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 225;BA.debugLine="req.InitializeGet(InvalidURL)";
 _req.InitializeGet(_invalidurl);
  };
@@ -179,7 +179,7 @@ _req.InitializeGet(_escapelink(_link,_parameters));
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 240;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97602181",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97667717",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 241;BA.debugLine="req.InitializeGet(escapeLink(InvalidURL, Paramet";
 _req.InitializeGet(_escapelink(_invalidurl,_parameters));
  };
@@ -303,7 +303,7 @@ _req.InitializeHead(_link);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 124;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97274501",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97340037",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 125;BA.debugLine="req.InitializeHead(InvalidURL)";
 _req.InitializeHead(_invalidurl);
  };
@@ -357,7 +357,7 @@ _req.InitializePatch2(_link,_data);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 109;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97208972",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97274508",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 110;BA.debugLine="req.InitializePatch2(InvalidURL, Data)";
 _req.InitializePatch2(_invalidurl,_data);
  };
@@ -383,7 +383,7 @@ _req.InitializePost2(_link,_data);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 68;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("96946821",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97012357",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 69;BA.debugLine="req.InitializePost2(InvalidURL, Data)";
 _req.InitializePost2(_invalidurl,_data);
  };
@@ -404,7 +404,7 @@ _length = 0;
  //BA.debugLineNum = 197;BA.debugLine="If Dir = File.DirAssets Then";
 if ((_dir).equals(__c.File.getDirAssets())) { 
  //BA.debugLineNum = 198;BA.debugLine="Log(\"Cannot send files from the assets folder.\")";
-__c.LogImpl("97471112","Cannot send files from the assets folder.",0);
+__c.LogImpl("97536648","Cannot send files from the assets folder.",0);
  //BA.debugLineNum = 199;BA.debugLine="Return";
 if (true) return "";
  };
@@ -541,7 +541,7 @@ _req.InitializePut2(_link,_data);
  } 
        catch (Exception e5) {
 			ba.setLastException(e5); //BA.debugLineNum = 85;BA.debugLine="Log($\"Invalid link: ${Link}\"$)";
-__c.LogImpl("97077893",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
+__c.LogImpl("97143429",("Invalid link: "+__c.SmartStringFormatter("",(Object)(_link))+""),0);
  //BA.debugLineNum = 86;BA.debugLine="req.InitializePut2(InvalidURL, Data)";
 _req.InitializePut2(_invalidurl,_data);
  };

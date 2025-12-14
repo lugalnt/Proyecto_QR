@@ -163,7 +163,9 @@ Sub JobDone(Job As HttpJob)
 		
 		' Intentar sacar nombre area
 		Dim areaName As String = ""
-		If item.ContainsKey("JSON_Reporte") Then
+		If item.ContainsKey("Nombre_Area") Then
+			areaName = item.Get("Nombre_Area")
+		Else If item.ContainsKey("JSON_Reporte") Then
 			Dim s As String = item.Get("JSON_Reporte")
 			Try
 				Dim jp2 As JSONParser
