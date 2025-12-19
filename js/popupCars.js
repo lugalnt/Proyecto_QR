@@ -14,12 +14,21 @@
   .cars-modal {
     width: min(760px, 92%);
     max-height: 86vh;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     padding: 18px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  .cars-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px; /* avoid scrollbar overlap */
   }
   .cars-header {
     display:flex;
@@ -36,7 +45,7 @@
     cursor: pointer;
     padding: 6px;
   }
-  .cars-list { display: flex; flex-direction: column; gap: 12px; }
+  /* .cars-list defined above */
   .car-card {
     border: 1px solid #e6e6e6;
     border-radius: 8px;
@@ -85,8 +94,25 @@
     const content = document.createElement('div');
     content.className = 'cars-list';
 
+    // Footer (Boton Cerrar)
+    const footer = document.createElement('div');
+    footer.className = 'cars-footer';
+    footer.style.marginTop = '18px';
+    footer.style.textAlign = 'right';
+
+    const footerCloseBtn = document.createElement('button');
+    footerCloseBtn.textContent = 'Cerrar';
+    footerCloseBtn.style.padding = '8px 16px';
+    footerCloseBtn.style.cursor = 'pointer';
+    footerCloseBtn.style.background = '#eee';
+    footerCloseBtn.style.border = '1px solid #ccc';
+    footerCloseBtn.style.borderRadius = '4px';
+
+    footer.appendChild(footerCloseBtn);
+
     modal.appendChild(header);
     modal.appendChild(content);
+    modal.appendChild(footer); // Añadimos el Footer
     overlay.appendChild(modal);
 
     // close handlers
@@ -95,6 +121,7 @@
       document.removeEventListener('keydown', onKeyDown);
     }
     closeBtn.addEventListener('click', cerrar);
+    footerCloseBtn.addEventListener('click', cerrar); // Event listener para el botón del footer
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) cerrar();
     });
@@ -180,7 +207,7 @@
 
       const name = document.createElement('div');
       name.className = 'car-name';
-      name.textContent = car.name ?? `CAR ${idx+1}`;
+      name.textContent = car.name ?? `CAR ${idx + 1}`;
 
       const desc = document.createElement('div');
       desc.className = 'prop-meta';
@@ -201,14 +228,14 @@
 
   // Exponer una API simple
   window.CarsPopup = {
-    showCars: function(areaObj) {
+    showCars: function (areaObj) {
       try {
         mostrarCars(areaObj);
       } catch (err) {
         console.error('Error mostrando cars:', err);
       }
     },
-    attachButton: function(buttonId, areaObj) {
+    attachButton: function (buttonId, areaObj) {
       const btn = document.getElementById(buttonId);
       if (!btn) {
         console.warn('attachButton: no se encontró el botón con id', buttonId);

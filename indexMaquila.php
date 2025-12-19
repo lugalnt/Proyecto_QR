@@ -1,18 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['Id_Usuario'])) {
+if (!isset($_SESSION['Id_Maquila'])) {
     header("Location: login.php");
-    exit();
-}
-
-// Check de Rol Administrador
-if (empty($_SESSION['Puesto_Usuario']) || $_SESSION['Puesto_Usuario'] !== 'Administrador') {
-    // Si no es admin, fuera
-    session_destroy();
-    echo "<script>
-        alert('Acceso denegado. Esta sección es solo para Administradores.\\n\\nSi eres un Usuario, por favor utiliza la Aplicación Móvil.');
-        window.location.href = 'login.php';
-    </script>";
     exit();
 }
 require_once 'controllers/usuarioController.php';
@@ -31,105 +20,8 @@ unset($_SESSION['mensaje']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    //USUARIOS/////////////////////////////////////////
+    //USUARIOS Y MAQUILAS ADMIN ELIMINADOS
 
-    if (isset($_POST['Registrar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
-        $payload = array_intersect_key($_POST, array_flip($permitidos));
-        try {
-            $UsuarioController->registrar($payload);
-            $_SESSION['mensaje'] = "✅ Usuario registrado con éxito";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        } catch (Exception $e) {
-            $mensaje = "❌ Error: " . $e->getMessage();
-        }
-    }
-
-    if (isset($_POST['Editar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
-        $payload = array_intersect_key($_POST, array_flip($permitidos));
-        $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
-        if ($id > 0) {
-            try {
-                $UsuarioController->actualizar($id, $payload);
-                $_SESSION['mensaje'] = "✅ Usuario modificado con éxito";
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            } catch (Exception $e) {
-                $mensaje = "❌ Error: " . $e->getMessage();
-            }
-        } else {
-            $mensaje = "❌ Id de usuario inválido";
-        }
-    }
-
-    if (isset($_POST['Borrar_Usuario'])) {
-        $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
-        if ($id > 0) {
-            try {
-                $UsuarioController->eliminar($id);
-                $_SESSION['mensaje'] = "✅ Usuario eliminado con éxito";
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            } catch (Exception $e) {
-                $mensaje = "❌ Error: " . $e->getMessage();
-            }
-        } else {
-            $mensaje = "❌ Id de usuario inválido";
-        }
-    }
-
-    //USUARIOS///////////////////////////////////////// 
-
-    //MAQUILA//////////////////////////////////////////
-
-    if (isset($_POST['Registrar_Maquila'])) {
-        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila"];
-        $payload = array_intersect_key($_POST, array_flip($permitidos));
-        try {
-            $MaquilaController->registrar($payload);
-            $_SESSION['mensaje'] = "✅ Maquila registrada con éxito";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        } catch (Exception $e) {
-            $mensaje = "❌ Error: " . $e->getMessage();
-        }
-    }
-
-    if (isset($_POST['Editar_Maquila'])) {
-        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila"];
-        $payload = array_intersect_key($_POST, array_flip($permitidos));
-        $id = isset($_POST['Id_Maquila']) ? intval($_POST['Id_Maquila']) : 0;
-        if ($id > 0) {
-            try {
-                $MaquilaController->actualizar($id, $payload);
-                $_SESSION['mensaje'] = "✅ Maquila modificado con éxito";
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            } catch (Exception $e) {
-                $mensaje = "❌ Error: " . $e->getMessage();
-            }
-        } else {
-            $mensaje = "❌ Id de maquila inválido";
-        }
-    }
-
-    if (isset($_POST['Borrar_Maquila'])) {
-        $id = isset($_POST['Id_Maquila']) ? intval($_POST['Id_Maquila']) : 0;
-        if ($id > 0) {
-            try {
-                $MaquilaController->eliminar($id);
-                $_SESSION['mensaje'] = "✅ Maquila eliminada con éxito";
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            } catch (Exception $e) {
-                $mensaje = "❌ Error: " . $e->getMessage();
-            }
-        } else {
-            $mensaje = "❌ Id de maquila inválido";
-        }
-    }
 
 
     //MAQUILA//////////////////////////////////////////
@@ -142,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $idArea = (int) $AreaController->registrar($payload);
             try {
-                $MaquilaAreaController->asignarMaquilaArea($_POST['Id_Maquila'], $idArea);
+                // Forzar uso de Maquila en Sesion
+                $MaquilaAreaController->asignarMaquilaArea($_SESSION['Id_Maquila'], $idArea);
             } catch (Exception $e) {
                 $mensaje = "❌ Error: " . $e->getMessage();
             }
@@ -163,9 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $updated = $AreaController->editarArea($payload);
             // si manejas asignación de maquila con controlador aparte:
-            if (!empty($_POST['Id_Maquila']) && !empty($_POST['Id_Area'])) {
+            // Al editar, aseguramos que siga bajo la misma maquila (o se reasigna si se perdió)
+            if (!empty($_SESSION['Id_Maquila']) && !empty($_POST['Id_Area'])) {
                 try {
-                    $MaquilaAreaController->asignarMaquilaArea((int) $_POST['Id_Maquila'], (int) $_POST['Id_Area']);
+                    $MaquilaAreaController->asignarMaquilaArea((int) $_SESSION['Id_Maquila'], (int) $_POST['Id_Area']);
                 } catch (Exception $e) {
                     // manejar error de asignación, pero la edición ya fue hecha
                     $mensaje = "❌ Error asignando maquila: " . $e->getMessage();
@@ -215,8 +109,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
     <div class="main-container">
         <div class="button-grid">
-            <button class="action-btn" onclick="showDiv('div1')">Usuarios</button>
-            <button class="action-btn" onclick="showDiv('div2')">Maquila</button>
+            <!-- <button class="action-btn" onclick="showDiv('div1')">Usuarios</button> -->
+            <!-- <button class="action-btn" onclick="showDiv('div2')">Maquila</button> -->
             <button class="action-btn" onclick="showDiv('div3')">Area</button>
             <button class="action-btn" onclick="showDiv('div4')">Reportes</button>
         </div>
@@ -227,120 +121,9 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             </div>
         <?php endif; ?>
 
-        <!--USUARIOS/////////////////////////////-->
-        <div id="div1" class="content-panel">
-            <h1>Usuarios</h1>
-            <form action="" method="POST" style="margin-bottom:16px;">
-                <label>Registra un usuario al sistema</label><br>
-                <input type="text" name="Nombre_Usuario" placeholder="Nombre del usuario" required>
-                <input type="tel" name="Telefono_Usuario" placeholder="Telefono del Usuario" required>
-                <input type="password" name="Password_Usuario" placeholder="Una contraseña para el usuario" required>
-                <input type="text" name="Puesto_Usuario" placeholder="Puesto del usuario" required>
-                <input type="hidden" name="Registrar_Usuario" value="1">
-                <button type="submit">Registrar</button>
-            </form>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Datos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($usuarios): ?>
-                        <?php foreach ($usuarios as $usuario): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($usuario['Id_Usuario']) ?></td>
-                                <td>
-                                    <form method="post" style="display:flex; gap:8px; align-items:center;">
-                                        <input type="text" name="Nombre_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required>
-                                        <input type="tel" name="Telefono_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Telefono_Usuario'] ?? '') ?>">
-                                        <input type="text" name="Puesto_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Puesto_Usuario'] ?? '') ?>">
-                                        <input type="password" name="Password_Usuario" value=""
-                                            placeholder="Nueva contraseña (Opcional)">
-                                        <input type="hidden" name="Id_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
-                                        <button type="submit" name="Editar_Usuario" value="1">Editar</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form method="post" style="display:inline;">
-                                        <input type="hidden" name="Id_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
-                                        <button type="submit" name="Borrar_Usuario" value="1"
-                                            onclick="return confirm('¿Eliminar usuario <?= htmlspecialchars($usuario['Nombre_Usuario']) ?>?');">Borrar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="3">No hay usuarios registrados</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-        <!--USUARIOS/////////////////////////////-->
-
-        <!--MAQUILAS/////////////////////////////-->
-        <div id="div2" class="content-panel">
-            <h1>Maquilas</h1>
-            <form action="" method="POST" style="margin-bottom:16px;">
-                <label>Registra una maquila al sistema</label><br>
-                <input type="text" name="Nombre_Maquila" placeholder="Nombre de la maquila" required>
-                <input type="password" name="Contraseña_Maquila" placeholder="Una contraseña para el usuario" required>
-                <input type="hidden" name="Registrar_Maquila" value="1">
-                <button type="submit">Registrar</button>
-            </form>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Datos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($maquilas): ?>
-                        <?php foreach ($maquilas as $maquila): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($maquila['Id_Maquila']) ?></td>
-                                <td>
-                                    <form method="post" style="display:flex; gap:8px; align-items:center;">
-                                        <input type="text" name="Nombre_Maquila"
-                                            value="<?= htmlspecialchars($maquila['Nombre_Maquila']) ?>" required>
-                                        <input type="password" name="ContraseÃ±a_Maquila" value=""
-                                            placeholder="Nueva contraseña (Opcional)">
-                                        <input type="hidden" name="Id_Maquila"
-                                            value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
-                                        <button type="submit" name="Editar_Maquila" value="1">Editar</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form method="post" style="display:inline;">
-                                        <input type="hidden" name="Id_Maquila"
-                                            value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
-                                        <button type="submit" name="Borrar_Maquila" value="1"
-                                            onclick="return confirm('¿Eliminar maquila <?= htmlspecialchars($maquila['Nombre_Maquila']) ?>?');">Borrar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="3">No hay maquilas registradas</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        <!-- USUARIOS y MAQUILAS Ocultos/Eliminados -->
+        <div id="div1" class="content-panel" style="display:none;"></div>
+        <div id="div2" class="content-panel" style="display:none;"></div>
         <!--MAQUILAS/////////////////////////////-->
 
         <!--AREAS/////////////////////////////-->
@@ -361,19 +144,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             <textarea name="Descripcion_Area" id="area_description" rows="3"></textarea>
                         </label>
 
-                        <label class="field">
-                            <span>Maquila del Area</span>
-                            <select name="Id_Maquila" id="maquila_id" required>
-                                <?php if ($maquilas): ?>
-                                    <?php foreach ($maquilas as $maquila): ?>
-                                        <option value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
-                                            <?= htmlspecialchars($maquila['Nombre_Maquila']) ?>
-                                        </option>
-
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
-                        </label>
+                        <!-- Maquila fija por sesion -->
+                        <input type="hidden" name="Id_Maquila" id="maquila_id" value="<?= $_SESSION['Id_Maquila'] ?>">
                     </div>
 
                     <hr />
@@ -451,60 +223,24 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             <br>
             <div>
                 <br>
-                <form method="get" action="#div3"> <!-- Action self, anchor to div3 -->
-                    <!-- hidden input para mantener la tab abierta via JS o backend detection -->
-                    <input type="hidden" name="view" value="areas_search">
-
-                    <label>Buscar Áreas por Maquila:</label>
-                    <select name="maquila_search_area" id="selectMaquila" required>
-                        <option value="">-- Seleccionar Maquila --</option>
-                        <?php if ($maquilas): ?>
-                            <?php foreach ($maquilas as $maquila):
-                                $mid = $maquila['Id_Maquila'] ?? $maquila['id'] ?? '';
-                                $mname = $maquila['Nombre_Maquila'] ?? '';
-                                $selected = (isset($_GET['maquila_search_area']) && $_GET['maquila_search_area'] == $mid) ? 'selected' : '';
-                                ?>
-                                <option value="<?= htmlspecialchars($mid) ?>" <?= $selected ?>>
-                                    <?= htmlspecialchars($mname) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
-                    <button type="submit"> Buscar </button>
-                </form>
                 <br>
-                <br>
+                <!-- LISTADO AUTOMATICO DE AREAS DE LA MAQUILA -->
                 <?php
-                // --- Lógica de búsqueda de áreas (GET) ---
                 $areasPorMaquilaList = [];
-                $laMaquilaBuscadaNombre = '';
+                $laMaquilaBuscadaNombre = $_SESSION['Nombre_Maquila'] ?? 'Mi Maquila';
 
-                if (!empty($_GET['maquila_search_area'])) {
-                    $mqSearchId = (int) $_GET['maquila_search_area'];
-                    try {
-                        // Obtener nombre de maquila para titulo
-                        if (isset($MaquilaController)) {
-                            $mqs = $MaquilaController->obtenerPor('Id_Maquila', $mqSearchId);
-                            if (!empty($mqs)) {
-                                $laMaquilaBuscadaNombre = $mqs[0]['Nombre_Maquila'] ?? '';
-                            }
-                        }
-                        // Obtener areas
-                        if (isset($MaquilaAreaController)) {
-                            $areasPorMaquilaList = $MaquilaAreaController->obtenerAreasPorMaquila($mqSearchId);
-                            // Normalizar (si devuelve array plano o con success key)
-                            if (isset($areasPorMaquilaList['success']))
-                                $areasPorMaquilaList = $areasPorMaquilaList['data'] ?? [];
-                        }
-                    } catch (\Throwable $e) {
-                        echo "<div class='error'>Error al buscar áreas: " . $e->getMessage() . "</div>";
+                try {
+                    if (isset($MaquilaAreaController)) {
+                        $areasPorMaquilaList = $MaquilaAreaController->obtenerAreasPorMaquila($_SESSION['Id_Maquila']);
+                        if (isset($areasPorMaquilaList['success']))
+                            $areasPorMaquilaList = $areasPorMaquilaList['data'] ?? [];
                     }
+                } catch (\Throwable $e) {
+                    echo "<div class='error'>Error al buscar áreas: " . $e->getMessage() . "</div>";
                 }
                 ?>
 
-                <?php if ($laMaquilaBuscadaNombre): ?>
-                    <h2> Areas de la maquila: <?= htmlspecialchars($laMaquilaBuscadaNombre) ?> </h2>
-                <?php endif; ?>
+                <h3> Áreas Registradas </h3>
 
                 <table class="report-table"> <!-- Reusamos estilo nuevo -->
                     <thead>
@@ -717,7 +453,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             $limit = isset($_GET['limit']) ? max(1, (int) $_GET['limit']) : 25;
 
             $filtros = [];
-            $maquilaId = isset($_GET['maquila']) ? (int) $_GET['maquila'] : null;
+            // Forzar maquila de sesion
+            $maquilaId = $_SESSION['Id_Maquila'];
             $areaId = isset($_GET['area']) ? (int) $_GET['area'] : null;
             $userId = isset($_GET['usuario']) ? (int) $_GET['usuario'] : null;
             $estado = isset($_GET['estado']) ? trim($_GET['estado']) : null;
@@ -801,20 +538,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             <!-- FORMULARIO DE FILTROS -->
             <form id="filterForm" method="get" class="filters-container">
 
-                <div class="filter-group">
-                    <label>Maquila</label>
-                    <select id="maquilaSelect" name="maquila">
-                        <option value="">-- Todas --</option>
-                        <?php foreach ($maquilas as $m):
-                            $mid = $m['Id_Maquila'] ?? $m['id'] ?? '';
-                            $mname = $m['Nombre_Maquila'] ?? 'Maquila ' . $mid;
-                            ?>
-                            <option value="<?= htmlspecialchars($mid) ?>" <?= ($maquilaId == $mid) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($mname) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <!-- Maquila Filter Removed for Maquila Dashboard -->
+
 
                 <div class="filter-group">
                     <label>Área</label>
@@ -955,13 +680,14 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             <!-- Scripts: enviar el formulario automáticamente cuando cambie la maquila para poblar áreas -->
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+                    /* Maquila select removed
                     var maquilaSelect = document.getElementById('maquilaSelect');
                     if (maquilaSelect) {
                         maquilaSelect.addEventListener('change', function () {
-                            // submit al cambiar maquila para que el servidor recargue y traiga las areas correspondientes
                             document.getElementById('filterForm').submit();
                         });
                     }
+                    */
 
                     // ocultar/mostrar campos según modo seleccionado
                     var modeSelect = document.getElementById('modeSelect');
