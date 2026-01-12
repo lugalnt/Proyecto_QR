@@ -866,10 +866,20 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         style="width: 80px;">
                 </div>
 
-                <div class="filter-group" style="justify-content: flex-end;">
+                <div class="filter-group" style="justify-content: flex-end; gap: 8px; display: flex;">
                     <button type="submit" class="filter-btn">Filtrar Reportes</button>
+                    <button type="button" id="exportBtn" class="filter-btn" style="background-color: #28a745;">Exportar
+                        a Excel</button>
                 </div>
             </form>
+
+            <script>
+                document.getElementById('exportBtn').addEventListener('click', function () {
+                    const form = document.getElementById('filterForm');
+                    const params = new URLSearchParams(new FormData(form)).toString();
+                    window.location.href = 'exportarReportes.php?' + params;
+                });
+            </script>
 
             <?php if (!empty($rows)): ?>
 
@@ -931,6 +941,11 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                                         data-report-id="<?= htmlspecialchars($id) ?>" data-json="<?= $jsonB64 ?>">
                                         Ver Respuestas
                                     </button>
+                                    <a href="exportarReportes.php?id_reporte_unico=<?= htmlspecialchars($id) ?>" 
+                                       class="filter-btn" 
+                                       style="padding:4px 10px; font-size:0.8rem; background-color: #28a745; text-decoration: none; display: inline-block;">
+                                       Excel
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
