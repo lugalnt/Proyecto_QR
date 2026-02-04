@@ -420,7 +420,7 @@ _fetchreports(_baseurltouse,_usertoshow);
  } 
        catch (Exception e32) {
 			processBA.setLastException(e32); //BA.debugLineNum = 58;BA.debugLine="Log(\"Error getting Starter.Id_Usuario\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("55636134","Error getting Starter.Id_Usuario",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("05636134","Error getting Starter.Id_Usuario",0);
  };
  };
  //BA.debugLineNum = 61;BA.debugLine="End Sub";
@@ -635,7 +635,7 @@ _areaname = BA.ObjectToString(_ma.Get((Object)("area_name")));};
  } 
        catch (Exception e62) {
 			processBA.setLastException(e62); //BA.debugLineNum = 173;BA.debugLine="Log(LastException.Message)";
-anywheresoftware.b4a.keywords.Common.LogImpl("55963852",anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("05963852",anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 177;BA.debugLine="If areaName <> \"\" Then title = title & \" - \" & a";

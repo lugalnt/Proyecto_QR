@@ -1,0 +1,7 @@
+# Handle Errors
+ErrorDocument 404 /Proyecto_QR/error.php?code=404
+ErrorDocument 403 /Proyecto_QR/error.php?code=403
+ErrorDocument 500 /Proyecto_QR/error.php?code=500
+
+# Prevent directory listing
+Options -Indexes

@@ -103,17 +103,24 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
 <body>
     <nav class="header">
-        <span class="nav-brand">Bienvenido: <?= htmlspecialchars($_SESSION['Nombre_Usuario']) ?></span>
-        <a href="login.php" class="logout-button">Salir</a>
+        <div class="nav-brand">
+            <img src="css/logo.png" alt="Logo FCS" class="nav-logo">
+            <span>FCS</span>
+        </div>
+
+        <div class="nav-menu">
+            <button class="action-btn" onclick="showDiv('div3')">📍 Area</button>
+            <button class="action-btn" onclick="showDiv('div4')">📊 Reportes</button>
+        </div>
+
+        <div class="nav-actions">
+            <span style="color: rgba(255,255,255,0.7); font-size: 0.9rem; font-weight: 500;">Hola,
+                <?= htmlspecialchars($_SESSION['Nombre_Usuario']) ?></span>
+            <a href="login.php" class="logout-button">Salir</a>
+        </div>
     </nav>
 
     <div class="main-container">
-        <div class="button-grid">
-            <!-- <button class="action-btn" onclick="showDiv('div1')">Usuarios</button> -->
-            <!-- <button class="action-btn" onclick="showDiv('div2')">Maquila</button> -->
-            <button class="action-btn" onclick="showDiv('div3')">Area</button>
-            <button class="action-btn" onclick="showDiv('div4')">Reportes</button>
-        </div>
 
         <?php if ($mensaje): ?>
             <div id="mensaje" class="mensaje <?= (strpos($mensaje, '✅') === 0) ? 'ok' : 'error' ?>">
@@ -713,23 +720,36 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
     <script>
         function showDiv(divId) {
+            // Ocultar todos los paneles
             document.querySelectorAll('.content-panel').forEach(panel => panel.style.display = 'none');
+
+            // Quitar clase active de todos los botones
+            document.querySelectorAll('.nav-menu .action-btn').forEach(btn => btn.classList.remove('active'));
+
             const el = document.getElementById(divId);
             if (el) el.style.display = 'block';
+
+            // Agregar clase active al botón correspondiente
+            const buttons = document.querySelectorAll('.nav-menu .action-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(divId)) {
+                    btn.classList.add('active');
+                }
+            });
+
             try { localStorage.setItem('adminDiv', divId); } catch (e) { }
         }
 
         // Detectar si venimos de una busqueda de areas (GET)
         const params = new URLSearchParams(window.location.search);
-        let initialDiv = 'div1';
+        let initialDiv = 'div3';
         if (params.has('maquila_search_area') || params.get('view') === 'areas_search') {
             initialDiv = 'div3';
         } else if (params.has('maquila') || params.has('mode') || params.has('usuario')) {
-            // Si hay params de reportes, default div4 (aunque el form de reportes suele conservar div4 via localstorage, esto refuerza)
             initialDiv = 'div4';
         }
 
-        const saved = initialDiv !== 'div1' ? initialDiv : (localStorage.getItem('adminDiv') || 'div1');
+        const saved = initialDiv !== 'div3' ? initialDiv : (localStorage.getItem('adminDiv') || 'div3');
         showDiv(saved);
     </script>
 </body>

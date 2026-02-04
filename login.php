@@ -28,7 +28,10 @@ session_start();
                 <button type="submit" class="button">Iniciar Sesión</button>
             </form>
 
-            <!-- Formulario de Registro -->
+            <div class="help-links">
+                <a href="contacto.html">Contacto</a>
+                <a href="ayuda.html">Ayuda</a>
+            </div>
         </div>
     </div>
 

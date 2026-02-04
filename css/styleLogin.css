@@ -1,104 +1,133 @@
-/* styleLogin.css */
+/* styleLogin.css - Modernized */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap');
 
-/* General Styles */
-body {
+:root {
+  --primary-gradient: linear-gradient(135deg, #c63f42 0%, #8d1202 100%);
+  --secondary-gradient: linear-gradient(135deg, #ffae15 0%, #e67e22 100%);
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-dark: #1a1a1a;
+  --text-muted: #666;
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #c63f42, #ffae15);
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #f0f2f5;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(198, 63, 66, 0.1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(255, 174, 21, 0.1) 0, transparent 50%);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: var(--text-dark);
 }
 
-/* Container */
 .container {
-  background: #ffffff;
-  color: #333;
-  width: 90%; /* Adjusted for smaller screens */
-  max-width: 400px; /* Limit the width on larger screens */
-  padding: 20px; /* Reduced padding for smaller screens */
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  width: 90%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
   text-align: center;
+  transition: transform 0.3s ease;
 }
 
-/* Form Title */
-.container h1 {
-  font-size: 22px; /* Slightly smaller font size */
-  margin-bottom: 15px;
-  color: #c63f42;
+.container:hover {
+  transform: translateY(-5px);
 }
 
-/* Input Fields */
-.container input[type="text"],
-.container input[type="password"],
-.container input[type="email"] {
+header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.form input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 14px 20px;
+  margin: 12px 0;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
   font-size: 16px;
-  box-sizing: border-box;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  font-family: inherit;
 }
 
-/* Buttons */
-.container button {
+.form input:focus {
+  outline: none;
+  border-color: #c63f42;
+  box-shadow: 0 0 0 4px rgba(198, 63, 66, 0.1);
+  background: #fff;
+}
+
+.button {
   width: 100%;
-  padding: 10px;
-  margin-top: 15px; /* Reduced margin for smaller screens */
-  background: #c63f42;
+  padding: 14px;
+  margin-top: 24px;
+  background: var(--primary-gradient);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(198, 63, 66, 0.3);
 }
 
-.container button:hover {
-  background: #2575fc;
+.button:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(198, 63, 66, 0.4);
 }
 
-/* Links */
-.container a {
-  display: block;
-  margin-top: 10px; /* Reduced margin for smaller screens */
-  color: #c63f42;
+.button:active {
+  transform: scale(0.98);
+}
+
+.help-links {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.help-links a {
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 14px;
+  font-weight: 400;
+  transition: color 0.2s;
 }
 
-.container a:hover {
+.help-links a:hover {
+  color: #c63f42;
   text-decoration: underline;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 480px) {
-  body {
-    padding: 10px; /* Add padding for smaller screens */
-  }
-
   .container {
-    padding: 15px; /* Reduce padding for smaller screens */
-  }
-
-  .container h1 {
-    font-size: 20px; /* Smaller font size for titles */
-  }
-
-  .container button {
-    font-size: 14px; /* Adjust button font size */
-    padding: 8px; /* Reduce button padding */
-  }
-
-  .container input[type="text"],
-  .container input[type="password"],
-  .container input[type="email"] {
-    font-size: 14px; /* Adjust input font size */
-    padding: 8px; /* Reduce input padding */
+    padding: 30px 20px;
   }
 }

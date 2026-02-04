@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda - Sistema de Inspección QR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c63f42;
+            --text: #333;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Centro de Ayuda</h1>
+        <div class="faq-item">
+            <p class="faq-question">¿Cómo inicio sesión?</p>
+            <p>Utiliza tus credenciales proporcionadas por el administrador. Puedes ingresar como Administrador o como
+                Maquila según tu rol.</p>
+        </div>
+        <div class="faq-item">
+            <p class="faq-question">¿Cómo escaneo un código QR?</p>
+            <p>Desde la aplicación móvil, selecciona la opción "Escanear" y apunta la cámara al código QR ubicado en el
+                área correspondiente.</p>
+        </div>
+        <div class="faq-item">
+            <p class="faq-question">¿Qué hacer si olvido mi contraseña?</p>
+            <p>Por favor contacta al departamento de sistemas o a tu administrador directo para restablecer tu cuenta.
+            </p>
+        </div>
+        <a href="login.php" class="back-link">← Volver al Inicio</a>
+    </div>
+</body>
+
+</html>

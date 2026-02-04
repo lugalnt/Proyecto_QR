@@ -624,7 +624,7 @@ if (_job._success /*boolean*/ ==anywheresoftware.b4a.keywords.Common.False) {
  //BA.debugLineNum = 103;BA.debugLine="ToastMessageShow(\"Error al obtener reportes: \" &";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error al obtener reportes: "+_job._errormessage /*String*/ ),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 104;BA.debugLine="Log(\"JobDone: HTTP error: \" & Job.ErrorMessage)";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900548","JobDone: HTTP error: "+_job._errormessage /*String*/ ,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900548","JobDone: HTTP error: "+_job._errormessage /*String*/ ,0);
  //BA.debugLineNum = 105;BA.debugLine="Job.Release";
 _job._release /*String*/ ();
  //BA.debugLineNum = 106;BA.debugLine="Return";
@@ -641,7 +641,7 @@ _res = _res.replace(BA.ObjectToString(anywheresoftware.b4a.keywords.Common.Chr((
  } 
        catch (Exception e13) {
 			processBA.setLastException(e13); //BA.debugLineNum = 115;BA.debugLine="Log(\"BOM replace error: \" & LastException.Messag";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900559","BOM replace error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900559","BOM replace error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 117;BA.debugLine="res = res.Trim";
 _res = _res.trim();
@@ -650,7 +650,7 @@ if ((_res).equals("")) {
  //BA.debugLineNum = 120;BA.debugLine="ToastMessageShow(\"Respuesta vacía del servidor.\"";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta vacía del servidor."),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 121;BA.debugLine="Log(\"JobDone: empty response\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900565","JobDone: empty response",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900565","JobDone: empty response",0);
  //BA.debugLineNum = 122;BA.debugLine="Job.Release";
 _job._release /*String*/ ();
  //BA.debugLineNum = 123;BA.debugLine="Return";
@@ -660,18 +660,18 @@ if (true) return "";
 try { //BA.debugLineNum = 128;BA.debugLine="File.WriteString(File.DirInternal, \"reports_resp";
 anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_debug.json",_res);
  //BA.debugLineNum = 129;BA.debugLine="Log(\"Saved raw response to: \" & File.Combine(Fil";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900573","Saved raw response to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_debug.json"),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900573","Saved raw response to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_debug.json"),0);
  } 
        catch (Exception e26) {
 			processBA.setLastException(e26); //BA.debugLineNum = 131;BA.debugLine="Log(\"Error writing debug file: \" & LastException";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900575","Error writing debug file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900575","Error writing debug file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 135;BA.debugLine="Dim extracted As String = ExtractFirstJson(res)";
 _extracted = _extractfirstjson(_res);
  //BA.debugLineNum = 136;BA.debugLine="If extracted = \"\" Then";
 if ((_extracted).equals("")) { 
  //BA.debugLineNum = 137;BA.debugLine="Log(\"ExtractFirstJson returned empty. Response m";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900581","ExtractFirstJson returned empty. Response may be malformed. Response snippet: "+_res.substring((int) (0),(int) (anywheresoftware.b4a.keywords.Common.Min(_res.length(),1000))),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900581","ExtractFirstJson returned empty. Response may be malformed. Response snippet: "+_res.substring((int) (0),(int) (anywheresoftware.b4a.keywords.Common.Min(_res.length(),1000))),0);
  //BA.debugLineNum = 138;BA.debugLine="ToastMessageShow(\"No se detectó un bloque JSON c";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("No se detectó un bloque JSON completo en la respuesta (ver logs)."),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 139;BA.debugLine="Job.Release";
@@ -683,11 +683,11 @@ if (true) return "";
 try { //BA.debugLineNum = 145;BA.debugLine="File.WriteString(File.DirInternal, \"reports_resp";
 anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_extracted.json",_extracted);
  //BA.debugLineNum = 146;BA.debugLine="Log(\"Saved extracted JSON to: \" & File.Combine(F";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900590","Saved extracted JSON to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_extracted.json"),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900590","Saved extracted JSON to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_extracted.json"),0);
  } 
        catch (Exception e39) {
 			processBA.setLastException(e39); //BA.debugLineNum = 148;BA.debugLine="Log(\"Error writing extracted debug file: \" & Las";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900592","Error writing extracted debug file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900592","Error writing extracted debug file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 152;BA.debugLine="Dim sb As StringBuilder";
 _sb = new anywheresoftware.b4a.keywords.StringBuilderWrapper();
@@ -726,17 +726,17 @@ _cleaned = _sb.ToString();
  //BA.debugLineNum = 170;BA.debugLine="If cleaned <> extracted Then";
 if ((_cleaned).equals(_extracted) == false) { 
  //BA.debugLineNum = 171;BA.debugLine="Log(\"EXTRACTED cleaned: length from \" & extracte";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900615","EXTRACTED cleaned: length from "+BA.NumberToString(_extracted.length())+" -> "+BA.NumberToString(_cleaned.length()),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900615","EXTRACTED cleaned: length from "+BA.NumberToString(_extracted.length())+" -> "+BA.NumberToString(_cleaned.length()),0);
  };
  //BA.debugLineNum = 175;BA.debugLine="Try";
 try { //BA.debugLineNum = 176;BA.debugLine="File.WriteString(File.DirInternal, \"reports_resp";
 anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_cleaned.json",_cleaned);
  //BA.debugLineNum = 177;BA.debugLine="Log(\"Saved cleaned JSON to: \" & File.Combine(Fil";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900621","Saved cleaned JSON to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_cleaned.json"),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900621","Saved cleaned JSON to: "+anywheresoftware.b4a.keywords.Common.File.Combine(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"reports_response_cleaned.json"),0);
  } 
        catch (Exception e64) {
 			processBA.setLastException(e64); //BA.debugLineNum = 179;BA.debugLine="Log(\"Could not write cleaned JSON file: \" & Last";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900623","Could not write cleaned JSON file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900623","Could not write cleaned JSON file: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 185;BA.debugLine="Dim parser As JSONParser";
 _parser = new anywheresoftware.b4a.objects.collections.JSONParser();
@@ -751,11 +751,11 @@ if (_cleaned.startsWith("{")) {
 try { //BA.debugLineNum = 191;BA.debugLine="root = parser.NextObject";
 _root = (Object)(_parser.NextObject().getObject());
  //BA.debugLineNum = 192;BA.debugLine="Log(\"Parsed cleaned as JSON Object\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900636","Parsed cleaned as JSON Object",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900636","Parsed cleaned as JSON Object",0);
  } 
        catch (Exception e75) {
 			processBA.setLastException(e75); //BA.debugLineNum = 194;BA.debugLine="Log(\"Parser NextObject failed: \" & LastExcepti";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900638","Parser NextObject failed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900638","Parser NextObject failed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 195;BA.debugLine="root = Null";
 _root = anywheresoftware.b4a.keywords.Common.Null;
  };
@@ -764,24 +764,24 @@ _root = anywheresoftware.b4a.keywords.Common.Null;
 try { //BA.debugLineNum = 199;BA.debugLine="root = parser.NextArray";
 _root = (Object)(_parser.NextArray().getObject());
  //BA.debugLineNum = 200;BA.debugLine="Log(\"Parsed cleaned as JSON Array\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900644","Parsed cleaned as JSON Array",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900644","Parsed cleaned as JSON Array",0);
  } 
        catch (Exception e83) {
 			processBA.setLastException(e83); //BA.debugLineNum = 202;BA.debugLine="Log(\"Parser NextArray failed: \" & LastExceptio";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900646","Parser NextArray failed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900646","Parser NextArray failed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 203;BA.debugLine="root = Null";
 _root = anywheresoftware.b4a.keywords.Common.Null;
  };
  }else {
  //BA.debugLineNum = 206;BA.debugLine="Log(\"Cleaned does not start with { or [, cannot";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900650","Cleaned does not start with { or [, cannot parse.",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900650","Cleaned does not start with { or [, cannot parse.",0);
  //BA.debugLineNum = 207;BA.debugLine="root = Null";
 _root = anywheresoftware.b4a.keywords.Common.Null;
  };
  } 
        catch (Exception e91) {
 			processBA.setLastException(e91); //BA.debugLineNum = 210;BA.debugLine="Log(\"Parser initialize error: \" & LastException.";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900654","Parser initialize error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900654","Parser initialize error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 211;BA.debugLine="root = Null";
 _root = anywheresoftware.b4a.keywords.Common.Null;
  };
@@ -794,11 +794,11 @@ _snippet = _cleaned;
 if (_snippet.length()>2000) { 
 _snippet = _snippet.substring((int) (0),(int) (2000));};
  //BA.debugLineNum = 218;BA.debugLine="Log(\"FINAL_PARSE_FAILED_SNIPPET: \" & snippet)";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900662","FINAL_PARSE_FAILED_SNIPPET: "+_snippet,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900662","FINAL_PARSE_FAILED_SNIPPET: "+_snippet,0);
  } 
        catch (Exception e100) {
 			processBA.setLastException(e100); //BA.debugLineNum = 220;BA.debugLine="Log(\"Could not produce FINAL_PARSE_FAILED_SNIPP";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900664","Could not produce FINAL_PARSE_FAILED_SNIPPET",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900664","Could not produce FINAL_PARSE_FAILED_SNIPPET",0);
  };
  //BA.debugLineNum = 222;BA.debugLine="ToastMessageShow(\"No se pudo parsear la respuest";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("No se pudo parsear la respuesta (ver Logcat)."),anywheresoftware.b4a.keywords.Common.True);
@@ -862,7 +862,7 @@ _list.Add((Object)(_mp.getObject()));
  } 
        catch (Exception e134) {
 			processBA.setLastException(e134); //BA.debugLineNum = 260;BA.debugLine="Log(\"JobDone building list error: \" & LastExcept";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900704","JobDone building list error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900704","JobDone building list error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 261;BA.debugLine="ToastMessageShow(\"Error procesando estructura de";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error procesando estructura de respuesta."),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 262;BA.debugLine="Job.Release";
@@ -951,7 +951,7 @@ _reportcontent = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware
  } 
        catch (Exception e177) {
 			processBA.setLastException(e177); //BA.debugLineNum = 313;BA.debugLine="Log(\"Error parsing JSON_Reporte: \" & LastExce";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900757","Error parsing JSON_Reporte: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900757","Error parsing JSON_Reporte: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 318;BA.debugLine="If reportContent = Null Then";
@@ -980,7 +980,7 @@ _reportcontent = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware
  } 
        catch (Exception e195) {
 			processBA.setLastException(e195); //BA.debugLineNum = 334;BA.debugLine="Log(\"Ignored non-map rawItem parse error: \" &";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900778","Ignored non-map rawItem parse error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900778","Ignored non-map rawItem parse error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 338;BA.debugLine="If reportContent = Null Then";
@@ -1007,7 +1007,7 @@ _title = BA.ObjectToString(_areamap.Get((Object)("areaName")));};
  } 
        catch (Exception e209) {
 			processBA.setLastException(e209); //BA.debugLineNum = 351;BA.debugLine="Log(\"Error leyendo area_name: \" & LastExceptio";
-anywheresoftware.b4a.keywords.Common.LogImpl("51900795","Error leyendo area_name: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("01900795","Error leyendo area_name: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 355;BA.debugLine="If title = \"\" Then";
@@ -1080,13 +1080,13 @@ String _jsonstr = "";
  //BA.debugLineNum = 460;BA.debugLine="Dim idx As Int = Value";
 _idx = (int)(BA.ObjectToNumber(_value));
  //BA.debugLineNum = 461;BA.debugLine="Log(\"lvReports_ItemClick fired. idx=\" & idx)";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031618","lvReports_ItemClick fired. idx="+BA.NumberToString(_idx),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031618","lvReports_ItemClick fired. idx="+BA.NumberToString(_idx),0);
  //BA.debugLineNum = 462;BA.debugLine="ToastMessageShow(\"Click: \" & idx, False) ' confir";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Click: "+BA.NumberToString(_idx)),anywheresoftware.b4a.keywords.Common.False);
  //BA.debugLineNum = 464;BA.debugLine="If reportsMap.IsInitialized = False Then";
 if (mostCurrent._reportsmap.IsInitialized()==anywheresoftware.b4a.keywords.Common.False) { 
  //BA.debugLineNum = 465;BA.debugLine="Log(\"lvReports_ItemClick: reportsMap no iniciali";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031622","lvReports_ItemClick: reportsMap no inicializado",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031622","lvReports_ItemClick: reportsMap no inicializado",0);
  //BA.debugLineNum = 466;BA.debugLine="MsgboxAsync(\"Mapa de reportes no inicializado\",";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("Mapa de reportes no inicializado"),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 467;BA.debugLine="Return";
@@ -1095,7 +1095,7 @@ if (true) return "";
  //BA.debugLineNum = 470;BA.debugLine="If reportsMap.ContainsKey(idx) = False Then";
 if (mostCurrent._reportsmap.ContainsKey((Object)(_idx))==anywheresoftware.b4a.keywords.Common.False) { 
  //BA.debugLineNum = 471;BA.debugLine="Log(\"lvReports_ItemClick: reportsMap no contiene";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031628","lvReports_ItemClick: reportsMap no contiene idx="+BA.NumberToString(_idx),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031628","lvReports_ItemClick: reportsMap no contiene idx="+BA.NumberToString(_idx),0);
  //BA.debugLineNum = 472;BA.debugLine="MsgboxAsync(\"Reporte no encontrado\", \"Error\")";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("Reporte no encontrado"),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 473;BA.debugLine="Return";
@@ -1111,7 +1111,7 @@ _stored = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware.b4a.Ab
  } 
        catch (Exception e19) {
 			processBA.setLastException(e19); //BA.debugLineNum = 481;BA.debugLine="Log(\"lvReports_ItemClick: error al obtener store";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031638","lvReports_ItemClick: error al obtener stored: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031638","lvReports_ItemClick: error al obtener stored: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 482;BA.debugLine="MsgboxAsync(\"Reporte inválido\", \"Error\")";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("Reporte inválido"),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 483;BA.debugLine="Return";
@@ -1120,7 +1120,7 @@ if (true) return "";
  //BA.debugLineNum = 486;BA.debugLine="If stored = Null Then";
 if (_stored== null) { 
  //BA.debugLineNum = 487;BA.debugLine="Log(\"lvReports_ItemClick: stored es Null\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031644","lvReports_ItemClick: stored es Null",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031644","lvReports_ItemClick: stored es Null",0);
  //BA.debugLineNum = 488;BA.debugLine="MsgboxAsync(\"Reporte inválido\", \"Error\")";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("Reporte inválido"),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 489;BA.debugLine="Return";
@@ -1144,7 +1144,7 @@ _parsed = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware.b4a.Ab
  } 
        catch (Exception e36) {
 			processBA.setLastException(e36); //BA.debugLineNum = 501;BA.debugLine="Log(\"lvReports_ItemClick: error leyendo parsed:";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031658","lvReports_ItemClick: error leyendo parsed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031658","lvReports_ItemClick: error leyendo parsed: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 504;BA.debugLine="Try";
 try { //BA.debugLineNum = 505;BA.debugLine="If stored.ContainsKey(\"raw\") Then";
@@ -1158,7 +1158,7 @@ _raw = (anywheresoftware.b4a.objects.collections.Map) anywheresoftware.b4a.AbsOb
  } 
        catch (Exception e44) {
 			processBA.setLastException(e44); //BA.debugLineNum = 510;BA.debugLine="Log(\"lvReports_ItemClick: error leyendo raw: \" &";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031667","lvReports_ItemClick: error leyendo raw: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031667","lvReports_ItemClick: error leyendo raw: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 514;BA.debugLine="If parsed = Null And raw Is Map Then parsed = raw";
 if (_parsed== null && _raw.getObjectOrNull() instanceof java.util.Map) { 
@@ -1166,7 +1166,7 @@ _parsed = _raw;};
  //BA.debugLineNum = 516;BA.debugLine="If parsed = Null Then";
 if (_parsed== null) { 
  //BA.debugLineNum = 517;BA.debugLine="Log(\"lvReports_ItemClick: no hay parsed ni raw ú";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031674","lvReports_ItemClick: no hay parsed ni raw útiles",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031674","lvReports_ItemClick: no hay parsed ni raw útiles",0);
  //BA.debugLineNum = 518;BA.debugLine="MsgboxAsync(\"No hay datos válidos para este repo";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("No hay datos válidos para este reporte."),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 519;BA.debugLine="Return";
@@ -1183,7 +1183,7 @@ _out.Put((Object)("area"),_parsed.Get((Object)("area")));};
  } 
        catch (Exception e57) {
 			processBA.setLastException(e57); //BA.debugLineNum = 529;BA.debugLine="Log(\"lvReports_ItemClick: error copiando parsed.";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031686","lvReports_ItemClick: error copiando parsed.area: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031686","lvReports_ItemClick: error copiando parsed.area: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 531;BA.debugLine="Try";
 try { //BA.debugLineNum = 532;BA.debugLine="If parsed.ContainsKey(\"car_reports\") Then out.Pu";
@@ -1192,7 +1192,7 @@ _out.Put((Object)("car_reports"),_parsed.Get((Object)("car_reports")));};
  } 
        catch (Exception e62) {
 			processBA.setLastException(e62); //BA.debugLineNum = 534;BA.debugLine="Log(\"lvReports_ItemClick: error copiando parsed.";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031691","lvReports_ItemClick: error copiando parsed.car_reports: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031691","lvReports_ItemClick: error copiando parsed.car_reports: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  //BA.debugLineNum = 537;BA.debugLine="If (out.ContainsKey(\"area\") = False Or out.Contai";
 if ((_out.ContainsKey((Object)("area"))==anywheresoftware.b4a.keywords.Common.False || _out.ContainsKey((Object)("car_reports"))==anywheresoftware.b4a.keywords.Common.False)) { 
@@ -1220,7 +1220,7 @@ _out.Put((Object)("car_reports"),_jrmap.Get((Object)("car_reports")));
  } 
        catch (Exception e78) {
 			processBA.setLastException(e78); //BA.debugLineNum = 552;BA.debugLine="Log(\"lvReports_ItemClick: raw.JSON_Reporte_pa";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031709","lvReports_ItemClick: raw.JSON_Reporte_parsed no es Map o error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031709","lvReports_ItemClick: raw.JSON_Reporte_parsed no es Map o error: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 557;BA.debugLine="If (out.ContainsKey(\"area\") = False Or out.Cont";
@@ -1252,7 +1252,7 @@ _out.Put((Object)("car_reports"),_m.Get((Object)("car_reports")));};
  } 
        catch (Exception e95) {
 			processBA.setLastException(e95); //BA.debugLineNum = 571;BA.debugLine="Log(\"lvReports_ItemClick: error parseando JSO";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031728","lvReports_ItemClick: error parseando JSON_Reporte: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031728","lvReports_ItemClick: error parseando JSON_Reporte: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  };
@@ -1275,14 +1275,14 @@ _out.Put((Object)(_k),_raw.Get((Object)(_k)));};
  } 
        catch (Exception e106) {
 			processBA.setLastException(e106); //BA.debugLineNum = 584;BA.debugLine="Log(\"lvReports_ItemClick: no pudo copiar key \"";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031741","lvReports_ItemClick: no pudo copiar key "+_k+": "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031741","lvReports_ItemClick: no pudo copiar key "+_k+": "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  }
 };
  } 
        catch (Exception e110) {
 			processBA.setLastException(e110); //BA.debugLineNum = 588;BA.debugLine="Log(\"lvReports_ItemClick: error iterando keys ra";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031745","lvReports_ItemClick: error iterando keys raw: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031745","lvReports_ItemClick: error iterando keys raw: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  //BA.debugLineNum = 594;BA.debugLine="If out.ContainsKey(\"Id_Reporte\") = False Then";
@@ -1301,13 +1301,13 @@ _jsonstr = _gen.ToString();
  //BA.debugLineNum = 603;BA.debugLine="File.WriteString(File.DirInternal, \"current_repo";
 anywheresoftware.b4a.keywords.Common.File.WriteString(anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"current_report.json",_jsonstr);
  //BA.debugLineNum = 604;BA.debugLine="Log(\"lvReports_ItemClick: wrote current_report.j";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031761","lvReports_ItemClick: wrote current_report.json length="+BA.NumberToString(_jsonstr.length()),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031761","lvReports_ItemClick: wrote current_report.json length="+BA.NumberToString(_jsonstr.length()),0);
  //BA.debugLineNum = 605;BA.debugLine="Log(\"lvReports_ItemClick snippet: \" & jsonStr.Su";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031762","lvReports_ItemClick snippet: "+_jsonstr.substring((int) (0),(int) (anywheresoftware.b4a.keywords.Common.Min(800,_jsonstr.length()))),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031762","lvReports_ItemClick snippet: "+_jsonstr.substring((int) (0),(int) (anywheresoftware.b4a.keywords.Common.Min(800,_jsonstr.length()))),0);
  } 
        catch (Exception e124) {
 			processBA.setLastException(e124); //BA.debugLineNum = 607;BA.debugLine="Log(\"lvReports_ItemClick: Error writing current_";
-anywheresoftware.b4a.keywords.Common.LogImpl("52031764","lvReports_ItemClick: Error writing current_report.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("02031764","lvReports_ItemClick: Error writing current_report.json: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 608;BA.debugLine="MsgboxAsync(\"No se pudo preparar el detalle del";
 anywheresoftware.b4a.keywords.Common.MsgboxAsync(BA.ObjectToCharSequence("No se pudo preparar el detalle del reporte."),BA.ObjectToCharSequence("Error"),processBA);
  //BA.debugLineNum = 609;BA.debugLine="Return";

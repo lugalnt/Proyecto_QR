@@ -461,7 +461,7 @@ _areacode = BA.NumberToString(_idarea)+"";
  } 
        catch (Exception e8) {
 			processBA.setLastException(e8); //BA.debugLineNum = 56;BA.debugLine="Log(\"Error leyendo Starter.Id_Area: \" & LastExce";
-anywheresoftware.b4a.keywords.Common.LogImpl("53735561","Error leyendo Starter.Id_Area: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("03735561","Error leyendo Starter.Id_Area: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  //BA.debugLineNum = 57;BA.debugLine="areaCode = \"\"";
 _areacode = "";
  };
@@ -535,7 +535,7 @@ _res = "";
  //BA.debugLineNum = 78;BA.debugLine="res = Job.GetString";
 _res = _job._getstring /*String*/ ();
  //BA.debugLineNum = 79;BA.debugLine="Log(\"Respuesta API getArea: \" & res)";
-anywheresoftware.b4a.keywords.Common.LogImpl("53801094","Respuesta API getArea: "+_res,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("03801094","Respuesta API getArea: "+_res,0);
  //BA.debugLineNum = 82;BA.debugLine="Dim startIndex As Int";
 _startindex = 0;
  //BA.debugLineNum = 83;BA.debugLine="startIndex = res.IndexOf(\"{\")";
@@ -654,7 +654,7 @@ mostCurrent._et_datosarea.setText(BA.ObjectToCharSequence(_texto));
 			processBA.setLastException(e73); //BA.debugLineNum = 165;BA.debugLine="ToastMessageShow(\"Respuesta inválida del servi";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Respuesta inválida del servidor"),anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 166;BA.debugLine="Log(\"Error parse JSON getArea: \" & LastExcepti";
-anywheresoftware.b4a.keywords.Common.LogImpl("53801181","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("03801181","Error parse JSON getArea: "+anywheresoftware.b4a.keywords.Common.LastException(mostCurrent.activityBA).getMessage(),0);
  };
  };
  }else {
