@@ -29,4 +29,3 @@ class Usuario_ReporteController
 
 }
 
-?>

@@ -103,97 +103,56 @@ class ExcelExporter
     }
 
     /**
-     * Exporta un reporte individual con sus detalles de CAR (desde JSON).
+     * Exporta un reporte individual con sus detalles de CAR (desde JSON) usando PLANTILLA.
      * 
      * @param array $report Datos del reporte (fila única).
      * @param string $filename Nombre del archivo.
      */
     public static function exportSingleReport(array $report, string $filename = 'Detalle_Reporte.xlsx')
     {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Detalle Reporte');
+        // Limpiar cualquier salida previa
+        if (ob_get_length())
+            ob_end_clean();
 
-        // Estilos
-        $labelStyle = ['font' => ['bold' => true], 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'E9ECEF']]];
-        $headerStyle = [
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
-        ];
-
-        // --- SECCIÓN 1: Información General ---
-        $sheet->setCellValue('A1', 'INFORMACIÓN GENERAL DEL REPORTE');
-        $sheet->mergeCells('A1:D1');
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-
-        $generalInfo = [
-            ['ID Reporte:', $report['Id_Reporte'], 'Fecha:', $report['FechaRegistro_Reporte']],
-            ['Maquila:', $report['Nombre_Maquila'] ?? 'N/A', 'Área:', $report['Nombre_Area'] ?? 'N/A'],
-            ['Responsable:', $report['Resp_Nombre'] ?? 'N/A', 'Estado:', $report['Estado_Reporte']],
-            ['CAR Totales:', $report['CARTotal_Reporte'], 'CAR Revisadas:', $report['CARRevisadas_Reporte']]
-        ];
-
-        $currRow = 3;
-        foreach ($generalInfo as $infoRow) {
-            $sheet->setCellValue('A' . $currRow, $infoRow[0]);
-            $sheet->setCellValue('B' . $currRow, $infoRow[1]);
-            $sheet->setCellValue('C' . $currRow, $infoRow[2]);
-            $sheet->setCellValue('D' . $currRow, $infoRow[3]);
-            $sheet->getStyle('A' . $currRow)->applyFromArray($labelStyle);
-            $sheet->getStyle('C' . $currRow)->applyFromArray($labelStyle);
-            $currRow++;
+        // Cargar plantilla
+        $templatePath = __DIR__ . '/plantillaReportes.xlsx';
+        if (!file_exists($templatePath)) {
+            throw new \Exception("La plantilla no existe en: " . $templatePath);
         }
 
-        // --- SECCIÓN 2: Detalle de Inspección (Tablas por CAR) ---
-        $currRow += 2;
-        $sheet->setCellValue('A' . $currRow, 'DETALLE DE INSPECCIÓN POR C.A.R.');
-        $sheet->mergeCells('A' . $currRow . ':D' . $currRow);
-        $sheet->getStyle('A' . $currRow)->getFont()->setBold(true)->setSize(12);
-        $currRow += 2;
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
 
-        // Parsear JSON_Reporte
+        // --- LIMPIEZA DE NOMBRES DEFINIDOS ---
+        $definedNames = $spreadsheet->getDefinedNames();
+        foreach ($definedNames as $name) {
+            $spreadsheet->removeDefinedName($name->getName());
+        }
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // --- 1. Mapeo de Encabezados ---
+        $sheet->setCellValue('C8', $report['Nombre_Maquila'] ?? '');
+        $sheet->setCellValue('C9', ($report['Nombre_Area'] ?? '') . ' / ' . ($report['Resp_Nombre'] ?? ''));
+        $sheet->setCellValue('C10', 'Inspección y Retrabajo (QR)');
+        $sheet->setCellValue('Q9', $report['Resp_Nombre'] ?? '');
+        $fecha = $report['FechaRegistro_Reporte'] ?? date('Y-m-d');
+        $sheet->setCellValue('Q10', $fecha);
+
+        // --- 2. Preparar Datos ---
         $jsonStr = $report['JSON_Reporte'] ?? '';
         $jsonData = json_decode($jsonStr, true);
-
         $carReports = $jsonData['car_reports'] ?? $jsonData['cars'] ?? $jsonData['area_data']['cars'] ?? $jsonData['area']['cars'] ?? [];
 
-        $hasContent = false;
+        $itemsToPrint = [];
+
         if (is_array($carReports)) {
             foreach ($carReports as $car) {
-                // Nombre del CAR
                 $carName = $car['car_name'] ?? $car['name'] ?? $car['Nombre_CAR'] ?? 'Sin Nombre';
                 $observacionGeneral = $car['observacion'] ?? $car['obs'] ?? '';
                 $responses = $car['responses'] ?? [];
                 $props = $car['properties'] ?? $car['Propiedades'] ?? [];
 
-                // Filtro: si no hay nada, saltar
-                if (empty($responses) && empty($props) && empty($observacionGeneral)) {
-                    continue;
-                }
-                $hasContent = true;
-
-                // --- TABLA PARA ESTE CAR ---
-                // Encabezado del CAR
-                $sheet->setCellValue('A' . $currRow, "C.A.R: " . $carName);
-                $sheet->mergeCells('A' . $currRow . ':D' . $currRow);
-                $sheet->getStyle('A' . $currRow)->applyFromArray([
-                    'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '2F5597']]
-                ]);
-                $currRow++;
-
-                // Sub-encabezados de la tabla
-                $sheet->setCellValue('A' . $currRow, 'Propiedad Evaluada');
-                $sheet->setCellValue('B' . $currRow, 'Respuesta / Valor');
-                $sheet->setCellValue('C' . $currRow, 'Observaciones');
-                $sheet->mergeCells('C' . $currRow . ':D' . $currRow); // Combinar para observaciones más largas
-                $sheet->getStyle('A' . $currRow . ':D' . $currRow)->applyFromArray($headerStyle);
-                $tableStart = $currRow;
-                $currRow++;
-
-                // Datos del CAR
+                $subItems = [];
                 if (!empty($responses) && is_array($responses)) {
                     foreach ($responses as $label => $value) {
                         if (is_bool($value))
@@ -202,62 +161,77 @@ class ExcelExporter
                             $value = "SÍ / OK";
                         if ($value === "0")
                             $value = "NO / ERROR";
-
-                        $sheet->setCellValue('A' . $currRow, $label);
-                        $sheet->setCellValue('B' . $currRow, $value);
-                        $sheet->setCellValue('C' . $currRow, $observacionGeneral);
-                        $sheet->mergeCells('C' . $currRow . ':D' . $currRow);
-                        $currRow++;
+                        $subItems[] = ['label' => $label, 'value' => $value, 'obs' => $observacionGeneral];
                     }
                 } elseif (!empty($props) && is_array($props)) {
                     foreach ($props as $prop) {
-                        $propLabel = $prop['label'] ?? $prop['Nombre_Propiedad'] ?? '-';
-                        $propValue = $prop['value'] ?? $prop['Valor'] ?? '';
-                        if (is_bool($propValue))
-                            $propValue = $propValue ? 'SÍ / OK' : 'NO / ERROR';
-                        if ($propValue === "1")
-                            $propValue = "SÍ / OK";
-                        if ($propValue === "0")
-                            $propValue = "NO / ERROR";
-
-                        $sheet->setCellValue('A' . $currRow, $propLabel);
-                        $sheet->setCellValue('B' . $currRow, $propValue);
-                        $sheet->setCellValue('C' . $currRow, $prop['obs'] ?? $observacionGeneral);
-                        $sheet->mergeCells('C' . $currRow . ':D' . $currRow);
-                        $currRow++;
+                        $label = $prop['label'] ?? $prop['Nombre_Propiedad'] ?? '-';
+                        $value = $prop['value'] ?? $prop['Valor'] ?? '';
+                        if (is_bool($value))
+                            $value = $value ? 'SÍ / OK' : 'NO / ERROR';
+                        if ($value === "1")
+                            $value = "SÍ / OK";
+                        if ($value === "0")
+                            $value = "NO / ERROR";
+                        $subItems[] = ['label' => $label, 'value' => $value, 'obs' => $prop['obs'] ?? $observacionGeneral];
                     }
                 } else {
-                    $sheet->setCellValue('A' . $currRow, '(Sin propiedades detalladas)');
-                    $sheet->setCellValue('B' . $currRow, 'Reportado');
-                    $sheet->setCellValue('C' . $currRow, $observacionGeneral);
-                    $sheet->mergeCells('C' . $currRow . ':D' . $currRow);
-                    $currRow++;
+                    $subItems[] = ['label' => '(General)', 'value' => 'Revisado', 'obs' => $observacionGeneral];
                 }
 
-                // Bordes para esta pequeña tabla
-                $sheet->getStyle('A' . $tableStart . ':D' . ($currRow - 1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-                $currRow += 2; // Espacio entre tablas de CAR
+                foreach ($subItems as $item) {
+                    $itemsToPrint[] = [
+                        'carName' => $carName,
+                        'detalle' => $item['label'] . ": " . $item['value'],
+                        'obs' => $item['obs'],
+                        'fecha' => $fecha
+                    ];
+                }
             }
         }
 
-        if (!$hasContent) {
-            $sheet->setCellValue('A' . $currRow, 'No hay inspecciones detalladas guardadas en este reporte.');
-            $sheet->mergeCells('A' . $currRow . ':D' . $currRow);
-            $currRow++;
+        // --- 3. Inserción Dinámica de Filas ---
+        $startRow = 14;
+
+        // Buscar footer
+        $highestRow = $sheet->getHighestRow();
+        $footerRowIndex = 62;
+        for ($r = 15; $r <= $highestRow; $r++) {
+            $val = $sheet->getCell('B' . $r)->getValue();
+            if ($val && stripos((string) $val, 'Observaciones') !== false) {
+                $footerRowIndex = $r;
+                break;
+            }
         }
 
-        // Estética final
-        foreach (range('A', 'D') as $colID) {
-            $sheet->getColumnDimension($colID)->setAutoSize(true);
+        $availableRows = $footerRowIndex - $startRow;
+        $neededRows = count($itemsToPrint);
+
+        if ($neededRows > $availableRows) {
+            $rowsToAdd = $neededRows - $availableRows + 2;
+            $sheet->insertNewRowBefore($footerRowIndex, $rowsToAdd);
         }
 
-        // Configurar cabeceras HTTP para descarga
+        // --- 4. Escribir Datos ---
+        $currentRow = $startRow;
+
+        foreach ($itemsToPrint as $item) {
+            $sheet->setCellValue('B' . $currentRow, $item['carName']);
+            $sheet->setCellValue('D' . $currentRow, $item['detalle']);
+            $sheet->setCellValue('K' . $currentRow, $item['obs']);
+            $sheet->setCellValue('R' . $currentRow, $item['fecha']);
+
+            // Auto altura
+            $sheet->getRowDimension($currentRow)->setRowHeight(-1);
+            $currentRow++;
+        }
+
+        // --- Output ---
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
 
-        $writer = new Xlsx($spreadsheet);
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         $writer->save('php://output');
         exit;
     }

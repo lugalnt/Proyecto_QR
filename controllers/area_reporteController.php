@@ -29,4 +29,3 @@ class Area_ReporteController
 
 }
 
-?>
