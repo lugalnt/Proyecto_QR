@@ -32,8 +32,20 @@ class UsuarioController
         if (is_array($data)) {
             if (empty($data['Nombre_Usuario']))
                 throw new \InvalidArgumentException('Nombre requerido');
+            
+            // Validar Nombre: No números
+            if (preg_match('/[0-9]/', $data['Nombre_Usuario'])) {
+                throw new \InvalidArgumentException('El nombre de usuario no puede contener números.');
+            }
+
             if (empty($data['Password_Usuario']))
                 throw new \InvalidArgumentException('Contraseña requerido');
+            
+            // Validar Contraseña: Regex Segura
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/', $data['Password_Usuario'])) {
+                throw new \InvalidArgumentException('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+            }
+
             if (empty($data['Telefono_Usuario']) || !filter_var($data['Telefono_Usuario'], FILTER_VALIDATE_INT)) {
                 throw new \InvalidArgumentException('Numero inválido');
             }

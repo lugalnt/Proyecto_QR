@@ -116,7 +116,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
         <div class="nav-actions">
             <span style="color: rgba(255,255,255,0.7); font-size: 0.9rem; font-weight: 500;">Hola,
                 <?= htmlspecialchars($_SESSION['Nombre_Usuario']) ?></span>
-            <a href="login.php" class="logout-button">Salir</a>
+            <a href="logout.php" class="logout-button">Salir</a>
         </div>
     </nav>
 

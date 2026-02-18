@@ -33,6 +33,11 @@ class MaquilaController
                 throw new \InvalidArgumentException('Nombre requerido');
             if (empty($data['Contraseña_Maquila']))
                 throw new \InvalidArgumentException('Contraseña requerido');
+
+             // Validar Contraseña: Regex Segura
+             if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/', $data['Contraseña_Maquila'])) {
+                throw new \InvalidArgumentException('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+            }
         }
 
         $data['Contraseña_Maquila'] = password_hash($data['Contraseña_Maquila'], PASSWORD_DEFAULT);
