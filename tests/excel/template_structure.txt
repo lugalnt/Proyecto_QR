@@ -1,0 +1,163 @@
+Plantilla cargada correctamente.
+=== Hoja: Tanque Agua ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"ABASTECIMIENTO DE AGUA","C":null,"D":null,"E":null,"F":null,"G":null,"H":"f","I":"S","J":"N\/A","K":"N","L":"PARAMETROS","M":"LECTURAS","N":null,"O":null,"P":"COMENTARIOS"}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B36
+
+=== Hoja: Cuarto Bombas ===
+  Row 15: {"A":null,"B":"CUARTO DE BOMBAS CONTRA INCENDIO","C":null,"D":null,"E":null,"F":null,"G":null,"H":"f","I":"S","J":"N\/A","K":"N","L":"PARAMETROS","M":"LECTURAS","N":null,"O":null,"P":"COMENTARIOS"}
+  Row 16: {"A":null,"B":"\u00bf Se tiene la tarjeta (permiso de puesta fuera de servicio) autorizado por el cliente ?","C":null,"D":null,"E":null,"F":null,"G":null,"H":"M","I":null,"J":"N\/A","K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B37
+
+=== Hoja: Bomba Jockey ===
+  Row 15: {"A":null,"B":" BOMBA JOCKEY","C":null,"D":null,"E":null,"F":null,"G":null,"H":"f","I":"S","J":"N\/A","K":"N","L":"PARAMETROS","M":"LECTURAS","N":null,"O":null,"P":"COMENTARIOS"}
+  Row 16: {"A":null,"B":"\u00bf La v\u00e1lvula de succi\u00f3n esta abierta ?","C":null,"D":null,"E":null,"F":null,"G":null,"H":"M","I":"OK","J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B74
+
+=== Hoja: Bomba Combustion ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"MOTOBOMBA DE COMBUSTION INTERNA.","C":null,"D":null,"E":null,"F":null,"G":null,"H":"f","I":"S","J":"N\/A","K":"N","L":"PARAMETROS","M":"LECTURAS","N":null,"O":null,"P":"COMENTARIOS"}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B147
+
+=== Hoja: Vàlvulas anual ===
+  Row 15: {"A":null,"B":"LISTA DE REVISION (CHECK LIST):","C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"Direcci\u00f3n","C":null,"D":"Ubicacion de la Valvula","E":null,"F":"Area Controlada","G":null,"H":null,"I":null,"J":"Tipo","K":"Abierta","L":"Cerrada","M":"Enllavada","N":"Bloqueada","O":"Monitoreada","P":"N\u00ba Vueltas"}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B46
+
+=== Hoja: Vàlvulas ===
+  Row 15: {"A":null,"B":"LISTA DE REVISION (CHECK LIST):","C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"Direcci\u00f3n","C":null,"D":"Ubicacion de la Valvula","E":null,"F":"Area Controlada","G":null,"H":null,"I":null,"J":"Tipo","K":"Abierta","L":"Cerrada","M":"Enllavada","N":"Bloqueada","O":"Monitoreada","P":"Observaciones"}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B46
+
+=== Hoja: Hidrantes Exteriores ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":"NUMERO DE HIDRANTE :","H":1,"I":2,"J":3,"K":4,"L":5,"M":6,"N":7,"O":8,"P":9}
+  Row 16: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B43
+
+=== Hoja: Hidrantes Interiores ===
+  Row 15: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"OK","H":"OK","I":"OK","J":"OK","K":"OK","L":"OK","M":"OK","N":"OK","O":"OK","P":"OK"}
+  Row 16: {"A":null,"B":"\u00bf Funciona el detector de flujo ?","C":null,"D":null,"E":null,"F":null,"G":"OK","H":"OK","I":"OK","J":"OK","K":"OK","L":"OK","M":"OK","N":"OK","O":"OK","P":"OK"}
+  [C7] => Master de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B40
+
+=== Hoja: Hidrantes Interiores (2) ===
+  Row 15: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"OK","H":"OK","I":"OK","J":"OK","K":"OK","L":"OK","M":"OK","N":"OK","O":"OK","P":"OK"}
+  Row 16: {"A":null,"B":"\u00bf Funciona el detector de flujo ?","C":null,"D":null,"E":null,"F":null,"G":"OK","H":"OK","I":"OK","J":"OK","K":"OK","L":"OK","M":"OK","N":"OK","O":"OK","P":"OK"}
+  [C7] => Master de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B40
+
+=== Hoja: Sistema 1 ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B75
+
+=== Hoja: Sistema 1A ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B75
+
+=== Hoja: Sistema 2  ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B76
+
+=== Hoja: Sistema 2A  ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B74
+
+=== Hoja: Sistema 3  ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B77
+
+=== Hoja: Sistema 3A  ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B75
+
+=== Hoja: Sistema 4 ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B80
+
+=== Hoja: Sistema 5 ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B76
+
+=== Hoja: Sistema 6 ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B76
+
+=== Hoja: Sistema 9 ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B76
+
+=== Hoja: Sistema 9A ===
+  Row 15: {"A":null,"B":"SISTEMAS HUMEDOS","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El sistema se encontr\u00f3 en servicio ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B75
+
+=== Hoja: Detec. de Flujo ===
+  Row 15: {"A":null,"B":"S: SATISFACTORIO            N\/A: NO APLICA            X: NO SATISFACTORIO","C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B33
+
+=== Hoja: Pruebas anuales de drenaje  ===
+  Row 15: {"A":null,"B":"Prueba Realizada","C":null,"D":null,"E":"F","F":"Riser Sistema 1","G":"Riser Sistema 1A","H":"Riser Sistema 2","I":"Riser Sistema 2A","J":"Riser Sistema 3","K":"Riser Sistema 3A","L":"Riser Sistema 4","M":"Riser Sistema 5","N":"Riser Sistema 6","O":"Riser Sistema 9","P":"Riser Sistema 9A"}
+  Row 16: {"A":null,"B":"Presi\u00f3n est\u00e1tica al final del servicio anual.","C":null,"D":null,"E":"A","F":"148 PSI","G":"150 PSI","H":"150 PSI","I":"154 PSI","J":"150 PSI","K":"150 PSI","L":"152 PSI","M":"155 PSI","N":"152 PSI","O":"155 PSI","P":"152 PSI"}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B22
+
+=== Hoja: Panel de Alarma ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"SISTEMA DE ALARMA Y DETECCION","C":null,"D":null,"E":null,"F":null,"G":null,"H":"f","I":"S","J":"N\/A","K":"N","L":"PARAMETROS","M":"LECTURAS","N":"COMENTARIOS","O":null,"P":null}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B52
+
+=== Hoja: Estaciones Manuales ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":"Z006","C":"M031","D":"E\/M","E":"Cuarto tratado de agua","F":null,"G":null,"H":"OK","I":"OK","J":"OK","K":"OK","L":"OK","M":null,"N":null,"O":null,"P":null}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B40
+
+=== Hoja: Detectores de Humo ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":"D\/C :","K":"Detector de Calor","L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":" DISPOSITIVOS DEL SISTEMA DE ALARMA Y DETECCION DIRECCIONADO","C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B115
+
+=== Hoja: FM200 ===
+  Row 15: {"A":null,"B":"INSPECCION VISUAL AL AREA","C":null,"D":null,"E":null,"F":null,"G":"f","H":"S","I":"N\/A","J":"N","K":"PARAMETROS","L":"LECTURAS","M":null,"N":null,"O":"COMENTARIOS","P":null}
+  Row 16: {"A":null,"B":"\u00bf El \u00e1rea de riesgo ha sido modificada con respecto al plano ?","C":null,"D":null,"E":null,"F":null,"G":"M","H":"OK","I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => Master Lock de Nogales Planta 2
+  Fila 'Observaciones' detectada en: B57
+
+=== Hoja: Aceptaciòn y entrega. ===
+  Row 15: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  Row 16: {"A":null,"B":null,"C":null,"D":null,"E":null,"F":null,"G":null,"H":null,"I":null,"J":null,"K":null,"L":null,"M":null,"N":null,"O":null,"P":null}
+  [C7] => [EMPTY]
+  Fila 'Observaciones' detectada en: B62
+
