@@ -24,7 +24,7 @@ class ExcelExporter
         if (ob_get_length())
             ob_end_clean();
 
-        // 1. Recolección y Organización de Datos (DEBUG)
+        // 1. Recolección y Organización de Datos
         $dataByArea = self::collectAndGroupData($rows);
 
         // 2. Cargar Plantilla
@@ -35,45 +35,45 @@ class ExcelExporter
 
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
 
-        // Limpiar nombres definidos para evitar conflictos de impresión
+        // Limpiar nombres definidos para evitar conflictos
         foreach ($spreadsheet->getDefinedNames() as $name) {
             $spreadsheet->removeDefinedName($name->getName());
         }
 
-        $allSheetNames = $spreadsheet->getSheetNames();
-        $usedAreas = array_keys($dataByArea);
+        $usedAreas = [];
 
         // 3. Procesar cada Área (Sistema)
         foreach ($dataByArea as $areaName => $areaData) {
-            // Intentar encontrar la hoja exacta o una parecida
             $sheet = self::getBestMatchingSheet($spreadsheet, $areaName);
 
             if (!$sheet) {
-                // Si no hay match, podríamos clonar una por defecto o saltar (aquí saltamos con log)
                 error_log("ExcelExporter: No se encontró hoja para el sistema '$areaName'.");
                 continue;
             }
 
-            self::fillSystemSheet($sheet, $areaData);
+            self::fillSystemSheet($sheet, $areaData, $areaName);
+            $usedAreas[] = $areaName;
         }
 
-        // 4. Eliminar hojas no utilizadas (opcional, pero limpio)
-        // Excepto "Aceptación y entrega" y las que acabamos de llenar
-        // Para simplificar, las dejamos pero llenamos la de Aceptación al final.
-
-        // 5. Llenar página de "Aceptación y entrega"
+        // 4. Llenar página de "Aceptación y entrega."
         $aceptacionSheet = $spreadsheet->getSheetByName('Aceptación y entrega.');
         if ($aceptacionSheet) {
             self::fillAcceptanceSheet($aceptacionSheet, $usedAreas);
         }
 
-        // 6. Output
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
+        // 5. Output
+        if (strpos($filename, 'php://') === 0 || strpos($filename, 'tests/') === 0) {
+            // Si es una ruta de prueba o stream directo
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save($filename === 'Test_Result.xlsx' ? 'php://output' : $filename);
+        } else {
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
 
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save('php://output');
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }
         exit;
     }
 
@@ -91,7 +91,6 @@ class ExcelExporter
                 ];
             }
 
-            // Parsear JSON de CARs
             $jsonStr = $row['JSON_Reporte'] ?? '';
             $jsonData = json_decode($jsonStr, true);
             $carReports = $jsonData['car_reports'] ?? $jsonData['cars'] ?? $jsonData['area_data']['cars'] ?? $jsonData['area']['cars'] ?? [];
@@ -102,10 +101,6 @@ class ExcelExporter
                 }
             }
         }
-
-        // Debug log opcional (PHP Error Log)
-        error_log("ExcelExporter: Datos recolectados para " . count($grouped) . " áreas.");
-
         return $grouped;
     }
 
@@ -137,66 +132,58 @@ class ExcelExporter
 
     private static function getBestMatchingSheet($spreadsheet, $name)
     {
-        // 1. Match exacto
         $sheet = $spreadsheet->getSheetByName($name);
         if ($sheet)
             return $sheet;
 
-        // 2. Match parcial (case insensitive, sin espacios raros)
         foreach ($spreadsheet->getAllSheets() as $sh) {
-            if (stripos(trim($sh->getTitle()), trim($name)) !== false) {
+            $title = trim($sh->getTitle());
+            if (stripos($title, trim($name)) !== false) {
                 return $sh;
             }
         }
-
-        // 3. Fallback: buscar una hoja que diga "Sistema X"
         return null;
     }
 
-    private static function fillSystemSheet($sheet, $data)
+    private static function fillSystemSheet($sheet, $data, $areaName)
     {
-        // Maquila C7 - I7 (celdas combinadas usualmente)
+        // Header: Maquila en C7, Area en B15 (según inspección previa)
         $sheet->setCellValue('C7', $data['maquila']);
 
-        // El usuario dijo: b-f 16 CARs, i 16 no ok, j 16 ok, k 16 parametros, l-m-n 16 lecturas
-        $currentRow = 16;
-        $startRow = 16;
+        // Título de la tabla usualmente está en B15
+        $sheet->setCellValue('B15', "LISTA DE REVISION: " . strtoupper($areaName));
 
-        // Buscar fila de observaciones para saber cuánto espacio tenemos
+        $currentRow = 16;
         $obsRowIndex = 62;
-        foreach (range(16, 500) as $r) {
+
+        // Buscar dinámicamente la fila de Observaciones
+        for ($r = 16; $r < 200; $r++) {
             $val = $sheet->getCell('B' . $r)->getCalculatedValue();
-            if ($val && stripos((string) $val, 'Observaciones') !== false) {
+            if ($val && (stripos((string) $val, 'Observaciones') !== false || stripos((string) $val, 'Comentarios') !== false)) {
                 $obsRowIndex = $r;
                 break;
             }
         }
 
         foreach ($data['cars'] as $car) {
-            // Un CAR puede tener múltiples sub-items si queremos detallar responses, 
-            // pero el usuario pidió "CAR" en B-F. Si el CAR es la unidad, ponemos el nombre ahí.
-
-            // Si hay muchos sub-items, insertamos filas
-            if ($currentRow >= $obsRowIndex - 1) {
+            if ($currentRow >= $obsRowIndex) {
                 $sheet->insertNewRowBefore($obsRowIndex, 1);
                 $obsRowIndex++;
             }
 
             $sheet->setCellValue('B' . $currentRow, $car['name']);
 
-            // Lógica simple para OK/NO OK (J/I)
-            // Asumiremos que si hay fallos en los detalles es NO OK
             $isOk = true;
             $readings = [];
             $params = [];
 
             foreach ($car['details'] as $detail) {
                 $v = (string) $detail['value'];
-                if (stripos($v, 'ERROR') !== false || stripos($v, 'NO') !== false || $v === "0" || $v === "false") {
+                $lowV = strtolower($v);
+                if ($lowV === 'no' || $lowV === 'error' || $lowV === '0' || $lowV === 'false' || $lowV === 'malo') {
                     $isOk = false;
                 }
 
-                // Si parece lectura (número)
                 if (is_numeric($v)) {
                     $readings[] = $detail['label'] . ": " . $v;
                 } else {
@@ -206,39 +193,51 @@ class ExcelExporter
 
             if ($isOk) {
                 $sheet->setCellValue('J' . $currentRow, 'X');
+                $sheet->setCellValue('I' . $currentRow, '');
             } else {
                 $sheet->setCellValue('I' . $currentRow, 'X');
+                $sheet->setCellValue('J' . $currentRow, '');
             }
 
             $sheet->setCellValue('K' . $currentRow, implode(", ", $params));
-            $sheet->setCellValue('L' . $currentRow, implode(", ", $readings));
 
-            // Observaciones (abajo, el usuario dijo "hay reglones de observaciones")
-            // Usualmente se ponen al final de la tabla o en la fila de observaciones del footer
+            // Lecturas en L, M, N (repartir si hay varias o poner todas en L)
+            if (count($readings) > 0) {
+                $sheet->setCellValue('L' . $currentRow, $readings[0]);
+                if (isset($readings[1]))
+                    $sheet->setCellValue('M' . $currentRow, $readings[1]);
+                if (isset($readings[2]))
+                    $sheet->setCellValue('N' . $currentRow, $readings[2]);
+            }
 
             $currentRow++;
         }
 
-        // Poner la observación general del primer reporte en la fila de observaciones detectada
-        if (!empty($data['cars'][0]['obs'])) {
-            $sheet->setCellValue('B' . ($obsRowIndex + 1), $data['cars'][0]['obs']);
+        // Observaciones generales del sistema
+        $allObs = [];
+        foreach ($data['cars'] as $car) {
+            if (!empty($car['obs']))
+                $allObs[] = $car['name'] . ": " . $car['obs'];
+        }
+
+        if (!empty($allObs)) {
+            $sheet->setCellValue('B' . ($obsRowIndex + 1), implode(" | ", $allObs));
         }
     }
 
     private static function fillAcceptanceSheet($sheet, $areas)
     {
-        // Listar las áreas al final
-        $sheet->setCellValue('B10', "Sistemas inspeccionados:");
+        // En la plantilla actual, parece que las áreas se listan a partir de la fila 11
         $r = 11;
         foreach ($areas as $area) {
-            $sheet->setCellValue('B' . $r, "- " . $area);
+            $sheet->setCellValue('B' . $r, $area);
+            $sheet->setCellValue('C' . $r, "COMPLETO");
             $r++;
+            if ($r > 30)
+                break; // Limite de seguridad
         }
     }
 
-    /**
-     * Exporta un reporte individual (mantenemos compatibilidad básica si se usa).
-     */
     public static function exportSingleReport(array $report, string $filename = 'Detalle_Reporte.xlsx')
     {
         self::exportReports([$report], $filename);
