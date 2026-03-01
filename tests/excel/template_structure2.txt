@@ -1,0 +1,131 @@
+=== HOJA: Vàlvulas anual ===
+Dimensiones: U59
+  R6: {"B6":"REPORTE DE INSPECCIÓN, PRUEBAS Y MANTENIMIENTO A VÁLVULAS "}
+  R7: {"B7":"CLIENTE : ","D7":"Master Lock de Nogales Planta 2","P7":"CONTRATO : "}
+  R8: {"B8":"ATENCION : ","D8":"Ing. Julio Landabazo","P8":"INSPECTOR : "}
+  R9: {"B9":"SERVICIO : ","D9":"=#REF!","P9":"FECHA : "}
+  R11: {"D11":"Válvulas  de Control y Seccionadoras"}
+  R13: {"B13":"f = FRECUENCIA          M = MENSUAL          Q = TRIMESTRAL ","I13":"S: SATISFACTORIO            N\/A: NO APLICA            N: NO "}
+  R15: {"B15":"LISTA DE REVISION (CHECK LIST):"}
+  R16: {"B16":"Dirección","D16":"Ubicacion de la Valvula","F16":"Area Controlada","J16":"Tipo","K16":"Abierta","L16":"Cerrada","M16":"Enllavada","N16":"Bloqueada","O16":"Monitoreada","P16":"Nº Vueltas"}
+  R17: {"B17":"M-066","D17":"Tanque de Abastecimiento de Agua","F17":"Todo el  sistema (Succión Bomba Diesel)","J17":"OS&V","K17":"OK","M17":"OK","N17":"NO","O17":"OK","P17":34}
+  R18: {"B18":"M-061","D18":"Interior del Cuarto de Bombas","F18":"Todo el  sistema (Descarga Diesel)","J18":"OS&V","K18":"OK","M18":"OK","N18":"NO","O18":"OK","P18":35}
+  R19: {"B19":"N\/A","D19":"Interior del Cuarto de Bombas","F19":"Manifoul de pruebas","J19":"OS&V","L19":"OK","M19":"OK","N19":"NO","O19":"N\/A","P19":"N\/A"}
+  R20: {"B20":"N\/A","D20":"Exterior del Cuarto de Bombas","F20":"Succion Bomba Jockey (Todo el Edificio)","J20":"Comp.","K20":"OK","M20":"OK","N20":"NO","O20":"N\/A","P20":9.75}
+  R21: {"B21":"N\/A","D21":"Interior del Cuarto de Bombas","F21":"Descarga Bomba Jockey (Todo el Edificio)","J21":"Comp.","K21":"OK","M21":"OK","N21":"NO","O21":"N\/A","P21":8.5}
+  R22: {"B22":"N\/A","D22":"Interior del Cuarto de Bombas","F22":"Sistema de Rociadores Cuarto de Bombas","J22":"Comp.","K22":"OK","M22":"OK","N22":"NO","O22":"N\/A","P22":9.5}
+  R23: {"B23":"M-092","D23":" Exterior Puerta de emergancia # 11","F23":"Sistema de Rociadores Nº 1","J23":"OS&V","K23":"OK","M23":"OK","N23":"NO","O23":"OK","P23":20.5}
+  R24: {"B24":"M-026","D24":"A un lado salida de emergencia # 11","F24":"Sistema de Rociadores en Racks 1A","J24":"IBV","K24":"OK","M24":"OK","N24":"NO","O24":"OK","P24":16.5}
+  R25: {"D25":"Derivacion cabezal sistema 1A","F25":"Ampliación Rociadores in rack almacen","J25":"IBV","K25":"OK","M25":"X","N25":"NO","O25":"OK","P25":12}
+  R26: {"B26":"M-028","D26":"A un lado salida de emergencia # 11","F26":"Sistema de Rociadores 1B fuera de servicio","J26":"IBV","L26":"OK","M26":"OK","N26":"NO","O26":"OK","P26":"N\/A"}
+  R27: {"B27":"M-009","D27":"Exterior Puerta de emergencia Nº 1","F27":"Sistema de Rociadores Nº 2","J27":"OS&V","K27":"OK","M27":"OK","N27":"NO","O27":"OK","P27":20.5}
+  R28: {"B28":"M-007","D28":"En Raiser Sistema  2A","F28":"Sistema de Rociadores in Racks 2A","J28":"IBV","K28":"OK","M28":"OK","N28":"NO","O28":"OK","P28":16}
+  R29: {"B29":"M-013","D29":" Exterior Puerta de emergencia Nº 2","F29":"Sistema de Rociadores Nº 3","J29":"OS&V","K29":"OK","M29":"OK","N29":"NO","O29":"OK","P29":20.25}
+  R30: {"B30":"M-012","D30":"En Raiser Sistema  3A","F30":"Sistema de Rociadores en Racks 3A","J30":"IBV","K30":"OK","M30":"OK","N30":"NO","O30":"OK","P30":16}
+  R31: {"B31":"M-020","D31":" Exterior Rampa Automotriz","F31":"Sistema de Rociadores Nº 4","J31":"OS&V","K31":"OK","M31":"OK","N31":"NO","O31":"OK","P31":20.5}
+  R32: {"B32":"M-086","D32":"Patio frente area  de compresores","F32":"Sistema de Rociadores Nº 5","J32":"PIV","K32":"OK","M32":"OK","N32":"NO","O32":"OK","P32":20.5}
+  R33: {"B33":"M-017","D33":" Exterior Cuarto de Bombas","F33":"Sistema de Rociadores Nº 6","J33":"OS&V","K33":"OK","M33":"OK","N33":"NO","O33":"OK","P33":20.25}
+  R34: {"B34":"M-021","D34":" Exterior Rampa Automotriz","F34":"Sistema de Rociadores Nº 7  ","J34":"OS&V","L34":"OK","M34":"OK","N34":"NO","O34":"OK","P34":"N\/A"}
+  R35: {"B35":"M-091","D35":" Exterior recepciòn","F35":"Sistema de Rociadores Nº 9","J35":"PIV","K35":"OK","M35":"OK","N35":"NO","O35":"OK","P35":20}
+  R36: {"B36":"M-003","D36":"En Raiser Sistema 9 A","F36":"Sistema de Rociadores in Racks 9A","J36":"IBV","K36":"OK","M36":"OK","N36":"NO","O36":"OK","P36":16.5}
+  R37: {"B37":"M- 034","D37":"Exterior Cocina","F37":"Vàlvula Seccionadora (Todo el Edificio)","J37":"PIV","L37":"OK","M37":"OK","N37":"NO","O37":"OK","P37":"xxx"}
+  R38: {"B38":"M-032","D38":" Estacionamiento","F38":"Vàlvula Seccionadora (Todo el Edificio)","J38":"PIV","K38":"OK","M38":"OK","N38":"NO","O38":"OK","P38":26}
+  R39: {"B39":"M-021","D39":" Exterior Cortina Automotriz","F39":"Vàlvula Seccionadora ","J39":"PIV","K39":"OK","M39":"OK","N39":"NO","O39":"OK","P39":26}
+  R40: {"B40":"M- 029","D40":"Patio Oriente 1 (afuera cuarto de Bombas)","F40":"Vàlvula Seccionadora (Todo el Edificio)","J40":"PIV","K40":"OK","M40":"OK","N40":"NO","O40":"OK","P40":32.5}
+  R41: {"B41":"M-030","D41":"Patio Oriente 2 (afuera cuarto de Bombas)","F41":"Vàlvula Seccionadora (Todo el Edificio)","J41":"PIV","K41":"OK","M41":"OK","N41":"NO","O41":"OK","P41":32.75}
+  R42: {"B42":"N\/A","D42":"Estacionamiento limite de instalaciones","F42":"A futuro","J42":"PIV","L42":"OK","M42":"OK","N42":"NO","O42":"N\/A","P42":"N\/A"}
+  R43: {"B43":"N\/A","D43":"Estacionamiento","F43":"Interconexion con ITT CANNON","J43":"PIV","L43":"OK","M43":"OK","N43":"NO","O43":"N\/A","P43":"N\/A"}
+  R44: {"B44":"N\/A","D44":"Patio noroeste","F44":"Interconexion con ITT CANNON","J44":"PIV","L44":"OK","M44":"OK","N44":"NO","O44":"N\/A","P44":"N\/A"}
+  R46: {"B46":"OBSERVACIONES :"}
+  R48: {"B48":"Se realizo la prueba annual de conteo de vueltas de cierre y"}
+  R49: {"B49":"Válvula seccionadora instalada en exterior de cocina requie"}
+  R50: {"B50":"Se lubricaron todas las válvulas"}
+  R53: {"H53":"ELABORO :"}
+  R54: {"H54":"=R8"}
+  R56: {"H56":"=R9"}
+  R57: {"H57":"NOMBRE, FIRMA Y FECHA"}
+
+=== HOJA: Sistema EJEMPLO ===
+Dimensiones: IU88
+  R1: {"P1":"FIRE CONTROL SYSTEMS"}
+  R2: {"P2":"Bucarest  12  Terranova Nogales, Sonora"}
+  R3: {"P3":"Tel. 104-1127 Cel. 631-357-9141 las 24 Hrs."}
+  R4: {"P4":"Patricia Campos Badillo"}
+  R5: {"P5":"RFC. CABP721117CW7"}
+  R6: {"B6":"REPORTE DE EJEMPLO","P6":"E. Mail: firecontrolsystems@hotmail.com"}
+  R7: {"B7":"CLIENTE:","C7":"MAQUILA","J7":"CONTRATO : ","L7":"Mensual"}
+  R8: {"B8":"ATENCIÓN:","C8":"Ing. Julio Landabazo","J8":"INSPECTOR : ","L8":"=#REF!"}
+  R9: {"B9":"SERVICIO:","C9":"=#REF!","J9":"FECHA : ","L9":"=#REF!"}
+  R11: {"C11":"Sistema EJEMPLO"}
+  R13: {"B13":"f = FRECUENCIA       M = MENSUAL       Q = TRIMESTRAL       ","F13":"S: SATISFACTORIO       N\/A: NO APLICA        N: NO SATISFACT"}
+  R15: {"B15":"SISTEMAS  EJEMPLO","G15":"f","H15":"S","I15":"N\/A","J15":"N","K15":"PARAMETROS","L15":"LECTURAS","O15":"COMENTARIOS"}
+  R75: {"B75":"OBSERVACIONES :"}
+
+=== HOJA: Detec. de Flujo ===
+Dimensiones: W45
+  R6: {"B6":"REPORTE DE INSPECCIÓN, PRUEBAS Y MANTENIMIENTO TRIMESTRAL A"}
+  R7: {"B7":"CLIENTE : ","D7":"Master Lock de Nogales Planta 2"}
+  R8: {"B8":"ATENCION : ","D8":"Ing. Julio Landabazo"}
+  R9: {"B9":"SERVICIO : ","D9":" 01 de 12"}
+  R10: {"A10":"98i"}
+  R11: {"D11":"DETECTORES DE FLUJO"}
+  R13: {"B13":"F = FRECUENCIA          M = MENSUAL          Q = TRIMESTRAL "}
+  R15: {"B15":"S: SATISFACTORIO            N\/A: NO APLICA            X: NO "}
+  R17: {"B17":"Direcciòn","C17":"Ubicación ","G17":"F","H17":"Alarma","I17":"Señal al tablero","K17":"Limpieza interna","L17":"Signos de Filtraciòn","M17":"Signos de corrosiòn","N17":"Terminales sulfatadas","O17":"Tiempo de respuesta "}
+  R18: {"B18":"M-024","C18":"Riser Sistema Nº 1","G18":"Q","H18":"X","I18":"OK","K18":"OK","L18":"OK","M18":"OK","N18":"OK","O18":37}
+  R19: {"B19":"M-025","C19":"Riser Sistema Nº 1A","G19":"Q","H19":"OK","I19":"OK","K19":"OK","L19":"OK","M19":"OK","N19":"OK","O19":42}
+  R20: {"B20":"M-027","C20":"Riser Sistema Nº 1B","G20":"Q","H20":"X","I20":"N\/A","K20":"N\/A","L20":"N\/A","M20":"N\/A","N20":"N\/A","O20":"N\/A"}
+  R21: {"B21":"M-006","C21":"Riser Sistema Nº 2","G21":"Q","H21":"X","I21":"OK","K21":"OK","L21":"OK","M21":"OK","N21":"OK","O21":40}
+  R22: {"B22":"M-008","C22":"Riser Sistema Nº 2 A","G22":"Q","H22":"X","I22":"OK","K22":"OK","L22":"OK","M22":"OK","N22":"OK","O22":47}
+  R23: {"B23":"M-010","C23":"Riser Sistema Nº 3","G23":"Q","H23":"X","I23":"OK","K23":"OK","L23":"OK","M23":"OK","N23":"OK","O23":38}
+  R24: {"B24":"M-011","C24":"Riser Sistema Nº 3A","G24":"Q","H24":"X","I24":"OK","K24":"OK","L24":"OK","M24":"OK","N24":"OK","O24":48}
+  R25: {"B25":"M-019","C25":"Riser Sistema Nº 4","G25":"Q","H25":"X","I25":"OK","K25":"OK","L25":"OK","M25":"OK","N25":"OK","O25":48}
+  R26: {"B26":"M-085","C26":"Riser Sistema Nº 5","G26":"Q","H26":"X","I26":"OK","K26":"OK","L26":"OK","M26":"OK","N26":"OK","O26":48}
+  R27: {"B27":"M-016","C27":"Riser Sistema Nº 6","G27":"Q","H27":"X","I27":"OK","K27":"OK","L27":"OK","M27":"OK","N27":"OK","O27":47}
+  R28: {"B28":"M-018","C28":"Riser Sistema Nº 7","G28":"Q","H28":"X","I28":"N\/A","K28":"N\/A","L28":"N\/A","M28":"N\/A","N28":"N\/A","O28":"N\/A"}
+  R29: {"B29":"M-005","C29":"Riser Sistema Nº 9","G29":"Q","H29":"X","I29":"OK","K29":"OK","L29":"OK","M29":"OK","N29":"OK","O29":43}
+  R30: {"B30":"M-004","C30":"Riser Sistema Nº 9A","G30":"Q","H30":"X","I30":"X","K30":"OK","L30":"X","M30":"OK","N30":"OK","O30":43}
+  R31: {"B31":"M-060","C31":"Rociadores Cto de Bombas","G31":"Q","H31":"OK","I31":"OK","K31":"OK","L31":"OK","M31":"OK","N31":"OK","O31":50}
+  R33: {"B33":"OBSERVACIONES :"}
+  R35: {"B35":"Se realizo prueba trimestral de tiempo de respuesta de los d"}
+  R36: {"B36":"Se detecto corrosion por filtración de agua en el sensor de"}
+  R40: {"J40":"ELABORÒ"}
+  R41: {"J41":"=S8"}
+  R43: {"J43":"=S9"}
+  R44: {"J44":"NOMBRE,FIRMA Y FECHA"}
+
+=== HOJA: Pruebas anuales de drenaje  ===
+Dimensiones: T35
+  R6: {"B6":"Pruebas de Drenaje Principal Anual a Sistemas Humedos."}
+  R7: {"B7":"Cliente:","C7":"Master Lock de Nogales Planta 2","O7":"CONTRATO : "}
+  R8: {"B8":"Atención:","C8":"Ing. Julio Landabazo","O8":"INSPECTOR:"}
+  R9: {"B9":"Servicio:","C9":" 2 de 12","O9":"FECHA:"}
+  R11: {"B11":"Las pruebas se realizaron utilizando medidores de presión c"}
+  R12: {"B12":"F = FRECUENCIA          M = MENSUAL          Q = TRIMESTRAL "}
+  R14: {"B14":"S: SATISFACTORIO            N\/A: NO APLICA            X: NO "}
+  R15: {"B15":"Prueba Realizada","E15":"F","F15":"Riser Sistema 1","G15":"Riser Sistema 1A","H15":"Riser Sistema 2","I15":"Riser Sistema 2A","J15":"Riser Sistema 3","K15":"Riser Sistema 3A","L15":"Riser Sistema 4","M15":"Riser Sistema 5","N15":"Riser Sistema 6","O15":"Riser Sistema 9","P15":"Riser Sistema 9A"}
+  R16: {"B16":"Presión estática al final del servicio anual.","E16":"A","F16":"148 PSI","G16":"150 PSI","H16":"150 PSI","I16":"154 PSI","J16":"150 PSI","K16":"150 PSI","L16":"152 PSI","M16":"155 PSI","N16":"152 PSI","O16":"155 PSI","P16":"152 PSI"}
+  R17: {"B17":"Presión residual con válvula (2\") de Dren abierta ","E17":"A","F17":"145 PSI","G17":"150 PSI","I17":"145 PSI","J17":"148 PSI","K17":"150 PSI","L17":"140 PSI","M17":"155 PSI","O17":"150 PSI","P17":"145 PSI"}
+  R18: {"B18":"Tiempo de respuesta del motor de alarma al abrir la válvula","E18":"A","F18":"09 SEG.","G18":"11 SEG.","I18":"21 SEG.","J18":"15 SEG.","K18":"08 SEG.","L18":"06 SEG.","M18":"06 SEG.","O18":"20 SEG.","P18":"15 SEG."}
+  R19: {"B19":"Presión residual con válvula de inspección abierta ","E19":"A","F19":"148 PSI","G19":"150 PSI","H19":"155 PSI","I19":"155 PSI","J19":"150 PSI","K19":"153 PSI","L19":"155 PSI","M19":"155 PSI","N19":"154 PSI","O19":"150 PSI","P19":"160 PSI"}
+  R20: {"B20":"Tiempo de respuesta del motor de alarma al abrir la válvula","E20":"A","F20":"60 SEG.","G20":"33 SEG.","H20":"52 SEG.","I20":"20 SEG.","J20":"57 SEG.","K20":"21 SEG.","L20":"35 SEG.","M20":"32 SEG.","N20":"39 SEG.","O20":"45 SEG.","P20":"30 SEG."}
+  R22: {"B22":"OBSERVACIONES:"}
+  R24: {"B24":"No se realizaron pruebas de drenaje a sistemas de rociadores"}
+  R30: {"I30":"ELABORÒ"}
+  R31: {"I31":"=Q8"}
+  R33: {"I33":"=Q9"}
+  R34: {"I34":"NOMBRE,FIRMA Y FECHA"}
+
+=== HOJA: Aceptaciòn y entrega. ===
+Dimensiones: BA104
+  R6: {"G6":"REPORTE DE ACEPTACION Y ENTREGA"}
+  R8: {"B8":"CLIENTE : ","O8":"CONTRATO : "}
+  R9: {"B9":"ATENCION : ","O9":"INSPECTOR:"}
+  R10: {"B10":"SERVICIO : ","O10":"FECHA:"}
+  R13: {"B13":"REFERENCIA","D13":"IRREGULARIDAD REPORTADA","K13":"RECOMENDACION HECHA"}
+  R62: {"B62":"Observaciones:"}
+  R72: {"E72":"Elaboro:","L72":"Por el cliente:"}
+  R73: {"E73":"=Q9","L73":"Ing. Julio Landabazo"}
+  R75: {"E75":"=Q10","L75":"=Q10"}
+  R76: {"E76":"Nombre, firma y fecha","L76":"Nombre, firma y fecha"}
+
