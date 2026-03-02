@@ -81,6 +81,20 @@ class ExcelExporter
         // 5. Eliminar la hoja "Sistema EJEMPLO" (ya no se necesita)
         $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($templateSheet));
 
+        // Eliminar hoja "Vàlvulas anual" solicitada por el usuario
+        $valvulasSheet = $spreadsheet->getSheetByName('Vàlvulas anual');
+        if ($valvulasSheet) {
+            $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($valvulasSheet));
+        }
+        $valvulasSheet = $spreadsheet->getSheetByName('Detec. de Flujo');
+        if ($valvulasSheet) {
+            $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($valvulasSheet));
+        }
+        $valvulasSheet = $spreadsheet->getSheetByName('Pruebas anuales de drenaje');
+        if ($valvulasSheet) {
+            $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($valvulasSheet));
+        }
+
         // 6. Rellenar hoja de "Aceptaciòn y entrega."
         $aceptacionSheet = $spreadsheet->getSheetByName('Aceptaciòn y entrega.');
         if (!$aceptacionSheet) {

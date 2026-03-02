@@ -75,6 +75,12 @@ goto :eof
 :start_services
 echo Ningún servicio detectado corriendo. Iniciando XAMPP/Apache/MySQL...
 
+REM Instalar/Verificar dependencias de Composer antes de iniciar
+echo Verificando e instalando dependencias con Composer...
+cd /d "%~dp0.."
+call composer install
+echo Dependencias verificadas.
+
 REM Iniciar Apache (siempre lo abrimos en ventana con título único)
 if exist "%XAMPP_PATH%\apache_start.bat" (
     echo Iniciando Apache con apache_start.bat...
