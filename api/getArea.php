@@ -43,7 +43,7 @@ try {
     } else {
         echo json_encode([
             'success' => false,
-            'message' => 'Área no encontrada'
+            'message' => 'Sistema no encontrado'
         ]);
     }
     exit;

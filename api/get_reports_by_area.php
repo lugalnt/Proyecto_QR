@@ -51,7 +51,7 @@ try {
 
         if (!$esValido) {
             // No autorizada
-            echo json_encode(['success' => false, 'error' => 'Esta área no pertenece a su maquila.']);
+            echo json_encode(['success' => false, 'error' => 'Este sistema no pertenece a su maquila.']);
             exit;
         }
     }

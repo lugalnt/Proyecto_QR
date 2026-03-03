@@ -2,7 +2,7 @@
 // Manejo del modal/popout para mostrar el JSON_Reporte en lenguaje natural.
 // Busca botones con .view-json-btn y usa el overlay con id rpOverlay, contenido en rpContent.
 
-(function(){
+(function () {
     function decodeB64ToString(b64) {
         try {
             // atob maneja base64 ASCII; si hay UTF-8 se necesita una decodificación extra.
@@ -24,7 +24,7 @@
         if (jsonObj.area) {
             var an = jsonObj.area.area_name || jsonObj.area.Nombre_Area || jsonObj.area.name || '';
             var ad = jsonObj.area.area_description || jsonObj.area.Descripcion_Area || jsonObj.area.description || '';
-            if (an) lines.push('Área: ' + an);
+            if (an) lines.push('Sistema: ' + an);
             if (ad) lines.push('Descripción: ' + ad);
             lines.push(''); // separación
         }
@@ -35,12 +35,12 @@
             return lines;
         }
 
-        cars.forEach(function(cr, idx){
-            var cname = cr.car_name || cr.name || ('C.A.R. ' + (idx+1));
+        cars.forEach(function (cr, idx) {
+            var cname = cr.car_name || cr.name || ('C.A.R. ' + (idx + 1));
             lines.push('--- ' + cname + ' ---');
             if (cr.responses && typeof cr.responses === 'object') {
                 // respuestas es map label => value
-                Object.keys(cr.responses).forEach(function(label){
+                Object.keys(cr.responses).forEach(function (label) {
                     var val = cr.responses[label];
                     var display = String(val);
                     // formateo booleano
@@ -73,31 +73,31 @@
         // limpiar
         contentEl.innerHTML = '';
         titleEl.textContent = title || 'Detalle del reporte';
-        lines.forEach(function(l){
+        lines.forEach(function (l) {
             var p = document.createElement('div');
             p.textContent = l;
             contentEl.appendChild(p);
         });
         overlay.style.display = 'flex';
-        overlay.setAttribute('aria-hidden','false');
+        overlay.setAttribute('aria-hidden', 'false');
     }
 
     function closeModal() {
         overlay.style.display = 'none';
-        overlay.setAttribute('aria-hidden','true');
+        overlay.setAttribute('aria-hidden', 'true');
         contentEl.innerHTML = '';
     }
 
     closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', function(e){
+    overlay.addEventListener('click', function (e) {
         if (e.target === overlay) closeModal();
     });
-    document.addEventListener('keydown', function(e){
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeModal();
     });
 
     // Attach handlers to buttons (delegation)
-    document.addEventListener('click', function(e){
+    document.addEventListener('click', function (e) {
         var btn = e.target.closest && e.target.closest('.view-json-btn');
         if (!btn) return;
         e.preventDefault();

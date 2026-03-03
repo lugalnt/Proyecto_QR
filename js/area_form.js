@@ -469,7 +469,7 @@ function showImportExistingNotice(incomingArray) {
       // mark editing mode
       isEditing = true;
       if(editarInput) editarInput.value = '1';
-      if(submitBtn) submitBtn.textContent = 'Actualizar Area';
+      if(submitBtn) submitBtn.textContent = 'Actualizar Sistema';
 
       // update hidden JSON and counter
       saveJSONToHidden();
@@ -480,7 +480,7 @@ function showImportExistingNotice(incomingArray) {
       console.log('loadAreaForEdit: formulario rellenado (Id_Area=' + (areaIdInput ? areaIdInput.value : '(sin id)') + ')');
     } catch(err){
       console.error('loadAreaForEdit error:', err);
-      alert('No se pudo cargar el área para edición. Revisa la consola.');
+      alert('No se pudo cargar el sistema para edición. Revisa la consola.');
     }
   };
 

@@ -32,7 +32,7 @@ class AreaController
 
         $existe = $this->obtenerPor('Nombre_Area', $data['Nombre_Area']);
         if ($existe) {
-            throw new \InvalidArgumentException('El Area ya existe, elige otro nombre.');
+            throw new \InvalidArgumentException('El Sistema ya existe, elige otro nombre.');
         }
 
         do {
@@ -139,7 +139,7 @@ class AreaController
         $ok = $this->base->actualizar($idArea, $updateData);
 
         if (!$ok) {
-            throw new \RuntimeException('No se pudo actualizar el área (actualizar devolvió false).');
+            throw new \RuntimeException('No se pudo actualizar el sistema (actualizar devolvió false).');
         }
 
         // Recuperar y retornar el registro actualizado (opcional)

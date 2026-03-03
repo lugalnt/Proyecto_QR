@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (Exception $e) {
                 $mensaje = "❌ Error: " . $e->getMessage();
             }
-            $_SESSION['mensaje'] = "✅ Area registrada con éxito";
+            $_SESSION['mensaje'] = "✅ Sistema registrado con éxito";
             header("Location: " . $_SERVER['PHP_SELF']);
             exit();
         } catch (Exception $e) {
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mensaje = "❌ Error asignando maquila: " . $e->getMessage();
                 }
             }
-            $_SESSION['mensaje'] = "✅ Area actualizada con éxito";
+            $_SESSION['mensaje'] = "✅ Sistema actualizado con éxito";
             header("Location: " . $_SERVER['PHP_SELF']);
             exit();
         } catch (Exception $e) {
@@ -109,7 +109,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
         </div>
 
         <div class="nav-menu">
-            <button class="action-btn" onclick="showDiv('div3')">📍 Area</button>
+            <button class="action-btn" onclick="showDiv('div3')">📍 Sistema</button>
             <button class="action-btn" onclick="showDiv('div4')">📊 Reportes</button>
         </div>
 
@@ -135,19 +135,19 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
         <!--AREAS/////////////////////////////-->
         <div id="div3" class="content-panel">
-            <h1>Area</h1>
+            <h1>Sistema</h1>
 
             <main class="container">
                 <form id="areaForm" method="post" action="">
 
                     <div class="row top">
                         <label class="field">
-                            <span>Nombre Area:</span>
+                            <span>Nombre Sistema:</span>
                             <input type="text" name="Nombre_Area" id="area_name" required />
                         </label>
 
                         <label class="field field-wide">
-                            <span>Descripcion area:</span>
+                            <span>Descripcion sistema:</span>
                             <textarea name="Descripcion_Area" id="area_description" rows="3"></textarea>
                         </label>
 
@@ -220,7 +220,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         <input type="hidden" name="JSON_Area" id="area_json" />
                         <input type="hidden" name="NumeroCAR_Area" id="car_count_input" value="0" />
                         <input type="hidden" name="Registrar_Area" value="1" />
-                        <button type="submit" id="submitBtn">Finalizar y Registrar Area</button>
+                        <button type="submit" id="submitBtn">Finalizar y Registrar Sistema</button>
                     </div>
                 </form>
             </main>
@@ -243,11 +243,11 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             $areasPorMaquilaList = $areasPorMaquilaList['data'] ?? [];
                     }
                 } catch (\Throwable $e) {
-                    echo "<div class='error'>Error al buscar áreas: " . $e->getMessage() . "</div>";
+                    echo "<div class='error'>Error al buscar sistemas: " . $e->getMessage() . "</div>";
                 }
                 ?>
 
-                <h3> Áreas Registradas </h3>
+                <h3> Sistemas Registrados </h3>
 
                 <table class="report-table"> <!-- Reusamos estilo nuevo -->
                     <thead>
@@ -302,7 +302,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="5">No hay areas para mostrar o no has buscado.</td>
+                                <td colspan="5">No hay sistemas para mostrar o no has buscado.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -380,7 +380,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         // marcar edición
                         const editar = document.getElementById('editar_area_input');
                         if (editar) editar.value = '1';
-                        const submit = document.getElementById('submitBtn'); if (submit) submit.textContent = 'Actualizar Area';
+                        const submit = document.getElementById('submitBtn'); if (submit) submit.textContent = 'Actualizar Sistema';
                         // actualizar hidden JSON y contador (si no existe UI para cars)
                         const areaJson = document.getElementById('area_json');
                         const carCount = document.getElementById('car_count_input');
@@ -549,13 +549,13 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
 
                 <div class="filter-group">
-                    <label>Área</label>
+                    <label>Sistema</label>
                     <select id="areaSelect" name="area">
                         <option value="">-- Todas --</option>
                         <?php if (!empty($areasForMaquila)): ?>
                             <?php foreach ($areasForMaquila as $a):
                                 $aid = $a['Id_Area'] ?? $a['id'] ?? '';
-                                $aname = $a['Nombre_Area'] ?? 'Area ' . $aid;
+                                $aname = $a['Nombre_Area'] ?? 'Sistema ' . $aid;
                                 ?>
                                 <option value="<?= htmlspecialchars($aid) ?>" <?= ($areaId == $aid) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($aname) ?>
@@ -610,7 +610,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         <tr>
                             <th>ID</th>
                             <th>Fecha</th>
-                            <th>Maquila / Área</th>
+                            <th>Maquila / Sistema</th>
                             <th>Responsable</th>
                             <th>Estado</th>
                             <th>Progreso CAR</th>
