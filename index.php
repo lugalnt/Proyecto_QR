@@ -886,7 +886,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                 document.getElementById('exportBtn').addEventListener('click', function () {
                     const form = document.getElementById('filterForm');
                     const params = new URLSearchParams(new FormData(form)).toString();
-                    window.location.href = 'exportarReportes.php?' + params;
+                    window.downloadExcelAsync('exportarReportes.php?' + params);
                 });
             </script>
 
@@ -951,7 +951,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                                         Ver Respuestas
                                     </button>
                                     <a href="exportarReportes.php?id_reporte_unico=<?= htmlspecialchars($id) ?>"
-                                        class="filter-btn"
+                                        class="filter-btn export-single-btn"
                                         style="padding:4px 10px; font-size:0.8rem; background-color: #28a745; text-decoration: none; display: inline-block;">
                                         Excel
                                     </a>
@@ -1045,6 +1045,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
         const saved = initialDiv !== 'div1' ? initialDiv : (localStorage.getItem('adminDiv') || 'div1');
         showDiv(saved);
     </script>
+    <script src="js/excel_export.js"></script>
 </body>
 
 </html>
