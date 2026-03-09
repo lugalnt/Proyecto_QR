@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Ajusta rutas según tu proyecto
-require_once __DIR__ . '/../controllers/ReporteController.php';
+require_once __DIR__ . '/../controllers/reporteController.php';
 // require_once __DIR__ . '/../config/db.php';
 
 try {
@@ -84,14 +84,14 @@ try {
     // - decodifica strings JSON salvo cuando la clave actual sea 'JSON_Reporte'
     // - protección por profundidad
     // ------------------------------
-    $normalize = function($value, $key = null, $depth = 0) use (&$normalize) {
+    $normalize = function ($value, $key = null, $depth = 0) use (&$normalize) {
         $MAX_DEPTH = 10;
         if ($depth > $MAX_DEPTH) {
             return $value;
         }
 
         if ($value instanceof \stdClass) {
-            $value = (array)$value;
+            $value = (array) $value;
         }
 
         if (is_array($value)) {
