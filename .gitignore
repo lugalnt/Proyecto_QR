@@ -1,0 +1,10 @@
+# Credenciales y configuración sensible
+.env
+
+# Dependencias (se reinstalan con composer install)
+vendor/
+
+# Archivos del sistema / editores
+.DS_Store
+Thumbs.db
+*.log

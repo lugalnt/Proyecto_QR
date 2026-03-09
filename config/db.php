@@ -1,20 +1,26 @@
 <?php
-// config/DB.php
+// config/db.php
 namespace Config;
 
-class DB {
+require_once __DIR__ . '/env.php';
+
+class DB
+{
     private static ?\PDO $pdo = null;
 
-    private const HOST = 'localhost';
-    private const NAME = 'fcs';
-    private const USER = 'root';
-    private const PASS = '';
     private const CHARSET = 'utf8mb4';
 
-    public static function getConnection(): \PDO {
-        if (self::$pdo !== null) return self::$pdo;
+    public static function getConnection(): \PDO
+    {
+        if (self::$pdo !== null)
+            return self::$pdo;
 
-        $dsn = "mysql:host=" . self::HOST . ";dbname=" . self::NAME . ";charset=" . self::CHARSET;
+        $host = getenv('DB_HOST') ?: 'localhost';
+        $name = getenv('DB_NAME') ?: 'fcs';
+        $user = getenv('DB_USER') ?: 'root';
+        $pass = getenv('DB_PASS') ?: '';
+
+        $dsn = "mysql:host={$host};dbname={$name};charset=" . self::CHARSET;
         $options = [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
@@ -22,7 +28,7 @@ class DB {
         ];
 
         try {
-            self::$pdo = new \PDO($dsn, self::USER, self::PASS, $options);
+            self::$pdo = new \PDO($dsn, $user, $pass, $options);
             return self::$pdo;
         } catch (\PDOException $e) {
             throw new \RuntimeException('DB connection error: ' . $e->getMessage());
