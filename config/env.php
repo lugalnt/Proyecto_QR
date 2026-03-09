@@ -1,34 +1,39 @@
 <?php
 // config/env.php
 // Carga el archivo .env de la raíz del proyecto en $_ENV y getenv().
+// Compatible con PHP 7.2+
 
 function loadEnv(string $path): void
 {
     if (!file_exists($path)) {
-        return; // Si no existe .env, no hace nada (usa vars ya definidas)
+        return; // Si no existe .env, no hace nada
     }
 
     $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        // Ignorar comentarios
-        if (str_starts_with(trim($line), '#')) {
+        $trimmed = trim($line);
+
+        // Ignorar comentarios y líneas vacías
+        if ($trimmed === '' || $trimmed[0] === '#') {
             continue;
         }
 
-        if (!str_contains($line, '=')) {
+        if (strpos($trimmed, '=') === false) {
             continue;
         }
 
-        [$key, $value] = explode('=', $line, 2);
+        [$key, $value] = explode('=', $trimmed, 2);
         $key = trim($key);
         $value = trim($value);
 
         // Quitar comillas si las hay
-        if (
-            (str_starts_with($value, '"') && str_ends_with($value, '"')) ||
-            (str_starts_with($value, "'") && str_ends_with($value, "'"))
-        ) {
-            $value = substr($value, 1, -1);
+        $len = strlen($value);
+        if ($len >= 2) {
+            $first = $value[0];
+            $last = $value[$len - 1];
+            if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                $value = substr($value, 1, -1);
+            }
         }
 
         if (!array_key_exists($key, $_ENV)) {
