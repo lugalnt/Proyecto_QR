@@ -1,5 +1,7 @@
 # Credenciales y configuración sensible
 .env
+config/fcsMailPass.txt
+config/env.php
 
 # Dependencias (se reinstalan con composer install)
 vendor/
