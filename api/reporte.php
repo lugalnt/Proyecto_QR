@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Ajusta rutas según tu proyecto
-require_once __DIR__ . '/../controllers/ReporteController.php';
+require_once __DIR__ . '/../controllers/reporteController.php';
 // require_once __DIR__ . '/../config/db.php';
 
 try {

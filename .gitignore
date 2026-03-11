@@ -1,0 +1,14 @@
+# Credenciales y configuración sensible
+.env
+config/env.php
+
+# Dependencias
+vendor/
+
+# Archivos del sistema / editores
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.swp
