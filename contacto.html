@@ -6,70 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Sistema de Inspección QR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #c63f42;
-            --text: #333;
-            --bg: #f8f9fa;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-
-        h1 {
-            color: var(--primary);
-            margin-top: 0;
-        }
-
-        .contact-info {
-            margin: 2rem 0;
-            text-align: left;
-        }
-
-        .contact-item {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .label {
-            font-weight: 600;
-            color: #555;
-            width: 80px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styleContacto.css">
 </head>
 
 <body>
@@ -97,6 +34,148 @@
 
         <a href="login.php" class="back-link">← Volver al Inicio</a>
     </div>
+
+    <!-- Inicio del Widget de Chat Flotante -->
+    <div class="chat-widget">
+        <!-- Caja de Chat -->
+        <div class="chat-box" id="chatBox" role="dialog" aria-labelledby="chatHeader" aria-hidden="true">
+            <div class="chat-header">
+                <span id="chatHeader">Envíanos un mensaje</span>
+                <button class="chat-close" id="closeChatBtn" aria-label="Cerrar chat">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+                </button>
+            </div>
+            <div class="chat-body">
+                <form id="chatForm">
+                    <!-- Honeypot -->
+                    <div class="chat-hp-group" aria-hidden="true">
+                        <label for="website_url">No llenar si eres humano</label>
+                        <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="chat-form-group">
+                        <label for="chatNombre">Nombre</label>
+                        <input type="text" id="chatNombre" name="nombre" class="chat-input" required placeholder="Tu nombre">
+                    </div>
+                    
+                    <div class="chat-form-group">
+                        <label for="chatEmail">Email</label>
+                        <input type="email" id="chatEmail" name="email" class="chat-input" required placeholder="tu@email.com">
+                    </div>
+
+                    <div class="chat-form-group">
+                        <label for="chatMensaje">Mensaje</label>
+                        <textarea id="chatMensaje" name="mensaje" class="chat-input" required placeholder="¿En qué podemos ayudarte?"></textarea>
+                    </div>
+
+                    <button type="submit" class="chat-submit-btn" id="chatSubmitBtn">
+                        <span id="chatSubmitText">Enviar Mensaje</span>
+                        <svg id="chatSubmitIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                        <div id="chatSubmitSpinner" style="display:none;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    </button>
+                    <div id="chatStatus" class="chat-status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Botón Flotante -->
+        <button class="chat-button" id="toggleChatBtn" aria-label="Abrir chat de soporte" aria-expanded="false" aria-controls="chatBox">
+            <svg id="chatIcon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        </button>
+    </div>
+
+    <!-- Script del Chat Flotante -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleChatBtn = document.getElementById('toggleChatBtn');
+            const closeChatBtn = document.getElementById('closeChatBtn');
+            const chatBox = document.getElementById('chatBox');
+            const chatForm = document.getElementById('chatForm');
+            const chatSubmitBtn = document.getElementById('chatSubmitBtn');
+            const chatStatus = document.getElementById('chatStatus');
+            const chatSubmitText = document.getElementById('chatSubmitText');
+            const chatSubmitIcon = document.getElementById('chatSubmitIcon');
+            const chatSubmitSpinner = document.getElementById('chatSubmitSpinner');
+
+            function toggleChat() {
+                const isActive = chatBox.classList.contains('active');
+                if (isActive) {
+                    // Cerrar
+                    chatBox.classList.remove('active');
+                    chatBox.setAttribute('aria-hidden', 'true');
+                    toggleChatBtn.setAttribute('aria-expanded', 'false');
+                } else {
+                    // Abrir
+                    chatBox.classList.add('active');
+                    chatBox.setAttribute('aria-hidden', 'false');
+                    toggleChatBtn.setAttribute('aria-expanded', 'true');
+                    setTimeout(() => document.getElementById('chatNombre').focus(), 300); // Wait for animation
+                }
+            }
+
+            toggleChatBtn.addEventListener('click', toggleChat);
+            closeChatBtn.addEventListener('click', toggleChat);
+
+            // Cerrar con Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && chatBox.classList.contains('active')) {
+                    toggleChat();
+                    toggleChatBtn.focus();
+                }
+            });
+
+            // Envío del formulario
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // UX Feedback (Spinner)
+                chatSubmitText.textContent = 'Enviando...';
+                chatSubmitIcon.style.display = 'none';
+                chatSubmitSpinner.style.display = 'inline-block';
+                chatSubmitBtn.disabled = true;
+                chatStatus.className = 'chat-status';
+                chatStatus.textContent = '';
+
+                const formData = new FormData(chatForm);
+
+                try {
+                    const response = await fetch('api/enviar_mensaje.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        chatStatus.textContent = result.message || 'Mensaje enviado correctamente.';
+                        chatStatus.className = 'chat-status success';
+                        chatForm.reset();
+                        
+                        // Autocerrar después de unos segundos
+                        setTimeout(() => {
+                            if (chatBox.classList.contains('active')) {
+                                toggleChat();
+                            }
+                            chatStatus.className = 'chat-status';
+                            chatStatus.textContent = '';
+                        }, 4000);
+                    } else {
+                        throw new Error(result.message || 'Error al enviar el mensaje.');
+                    }
+                } catch (error) {
+                    chatStatus.textContent = error.message;
+                    chatStatus.className = 'chat-status error';
+                } finally {
+                    // Restore button state
+                    chatSubmitText.textContent = 'Enviar Mensaje';
+                    chatSubmitIcon.style.display = 'inline-block';
+                    chatSubmitSpinner.style.display = 'none';
+                    chatSubmitBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+    <!-- Fin del Widget -->
 </body>
 
 </html>
