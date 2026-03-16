@@ -238,22 +238,44 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
         <!--USUARIOS/////////////////////////////-->
         <div id="div1" class="content-panel">
-            <h1>Usuarios</h1>
-            <form action="" method="POST" style="margin-bottom:16px;">
-                <label>Registra un usuario al sistema</label><br>
-                <input type="text" name="Nombre_Usuario" placeholder="Nombre del usuario" required>
-                <input type="tel" name="Telefono_Usuario" placeholder="Telefono del Usuario" required>
-                <input type="password" name="Password_Usuario" placeholder="Una contraseña para el usuario" required>
-                <input type="text" name="Puesto_Usuario" placeholder="Puesto del usuario" required>
-                <input type="hidden" name="Registrar_Usuario" value="1">
-                <button type="submit">Registrar</button>
-            </form>
+            <div class="section-header">
+                <div class="section-icon">👤</div>
+                <h1>Usuarios</h1>
+            </div>
 
-            <table>
+            <div class="register-card">
+                <h2>Registrar nuevo usuario</h2>
+                <form action="" method="POST">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="reg_nombre_usuario">Nombre</label>
+                            <input type="text" id="reg_nombre_usuario" name="Nombre_Usuario" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="reg_tel_usuario">Teléfono</label>
+                            <input type="tel" id="reg_tel_usuario" name="Telefono_Usuario" placeholder="Ej: 6441234567" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="reg_pass_usuario">Contraseña</label>
+                            <input type="password" id="reg_pass_usuario" name="Password_Usuario" placeholder="Contraseña segura" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="reg_puesto_usuario">Puesto</label>
+                            <input type="text" id="reg_puesto_usuario" name="Puesto_Usuario" placeholder="Ej: Operador" required>
+                        </div>
+                        <div class="form-grid-actions">
+                            <input type="hidden" name="Registrar_Usuario" value="1">
+                            <button type="submit" class="btn-primary">✚ Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="section-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Datos</th>
+                        <th>Datos del Usuario</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -261,35 +283,37 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                     <?php if ($usuarios): ?>
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
-                                <td><?= htmlspecialchars($usuario['Id_Usuario']) ?></td>
+                                <td class="row-id">#<?= htmlspecialchars($usuario['Id_Usuario']) ?></td>
                                 <td>
-                                    <form method="post" style="display:flex; gap:8px; align-items:center;">
-                                        <input type="text" name="Nombre_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required>
-                                        <input type="tel" name="Telefono_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Telefono_Usuario'] ?? '') ?>">
-                                        <input type="text" name="Puesto_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Puesto_Usuario'] ?? '') ?>">
-                                        <input type="password" name="Password_Usuario" value=""
-                                            placeholder="Nueva contraseña (Opcional)">
-                                        <input type="hidden" name="Id_Usuario"
-                                            value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
-                                        <button type="submit" name="Editar_Usuario" value="1">Editar</button>
+                                    <form method="post">
+                                        <div class="table-form-row">
+                                            <input type="text" name="Nombre_Usuario"
+                                                value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required placeholder="Nombre">
+                                            <input type="tel" name="Telefono_Usuario"
+                                                value="<?= htmlspecialchars($usuario['Telefono_Usuario'] ?? '') ?>" placeholder="Teléfono">
+                                            <input type="text" name="Puesto_Usuario"
+                                                value="<?= htmlspecialchars($usuario['Puesto_Usuario'] ?? '') ?>" placeholder="Puesto">
+                                            <input type="password" name="Password_Usuario" value=""
+                                                placeholder="Nueva contraseña (Opcional)">
+                                            <input type="hidden" name="Id_Usuario"
+                                                value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
+                                            <button type="submit" name="Editar_Usuario" value="1" class="btn-edit">✏ Editar</button>
+                                        </div>
                                     </form>
                                 </td>
                                 <td>
-                                    <form method="post" style="display:inline;">
+                                    <form method="post">
                                         <input type="hidden" name="Id_Usuario"
                                             value="<?= htmlspecialchars($usuario['Id_Usuario']) ?>">
-                                        <button type="submit" name="Borrar_Usuario" value="1"
-                                            onclick="return confirm('¿Eliminar usuario <?= htmlspecialchars($usuario['Nombre_Usuario']) ?>?');">Borrar</button>
+                                        <button type="submit" name="Borrar_Usuario" value="1" class="btn-delete"
+                                            onclick="return confirm('¿Eliminar usuario <?= htmlspecialchars($usuario['Nombre_Usuario']) ?>?');">🗑 Borrar</button>
                                     </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="3">No hay usuarios registrados</td>
+                        <tr class="empty-state">
+                            <td colspan="3">No hay usuarios registrados aún.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -299,20 +323,36 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
         <!--MAQUILAS/////////////////////////////-->
         <div id="div2" class="content-panel">
-            <h1>Maquilas</h1>
-            <form action="" method="POST" style="margin-bottom:16px;">
-                <label>Registra una maquila al sistema</label><br>
-                <input type="text" name="Nombre_Maquila" placeholder="Nombre de la maquila" required>
-                <input type="password" name="Contraseña_Maquila" placeholder="Una contraseña para el usuario" required>
-                <input type="hidden" name="Registrar_Maquila" value="1">
-                <button type="submit">Registrar</button>
-            </form>
+            <div class="section-header">
+                <div class="section-icon">🏭</div>
+                <h1>Maquilas</h1>
+            </div>
 
-            <table>
+            <div class="register-card">
+                <h2>Registrar nueva maquila</h2>
+                <form action="" method="POST">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="reg_nombre_maquila">Nombre</label>
+                            <input type="text" id="reg_nombre_maquila" name="Nombre_Maquila" placeholder="Nombre de la maquila" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="reg_pass_maquila">Contraseña</label>
+                            <input type="password" id="reg_pass_maquila" name="Contraseña_Maquila" placeholder="Contraseña de acceso" required>
+                        </div>
+                        <div class="form-grid-actions">
+                            <input type="hidden" name="Registrar_Maquila" value="1">
+                            <button type="submit" class="btn-primary">✚ Registrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="section-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Datos</th>
+                        <th>Datos de la Maquila</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -320,31 +360,33 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                     <?php if ($maquilas): ?>
                         <?php foreach ($maquilas as $maquila): ?>
                             <tr>
-                                <td><?= htmlspecialchars($maquila['Id_Maquila']) ?></td>
+                                <td class="row-id">#<?= htmlspecialchars($maquila['Id_Maquila']) ?></td>
                                 <td>
-                                    <form method="post" style="display:flex; gap:8px; align-items:center;">
-                                        <input type="text" name="Nombre_Maquila"
-                                            value="<?= htmlspecialchars($maquila['Nombre_Maquila']) ?>" required>
-                                        <input type="password" name="ContraseÃ±a_Maquila" value=""
-                                            placeholder="Nueva contraseña (Opcional)">
-                                        <input type="hidden" name="Id_Maquila"
-                                            value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
-                                        <button type="submit" name="Editar_Maquila" value="1">Editar</button>
+                                    <form method="post">
+                                        <div class="table-form-row">
+                                            <input type="text" name="Nombre_Maquila"
+                                                value="<?= htmlspecialchars($maquila['Nombre_Maquila']) ?>" required placeholder="Nombre">
+                                            <input type="password" name="Contraseña_Maquila" value=""
+                                                placeholder="Nueva contraseña (Opcional)">
+                                            <input type="hidden" name="Id_Maquila"
+                                                value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
+                                            <button type="submit" name="Editar_Maquila" value="1" class="btn-edit">✏ Editar</button>
+                                        </div>
                                     </form>
                                 </td>
                                 <td>
-                                    <form method="post" style="display:inline;">
+                                    <form method="post">
                                         <input type="hidden" name="Id_Maquila"
                                             value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
-                                        <button type="submit" name="Borrar_Maquila" value="1"
-                                            onclick="return confirm('¿Eliminar maquila <?= htmlspecialchars($maquila['Nombre_Maquila']) ?>?');">Borrar</button>
+                                        <button type="submit" name="Borrar_Maquila" value="1" class="btn-delete"
+                                            onclick="return confirm('¿Eliminar maquila <?= htmlspecialchars($maquila['Nombre_Maquila']) ?>?');">🗑 Borrar</button>
                                     </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="3">No hay maquilas registradas</td>
+                        <tr class="empty-state">
+                            <td colspan="3">No hay maquilas registradas aún.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

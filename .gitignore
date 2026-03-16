@@ -1,15 +1,12 @@
 # Credenciales y configuración sensible
 .env
-config/env.php
 config/fcsMailPass.txt
+config/env.php
 
-# Dependencias
+# Dependencias (se reinstalan con composer install)
 vendor/
 
 # Archivos del sistema / editores
 .DS_Store
 Thumbs.db
 *.log
-.vscode/
-.idea/
-*.swp

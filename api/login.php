@@ -51,7 +51,7 @@ try {
             'data' => [
                 'role' => 'usuario',
                 'token' => $token,
-                'Id_Usuario' => (int)$usuario['Id_Usuario'],
+                'Id_Usuario' => (int) $usuario['Id_Usuario'],
                 'Nombre_Usuario' => $usuario['Nombre_Usuario'],
                 'Puesto_Usuario' => $usuario['Puesto_Usuario'] ?? null,
                 'Telefono_Usuario' => $usuario['Telefono_Usuario'] ?? null
@@ -95,7 +95,7 @@ try {
             'data' => [
                 'role' => 'maquila',
                 'token' => $token,
-                'Id_Maquila' => (int)$maquila['Id_Maquila'],
+                'Id_Maquila' => (int) $maquila['Id_Maquila'],
                 'Nombre_Maquila' => $maquila['Nombre_Maquila']
             ]
         ]);
