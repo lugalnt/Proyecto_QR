@@ -1116,3 +1116,511 @@ button.secondary {
         font-size: 1.3rem;
     }
 }
+
+/* ====================================================
+   MODERNIZACIÓN: Sección Sistemas (div3)
+   ==================================================== */
+
+/* --- Zona label (divisor visual entre zonas) --- */
+.zona-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin: 1.5rem 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.zona-label::before,
+.zona-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e8ecf4;
+}
+
+.zona-label span {
+    white-space: nowrap;
+}
+
+/* --- Sistema info grid (Zona A) --- */
+.sistema-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1rem 1.25rem;
+    align-items: start;
+}
+
+/* --- CAR Builder layout (Zona B) --- */
+.car-builder {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.car-builder-left,
+.car-builder-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* --- Prop type pills --- */
+.prop-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0.75rem 0;
+}
+
+.prop-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.45rem 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 99px;
+    background: #fff;
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.prop-pill:hover {
+    border-color: #c63f42;
+    color: #c63f42;
+    background: rgba(198, 63, 66, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(198,63,66,0.15);
+}
+
+.prop-pill.active {
+    border-color: #c63f42;
+    background: rgba(198, 63, 66, 0.1);
+    color: #c63f42;
+}
+
+/* --- Property editor panel --- */
+.prop-editor-panel {
+    background: #fafbff;
+    border: 1.5px solid #e2e8f0;
+    border-left: 3px solid #c63f42;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin-top: 0.5rem;
+    animation: slideDown 0.2s ease-out;
+}
+
+.prop-editor-panel[aria-hidden="true"] {
+    display: none;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.prop-editor-panel h3 {
+    font-size: 0.87rem;
+    font-weight: 700;
+    color: #c63f42;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.85rem 0;
+}
+
+.prop-editor-panel .field {
+    margin-bottom: 0.75rem;
+}
+
+.prop-editor-panel .field span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.prop-editor-panel .field input,
+.prop-editor-panel .field select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--color-text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.prop-editor-panel .field input:focus,
+.prop-editor-panel .field select:focus {
+    border-color: #c63f42;
+    box-shadow: 0 0 0 3px rgba(198,63,66,0.10);
+}
+
+.prop-editor-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 0.75rem;
+}
+
+/* --- CAR builder card (panel right side) --- */
+.car-panel-card {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.car-panel-card h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.75rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* --- Props added container (inside right panel) --- */
+#currentPropsContainer {
+    min-height: 56px;
+    border: 1.5px dashed #e2e8f0;
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+    background: #f8fafc;
+    font-size: 0.88rem;
+}
+
+#currentPropsContainer .muted {
+    color: #94a3b8;
+    font-size: 0.84rem;
+}
+
+/* prop-list dentro del contenedor */
+#currentPropsContainer .prop-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#currentPropsContainer .prop-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 8px;
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 7px;
+    font-size: 0.85rem;
+}
+
+#currentPropsContainer .prop-list li strong {
+    color: var(--color-text);
+}
+
+#currentPropsContainer .prop-list li .prop-meta {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+#currentPropsContainer .prop-list li button {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: auto;
+}
+
+#currentPropsContainer .prop-list li button:hover {
+    background: #be123c;
+    color: #fff;
+}
+
+/* --- CARs list items --- */
+#carsList .car-item {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-left: 3px solid #c63f42;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 8px;
+    transition: box-shadow 0.2s;
+}
+
+#carsList .car-item:hover {
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+#carsList .car-item b {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--color-text);
+    margin-bottom: 3px;
+}
+
+#carsList .car-item .muted {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#carsList .car-item > div:last-child {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#carsList .car-item > div:last-child button {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+    border-radius: 7px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+/* Eliminar C.A.R */
+#carsList .car-item > div:last-child button:first-child {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+}
+
+#carsList .car-item > div:last-child button:first-child:hover {
+    background: #be123c;
+    color: #fff;
+}
+
+/* Editar C.A.R */
+#carsList .car-item > div:last-child button.secondary {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+#carsList .car-item > div:last-child button.secondary:hover {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+#carsList .muted {
+    color: #94a3b8;
+    font-size: 0.84rem;
+    padding: 0.5rem;
+}
+
+/* Import notice (cuando cargas un sistema para editar) */
+.import-notice > div {
+    background: #fffbeb;
+    border: 1px dashed #fbbf24;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 8px;
+}
+
+.import-notice strong {
+    color: #92400e;
+    font-size: 0.88rem;
+}
+
+.import-notice .muted {
+    color: #b45309;
+    margin-top: 4px;
+}
+
+.import-notice > div > div:last-child {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.import-notice > div > div:last-child button:first-child {
+    background: #f59e0b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.import-notice > div > div:last-child button:last-child {
+    background: #fff;
+    color: #78716c;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- Add CAR row --- */
+.add-car-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
+}
+
+/* --- Zona submit (Zona C) --- */
+.sistemas-submit-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+    margin-top: 1rem;
+}
+
+/* --- Search card (buscador de sistemas) --- */
+.search-card {
+    background: #f8fafc;
+    border: 1px solid #e8ecf4;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-card .form-field {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-card .form-field label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.search-card .form-field select {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    color: var(--color-text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-card .form-field select:focus {
+    border-color: #c63f42;
+    box-shadow: 0 0 0 3px rgba(198,63,66,0.12);
+}
+
+/* --- Secondary button (Mostrar CARS) --- */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1.5px solid #e2e8f0;
+    padding: 0.42rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover {
+    background: #334155;
+    color: #fff;
+    border-color: #334155;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(51,65,85,0.2);
+}
+
+/* --- Sistemas table search results header --- */
+.sistemas-results-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1.5rem 0 0.75rem 0;
+}
+
+.sistemas-results-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.sistemas-results-header .result-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(198,63,66,0.1);
+    color: #c63f42;
+    border-radius: 99px;
+    padding: 2px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+/* --- Responsive: Sistemas --- */
+@media (max-width: 900px) {
+    .sistema-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .car-builder {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .sistema-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prop-pills {
+        gap: 6px;
+    }
+
+    .prop-pill {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.78rem;
+    }
+
+    .search-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

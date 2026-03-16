@@ -396,229 +396,236 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
         <!--AREAS/////////////////////////////-->
         <div id="div3" class="content-panel">
-            <h1>Sistema</h1>
 
-            <main class="container">
+            <div class="section-header">
+                <div class="section-icon">📍</div>
+                <h1>Sistemas</h1>
+            </div>
+
+            <div class="register-card">
                 <form id="areaForm" method="post" action="">
 
-                    <div class="row top">
-                        <label class="field">
-                            <span>Nombre Sistema:</span>
-                            <input type="text" name="Nombre_Area" id="area_name" required />
-                        </label>
+                    <!-- ZONA A: Información básica del Sistema -->
+                    <div class="zona-label"><span>Información del Sistema</span></div>
+                    <div class="sistema-info-grid">
+                        <div class="form-field">
+                            <label for="area_name">Nombre del Sistema</label>
+                            <input type="text" name="Nombre_Area" id="area_name" placeholder="Ej: Línea de ensamble 1" required />
+                        </div>
 
-                        <label class="field field-wide">
-                            <span>Descripcion sistema:</span>
-                            <textarea name="Descripcion_Area" id="area_description" rows="3"></textarea>
-                        </label>
+                        <div class="form-field">
+                            <label for="area_description">Descripción</label>
+                            <input type="text" name="Descripcion_Area" id="area_description" placeholder="Breve descripción del sistema" />
+                        </div>
 
-                        <label class="field">
-                            <span>Maquila del Sistema</span>
+                        <div class="form-field">
+                            <label for="maquila_id">Maquila asignada</label>
                             <select name="Id_Maquila" id="maquila_id" required>
                                 <?php if ($maquilas): ?>
                                     <?php foreach ($maquilas as $maquila): ?>
                                         <option value="<?= htmlspecialchars($maquila['Id_Maquila']) ?>">
                                             <?= htmlspecialchars($maquila['Nombre_Maquila']) ?>
                                         </option>
-
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-                        </label>
+                        </div>
                     </div>
 
-                    <hr />
+                    <!-- ZONA B: Constructor de CARs -->
+                    <div class="zona-label"><span>Cosas A Revisar (C.A.R.)</span></div>
+                    <div class="car-builder">
 
-                    <section class="car-section">
-                        <h2>Agregar C.A.R (Cosas A Revisar)</h2>
+                        <!-- COLUMNA IZQUIERDA: definir un C.A.R. -->
+                        <div class="car-builder-left">
 
-                        <div class="car-left">
-                            <label class="field">
-                                <span>Nombre C.A.R</span>
-                                <input type="text" id="car_name_input" placeholder="Ej: Valvula principal" />
-                            </label>
-
-                            <div class="prop-buttons">
-                                <button type="button" class="prop-btn" data-type="bool">Ok/ No Ok</button>
-                                <button type="button" class="prop-btn" data-type="range">Rango</button>
-                                <button type="button" class="prop-btn" data-type="number">Numero</button>
-                                <button type="button" class="prop-btn" data-type="text">Descripcion</button>
-                                <button type="button" class="prop-btn" data-type="date">Fecha</button>
+                            <div class="form-field">
+                                <label for="car_name_input">Nombre del C.A.R.</label>
+                                <input type="text" id="car_name_input" placeholder="Ej: Válvula principal" />
                             </div>
 
-                            <div class="editor" id="propEditor" aria-hidden="true">
+                            <div>
+                                <p style="font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Tipo de propiedad a agregar</p>
+                                <div class="prop-pills">
+                                    <button type="button" class="prop-pill prop-btn" data-type="bool">✅ Ok / No Ok</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="range">📏 Rango</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="number">🔢 Número</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="text">📝 Descripción</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="date">📅 Fecha</button>
+                                </div>
+                            </div>
+
+                            <!-- Editor de propiedades (se muestra al seleccionar tipo) -->
+                            <div class="prop-editor-panel" id="propEditor" aria-hidden="true">
                                 <h3 id="editorTitle">Añadir propiedad</h3>
                                 <label class="field small">
                                     <span>Nombre de propiedad</span>
                                     <input type="text" id="prop_label" placeholder="Ej: Funcionamiento" />
                                 </label>
                                 <div id="typeSettings"></div>
-
-                                <div class="editor-actions">
-                                    <button type="button" id="addPropertyBtn">Agregar propiedad</button>
-                                    <button type="button" id="cancelPropertyBtn" class="secondary">Cancelar</button>
+                                <div class="prop-editor-actions editor-actions">
+                                    <button type="button" id="addPropertyBtn" class="btn-primary" style="padding:0.45rem 1rem; font-size:0.85rem;">Agregar propiedad</button>
+                                    <button type="button" id="cancelPropertyBtn" class="secondary btn-secondary" style="padding:0.45rem 1rem; font-size:0.85rem;">Cancelar</button>
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="car-right">
-                            <div class="card">
-                                <h4>Propiedades añadidas.</h4>
+                        <!-- COLUMNA DERECHA: propiedades actuales + CARs confirmados -->
+                        <div class="car-builder-right">
+
+                            <div class="car-panel-card">
+                                <h4>Propiedades del C.A.R. en construcción</h4>
                                 <div id="currentPropsContainer">
-                                    <p class="muted">No hay propiedades agregadas (selecciona un tipo con los botones).
-                                    </p>
+                                    <p class="muted">Selecciona un tipo de propiedad con los botones de la izquierda.</p>
                                 </div>
-
                             </div>
 
-                            <div class="card">
-                                <h4>Listado de C.A.R agregados</h4>
+                            <div class="car-panel-card">
+                                <h4>C.A.R.s confirmados en este sistema</h4>
                                 <div id="carsList"></div>
-
                                 <div class="add-car-row">
-                                    <button type="button" id="addCarBtn">Agregar C.A.R</button>
+                                    <button type="button" id="addCarBtn" class="btn-primary" style="padding:0.5rem 1.2rem; font-size:0.88rem;">＋ Confirmar C.A.R.</button>
                                 </div>
                             </div>
 
                         </div>
-                    </section>
+                    </div>
 
-                    <hr />
-
-                    <div class="final-row">
+                    <!-- ZONA C: Campos ocultos y submit -->
+                    <div class="sistemas-submit-row final-row">
                         <input type="hidden" name="Editar_Area" id="editar_area_input" value="0" />
                         <input type="hidden" name="Id_Area" id="area_id_input" />
                         <input type="hidden" name="JSON_Area" id="area_json" />
                         <input type="hidden" name="NumeroCAR_Area" id="car_count_input" value="0" />
                         <input type="hidden" name="Registrar_Area" value="1" />
-                        <button type="submit" id="submitBtn">Finalizar y Registrar Sistema</button>
+                        <button type="submit" id="submitBtn" class="btn-primary" style="padding:0.7rem 1.8rem; font-size:0.95rem;">🗸 Finalizar y Registrar Sistema</button>
                     </div>
+
                 </form>
-            </main>
+            </div>
 
             <script src="js/area_form.js"></script>
 
-            <br>
-            <div>
-                <br>
-                <form method="get" action="#div3"> <!-- Action self, anchor to div3 -->
-                    <!-- hidden input para mantener la tab abierta via JS o backend detection -->
+            <!-- Buscador de sistemas por maquila -->
+            <div class="search-card">
+                <form method="get" action="#div3" style="display:contents;">
                     <input type="hidden" name="view" value="areas_search">
-
-                    <label>Buscar Sistemas por Maquila:</label>
-                    <select name="maquila_search_area" id="selectMaquila" required>
-                        <option value="">-- Seleccionar Maquila --</option>
-                        <?php if ($maquilas): ?>
-                            <?php foreach ($maquilas as $maquila):
-                                $mid = $maquila['Id_Maquila'] ?? $maquila['id'] ?? '';
-                                $mname = $maquila['Nombre_Maquila'] ?? '';
-                                $selected = (isset($_GET['maquila_search_area']) && $_GET['maquila_search_area'] == $mid) ? 'selected' : '';
-                                ?>
-                                <option value="<?= htmlspecialchars($mid) ?>" <?= $selected ?>>
-                                    <?= htmlspecialchars($mname) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
-                    <button type="submit"> Buscar </button>
+                    <div class="form-field">
+                        <label for="selectMaquila">Buscar sistemas por maquila</label>
+                        <select name="maquila_search_area" id="selectMaquila" required>
+                            <option value="">— Seleccionar maquila —</option>
+                            <?php if ($maquilas): ?>
+                                <?php foreach ($maquilas as $maquila):
+                                    $mid = $maquila['Id_Maquila'] ?? $maquila['id'] ?? '';
+                                    $mname = $maquila['Nombre_Maquila'] ?? '';
+                                    $selected = (isset($_GET['maquila_search_area']) && $_GET['maquila_search_area'] == $mid) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?= htmlspecialchars($mid) ?>" <?= $selected ?>>
+                                        <?= htmlspecialchars($mname) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary" style="padding:0.6rem 1.4rem; white-space:nowrap;">🔍 Buscar</button>
                 </form>
-                <br>
-                <br>
-                <?php
-                // --- Lógica de búsqueda de áreas (GET) ---
-                $areasPorMaquilaList = [];
-                $laMaquilaBuscadaNombre = '';
+            </div>
 
-                if (!empty($_GET['maquila_search_area'])) {
-                    $mqSearchId = (int) $_GET['maquila_search_area'];
-                    try {
-                        // Obtener nombre de maquila para titulo
-                        if (isset($MaquilaController)) {
-                            $mqs = $MaquilaController->obtenerPor('Id_Maquila', $mqSearchId);
-                            if (!empty($mqs)) {
-                                $laMaquilaBuscadaNombre = $mqs[0]['Nombre_Maquila'] ?? '';
-                            }
+            <?php
+            // --- Lógica de búsqueda de áreas (GET) ---
+            $areasPorMaquilaList = [];
+            $laMaquilaBuscadaNombre = '';
+
+            if (!empty($_GET['maquila_search_area'])) {
+                $mqSearchId = (int) $_GET['maquila_search_area'];
+                try {
+                    // Obtener nombre de maquila para titulo
+                    if (isset($MaquilaController)) {
+                        $mqs = $MaquilaController->obtenerPor('Id_Maquila', $mqSearchId);
+                        if (!empty($mqs)) {
+                            $laMaquilaBuscadaNombre = $mqs[0]['Nombre_Maquila'] ?? '';
                         }
-                        // Obtener areas
-                        if (isset($MaquilaAreaController)) {
-                            $areasPorMaquilaList = $MaquilaAreaController->obtenerAreasPorMaquila($mqSearchId);
-                            // Normalizar (si devuelve array plano o con success key)
-                            if (isset($areasPorMaquilaList['success']))
-                                $areasPorMaquilaList = $areasPorMaquilaList['data'] ?? [];
-                        }
-                    } catch (\Throwable $e) {
-                        echo "<div class='error'>Error al buscar sistemas: " . $e->getMessage() . "</div>";
                     }
+                    // Obtener areas
+                    if (isset($MaquilaAreaController)) {
+                        $areasPorMaquilaList = $MaquilaAreaController->obtenerAreasPorMaquila($mqSearchId);
+                        // Normalizar (si devuelve array plano o con success key)
+                        if (isset($areasPorMaquilaList['success']))
+                            $areasPorMaquilaList = $areasPorMaquilaList['data'] ?? [];
+                    }
+                } catch (\Throwable $e) {
+                    echo "<div class='error'>Error al buscar sistemas: " . $e->getMessage() . "</div>";
                 }
-                ?>
+            }
+            ?>
 
-                <?php if ($laMaquilaBuscadaNombre): ?>
-                    <h2> Sistemas de la maquila: <?= htmlspecialchars($laMaquilaBuscadaNombre) ?> </h2>
-                <?php endif; ?>
+            <?php if ($laMaquilaBuscadaNombre): ?>
+                <div class="sistemas-results-header">
+                    <h2>Sistemas de: <?= htmlspecialchars($laMaquilaBuscadaNombre) ?></h2>
+                    <span class="result-badge"><?= count($areasPorMaquilaList) ?> sistema<?= count($areasPorMaquilaList) !== 1 ? 's' : '' ?></span>
+                </div>
+            <?php endif; ?>
 
-                <table class="report-table"> <!-- Reusamos estilo nuevo -->
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th># CARs</th>
-                            <th>Código QR</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($areasPorMaquilaList)): ?>
-                            <?php foreach ($areasPorMaquilaList as $areaPorMaquila): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($areaPorMaquila['Id_Area']) ?></td>
-                                    <td><?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?></td>
-                                    <td><?= htmlspecialchars($areaPorMaquila['Descripcion_Area']) ?></td>
-                                    <td>
-                                        <?= htmlspecialchars($areaPorMaquila['NumeroCAR_Area']) ?>
+            <table class="section-table" style="margin-top: <?= $laMaquilaBuscadaNombre ? '0' : '1.5rem' ?>;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th># CARs / Acciones</th>
+                        <th>Código QR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($areasPorMaquilaList)): ?>
+                        <?php foreach ($areasPorMaquilaList as $areaPorMaquila): ?>
+                            <tr>
+                                <td class="row-id">#<?= htmlspecialchars($areaPorMaquila['Id_Area']) ?></td>
+                                <td><strong><?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?></strong></td>
+                                <td style="color:#64748b; font-size:0.88rem;"><?= htmlspecialchars($areaPorMaquila['Descripcion_Area']) ?></td>
+                                <td>
+                                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+                                        <span style="background:#f1f5f9; color:#475569; border-radius:99px; padding:2px 10px; font-size:0.78rem; font-weight:700;">
+                                            <?= htmlspecialchars($areaPorMaquila['NumeroCAR_Area']) ?> CARs
+                                        </span>
 
                                         <?php
-                                        // Decodificamos y re-encodeamos el JSON para asegurarlo
                                         $areaTmp = $areaPorMaquila['JSON_Area'] ?? '[]';
                                         $areaData = json_decode($areaTmp, true);
-                                        if ($areaData === null)
-                                            $areaData = [];
-                                        // json_encode con flags
+                                        if ($areaData === null) $areaData = [];
                                         $areaJsonEscaped = htmlspecialchars(json_encode($areaData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8');
                                         ?>
 
-                                        <!-- botón que abre el popup; data-area contiene el JSON escapado -->
-                                        <button type="button" class="mostrarCarsBtn" data-area="<?= $areaJsonEscaped ?>">Mostrar
-                                            CARS</button>
-
-                                        <button type="button" class="editarAreaBtn" data-area="<?= $areaJsonEscaped ?>"
-                                            data-id="<?= htmlspecialchars($areaPorMaquila['Id_Area']) ?>">Editar</button>
-
-                                    </td>
-                                    <td style="text-align:center;">
-                                        <?php if (!empty($areaPorMaquila['Codigo_Area'])): ?>
-                                            <a href="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png"
-                                                download="CodigoQR_Area<?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?>.png">
-                                                <img style="max-width:80px; max-height: 80px"
-                                                    src="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png" />
-                                            </a>
-                                        <?php else: ?>
-                                            <span style="color:gray;">Sin QR</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5">No hay sistemas para mostrar o no has buscado.</td>
+                                        <button type="button" class="mostrarCarsBtn btn-secondary" data-area="<?= $areaJsonEscaped ?>">👁 Ver CARs</button>
+                                        <button type="button" class="editarAreaBtn btn-edit" data-area="<?= $areaJsonEscaped ?>"
+                                            data-id="<?= htmlspecialchars($areaPorMaquila['Id_Area']) ?>">✏ Editar</button>
+                                    </div>
+                                </td>
+                                <td style="text-align:center;">
+                                    <?php if (!empty($areaPorMaquila['Codigo_Area'])): ?>
+                                        <a href="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png"
+                                            download="CodigoQR_<?= htmlspecialchars($areaPorMaquila['Nombre_Area']) ?>.png"
+                                            title="Descargar QR">
+                                            <img style="max-width:72px; max-height:72px; border-radius:8px; border:1px solid #e8ecf4;"
+                                                src="qrcodes/<?= htmlspecialchars($areaPorMaquila['Codigo_Area']) ?>.png" />
+                                        </a>
+                                    <?php else: ?>
+                                        <span style="color:#94a3b8; font-size:0.82rem;">Sin QR</span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr class="empty-state">
+                            <td colspan="5">
+                                <?= $laMaquilaBuscadaNombre ? 'No hay sistemas registrados para esta maquila.' : 'Selecciona una maquila arriba para ver sus sistemas.' ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
 
-
-
-            </div>
             <script src="js/popupCars.js?v=2"></script>
 
             <!-- Script para enganchar los botones y pasarles su JSON al popup -->
@@ -644,8 +651,6 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                     });
                 });
             </script>
-
-
 
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
@@ -733,24 +738,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         if (btn.classList.contains('editarAreaBtn')) { e.preventDefault(); handleEditarArea(btn); }
                     });
 
-
-
                 }); // DOMContentLoaded
             </script>
-
-
-
-
-
-
-
-            <!-- Script para encganchar los botonos, pero para editar -->
-
-
-
-
-
-
 
         </div>
         <!--AREAS/////////////////////////////-->
