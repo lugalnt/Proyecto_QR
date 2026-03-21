@@ -1180,18 +1180,44 @@ button.secondary {
 .prop-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 0.45rem 1rem;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
     border: 1.5px solid #e2e8f0;
-    border-radius: 99px;
+    border-radius: 10px;
     background: #fff;
     color: #475569;
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap;
+    position: relative;
 }
+
+.prop-pill::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    background: #1e293b;
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 4px 9px;
+    border-radius: 7px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 100;
+}
+
+.prop-pill:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
 
 .prop-pill:hover {
     border-color: #c63f42;

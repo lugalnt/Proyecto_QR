@@ -447,11 +447,11 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             <div>
                                 <p style="font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Tipo de propiedad a agregar</p>
                                 <div class="prop-pills">
-                                    <button type="button" class="prop-pill prop-btn" data-type="bool">✅ Ok / No Ok</button>
-                                    <button type="button" class="prop-pill prop-btn" data-type="range">📏 Rango</button>
-                                    <button type="button" class="prop-pill prop-btn" data-type="number">🔢 Número</button>
-                                    <button type="button" class="prop-pill prop-btn" data-type="text">📝 Descripción</button>
-                                    <button type="button" class="prop-pill prop-btn" data-type="date">📅 Fecha</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="bool" data-tooltip="Ok / No Ok">✅</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="range" data-tooltip="Rango">📏</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="number" data-tooltip="Número">🔢</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="text" data-tooltip="Descripción">📝</button>
+                                    <button type="button" class="prop-pill prop-btn" data-type="date" data-tooltip="Fecha">📅</button>
                                 </div>
                             </div>
 
@@ -761,6 +761,7 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
             $areaId = isset($_GET['area']) ? (int) $_GET['area'] : null;
             $userId = isset($_GET['usuario']) ? (int) $_GET['usuario'] : null;
             $estado = isset($_GET['estado']) ? trim($_GET['estado']) : null;
+            $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : null;
 
             if ($maquilaId)
                 $filtros['id_maquila'] = $maquilaId;
@@ -770,7 +771,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                 $filtros['id_usuario'] = $userId;
             if ($estado)
                 $filtros['estado'] = $estado;
-
+            if ($keyword)
+                $filtros['keyword'] = $keyword;
 
             // --- Helpers para normalizar respuestas de controllers ---
             $normalizeControllerRows = function ($res) {
@@ -839,77 +841,83 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
             <!-- ESTILOS ADICIONALES PARA TABLA Y FILTROS -->
             <!-- FORMULARIO DE FILTROS -->
-            <form id="filterForm" method="get" class="filters-container">
+            <form id="filterForm" method="get" class="search-card">
+                
+                <div class="form-grid">
+                    <div class="form-field form-field-wide" style="grid-column: 1 / -1;">
+                        <label>Buscar por palabra clave (ID, Nombre, Estado, Contenido...)</label>
+                        <input type="text" name="keyword" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Ej: Fuga, OK, Juan, Valvula principal..." />
+                    </div>
 
-                <div class="filter-group">
-                    <label>Maquila</label>
-                    <select id="maquilaSelect" name="maquila">
-                        <option value="">-- Todas --</option>
-                        <?php foreach ($maquilas as $m):
-                            $mid = $m['Id_Maquila'] ?? $m['id'] ?? '';
-                            $mname = $m['Nombre_Maquila'] ?? 'Maquila ' . $mid;
-                            ?>
-                            <option value="<?= htmlspecialchars($mid) ?>" <?= ($maquilaId == $mid) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($mname) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Sistema</label>
-                    <select id="areaSelect" name="area">
-                        <option value="">-- Todas --</option>
-                        <?php if (!empty($areasForMaquila)): ?>
-                            <?php foreach ($areasForMaquila as $a):
-                                $aid = $a['Id_Area'] ?? $a['id'] ?? '';
-                                $aname = $a['Nombre_Area'] ?? 'Sistema ' . $aid;
+                    <div class="form-field">
+                        <label>Maquila</label>
+                        <select id="maquilaSelect" name="maquila">
+                            <option value="">-- Todas --</option>
+                            <?php foreach ($maquilas as $m):
+                                $mid = $m['Id_Maquila'] ?? $m['id'] ?? '';
+                                $mname = $m['Nombre_Maquila'] ?? 'Maquila ' . $mid;
                                 ?>
-                                <option value="<?= htmlspecialchars($aid) ?>" <?= ($areaId == $aid) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($aname) ?>
+                                <option value="<?= htmlspecialchars($mid) ?>" <?= ($maquilaId == $mid) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($mname) ?>
                                 </option>
                             <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Sistema</label>
+                        <select id="areaSelect" name="area">
+                            <option value="">-- Todos --</option>
+                            <?php if (!empty($areasForMaquila)): ?>
+                                <?php foreach ($areasForMaquila as $a):
+                                    $aid = $a['Id_Area'] ?? $a['id'] ?? '';
+                                    $aname = $a['Nombre_Area'] ?? 'Sistema ' . $aid;
+                                    ?>
+                                    <option value="<?= htmlspecialchars($aid) ?>" <?= ($areaId == $aid) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($aname) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Responsable</label>
+                        <select name="usuario">
+                            <option value="">-- Todos --</option>
+                            <?php foreach ($usuarios as $u):
+                                $uid = $u['Id_Usuario'] ?? $u['id'] ?? '';
+                                $uname = $u['Nombre_Usuario'] ?? 'Usuario ' . $uid;
+                                ?>
+                                <option value="<?= htmlspecialchars($uid) ?>" <?= ($userId == $uid) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($uname) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Estado</label>
+                        <select name="estado">
+                            <option value="">-- Todos --</option>
+                            <option value="Abierto" <?= ($estado == 'Abierto') ? 'selected' : '' ?>>Abierto</option>
+                            <option value="Cerrado" <?= ($estado == 'Cerrado') ? 'selected' : '' ?>>Cerrado</option>
+                            <option value="Pendiente" <?= ($estado == 'Pendiente') ? 'selected' : '' ?>>Pendiente</option>
+                            <option value="OK" <?= ($estado == 'OK') ? 'selected' : '' ?>>OK</option>
+                            <option value="NOK" <?= ($estado == 'NOK') ? 'selected' : '' ?>>NOK</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Límite</label>
+                        <input type="number" name="limit" value="<?= htmlspecialchars($limit) ?>" min="1" max="500">
+                    </div>
                 </div>
 
-                <div class="filter-group">
-                    <label>Usuario (Responsable)</label>
-                    <select name="usuario">
-                        <option value="">-- Todos --</option>
-                        <?php foreach ($usuarios as $u):
-                            $uid = $u['Id_Usuario'] ?? $u['id'] ?? '';
-                            $uname = $u['Nombre_Usuario'] ?? 'Usuario ' . $uid;
-                            ?>
-                            <option value="<?= htmlspecialchars($uid) ?>" <?= ($userId == $uid) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($uname) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Estado</label>
-                    <select name="estado">
-                        <option value="">-- Todos --</option>
-                        <option value="Abierto" <?= ($estado == 'Abierto') ? 'selected' : '' ?>>Abierto</option>
-                        <option value="Cerrado" <?= ($estado == 'Cerrado') ? 'selected' : '' ?>>Cerrado</option>
-                        <option value="Pendiente" <?= ($estado == 'Pendiente') ? 'selected' : '' ?>>Pendiente</option>
-                        <option value="OK" <?= ($estado == 'OK') ? 'selected' : '' ?>>OK</option>
-                        <option value="NOK" <?= ($estado == 'NOK') ? 'selected' : '' ?>>NOK</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Límite</label>
-                    <input type="number" name="limit" value="<?= htmlspecialchars($limit) ?>" min="1" max="500"
-                        style="width: 80px;">
-                </div>
-
-                <div class="filter-group" style="justify-content: flex-end; gap: 8px; display: flex;">
-                    <button type="submit" class="filter-btn">Filtrar Reportes</button>
-                    <button type="button" id="exportBtn" class="filter-btn" style="background-color: #28a745;">Exportar
-                        a Excel</button>
+                <div class="sistemas-submit-row" style="margin-top: 20px;">
+                    <div style="flex-grow: 1;"></div>
+                    <button type="button" id="exportBtn" class="btn-secondary" style="color: #10b981; border-color: #10b981;">📊 Exportar a Excel</button>
+                    <button type="submit" class="btn-primary">Filtrar Reportes</button>
                 </div>
             </form>
 

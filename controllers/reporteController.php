@@ -545,6 +545,15 @@ class ReporteController
                 $params[] = "%" . $filtros['id_reporte'] . "%";
             }
 
+            // Keyword global
+            if (!empty($filtros['keyword'])) {
+                $kw = "%" . $filtros['keyword'] . "%";
+                $conditions[] = "(r.Id_Reporte LIKE ? OR m.Nombre_Maquila LIKE ? OR a.Nombre_Area LIKE ? OR u.Nombre_Usuario LIKE ? OR r.Estado_Reporte LIKE ? OR r.JSON_Reporte LIKE ?)";
+                for ($i = 0; $i < 6; $i++) {
+                    $params[] = $kw;
+                }
+            }
+
 
             // Concatenar condiciones
             if (!empty($conditions)) {
