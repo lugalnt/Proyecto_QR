@@ -841,12 +841,12 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
 
             <!-- ESTILOS ADICIONALES PARA TABLA Y FILTROS -->
             <!-- FORMULARIO DE FILTROS -->
+            <!-- FORMULARIO DE FILTROS -->
             <form id="filterForm" method="get" class="search-card">
-                
-                <div class="form-grid">
-                    <div class="form-field form-field-wide" style="grid-column: 1 / -1;">
-                        <label>Buscar por palabra clave (ID, Nombre, Estado, Contenido...)</label>
-                        <input type="text" name="keyword" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Ej: Fuga, OK, Juan, Valvula principal..." />
+                <div class="compact-filter-bar">
+                    <div class="form-field keyword-field">
+                        <label>Buscar palabra clave (ID, Nombre, Contenido...)</label>
+                        <input type="text" name="keyword" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Ej: Fuga, OK, Juan..." />
                     </div>
 
                     <div class="form-field">
@@ -908,16 +908,15 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                         </select>
                     </div>
 
-                    <div class="form-field">
+                    <div class="form-field" style="flex: 1 1 80px; min-width: 80px;">
                         <label>Límite</label>
                         <input type="number" name="limit" value="<?= htmlspecialchars($limit) ?>" min="1" max="500">
                     </div>
-                </div>
 
-                <div class="sistemas-submit-row" style="margin-top: 20px;">
-                    <div style="flex-grow: 1;"></div>
-                    <button type="button" id="exportBtn" class="btn-secondary" style="color: #10b981; border-color: #10b981;">📊 Exportar a Excel</button>
-                    <button type="submit" class="btn-primary">Filtrar Reportes</button>
+                    <div class="filter-actions">
+                        <button type="button" id="exportBtn" class="btn-secondary" style="color: #10b981; border-color: #10b981;">📊 Exportar</button>
+                        <button type="submit" class="btn-primary">Filtrar</button>
+                    </div>
                 </div>
             </form>
 

@@ -1649,4 +1649,69 @@ button.secondary {
         flex-direction: column;
         align-items: stretch;
     }
+}
+
+/* ====================================================
+   MODERNIZACIÓN: Barra de Filtros Compacta (Reportes)
+   ==================================================== */
+
+.compact-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.compact-filter-bar .form-field {
+    flex: 1 1 140px;
+    min-width: 120px;
+    margin-bottom: 0;
+}
+
+.compact-filter-bar .form-field.keyword-field {
+    flex: 2 1 260px;
+}
+
+.compact-filter-bar label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.compact-filter-bar input,
+.compact-filter-bar select {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    height: 36px;
+}
+
+.compact-filter-bar input:focus,
+.compact-filter-bar select:focus {
+    border-color: #c63f42;
+    box-shadow: 0 0 0 3px rgba(198,63,66,0.12);
+}
+
+.compact-filter-bar .filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+}
+
+.compact-filter-bar .btn-primary,
+.compact-filter-bar .btn-secondary {
+    height: 36px;
+    padding: 0 1rem;
+    font-size: 0.85rem;
 }
