@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //USUARIOS/////////////////////////////////////////
 
     if (isset($_POST['Registrar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
+        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario", "Email_Usuario"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         try {
             $UsuarioController->registrar($payload);
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['Editar_Usuario'])) {
-        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario"];
+        $permitidos = ["Nombre_Usuario", "Telefono_Usuario", "Password_Usuario", "Puesto_Usuario", "Email_Usuario"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         $id = isset($_POST['Id_Usuario']) ? intval($_POST['Id_Usuario']) : 0;
         if ($id > 0) {
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //MAQUILA//////////////////////////////////////////
 
     if (isset($_POST['Registrar_Maquila'])) {
-        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila"];
+        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila", "Email_Maquila"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         try {
             $MaquilaController->registrar($payload);
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['Editar_Maquila'])) {
-        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila"];
+        $permitidos = ["Nombre_Maquila", "Contraseña_Maquila", "Email_Maquila"];
         $payload = array_intersect_key($_POST, array_flip($permitidos));
         $id = isset($_POST['Id_Maquila']) ? intval($_POST['Id_Maquila']) : 0;
         if ($id > 0) {
@@ -256,6 +256,10 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             <input type="tel" id="reg_tel_usuario" name="Telefono_Usuario" placeholder="Ej: 6441234567" required>
                         </div>
                         <div class="form-field">
+                            <label for="reg_email_usuario">Correo Electrónico</label>
+                            <input type="email" id="reg_email_usuario" name="Email_Usuario" placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="form-field">
                             <label for="reg_pass_usuario">Contraseña</label>
                             <input type="password" id="reg_pass_usuario" name="Password_Usuario" placeholder="Contraseña segura" required>
                         </div>
@@ -291,6 +295,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                                                 value="<?= htmlspecialchars($usuario['Nombre_Usuario']) ?>" required placeholder="Nombre">
                                             <input type="tel" name="Telefono_Usuario"
                                                 value="<?= htmlspecialchars($usuario['Telefono_Usuario'] ?? '') ?>" placeholder="Teléfono">
+                                            <input type="email" name="Email_Usuario"
+                                                value="<?= htmlspecialchars($usuario['Email_Usuario'] ?? '') ?>" placeholder="Correo Electrónico">
                                             <input type="text" name="Puesto_Usuario"
                                                 value="<?= htmlspecialchars($usuario['Puesto_Usuario'] ?? '') ?>" placeholder="Puesto">
                                             <input type="password" name="Password_Usuario" value=""
@@ -340,6 +346,10 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                             <label for="reg_pass_maquila">Contraseña</label>
                             <input type="password" id="reg_pass_maquila" name="Contraseña_Maquila" placeholder="Contraseña de acceso" required>
                         </div>
+                        <div class="form-field">
+                            <label for="reg_email_maquila">Correo Electrónico</label>
+                            <input type="email" id="reg_email_maquila" name="Email_Maquila" placeholder="correo@ejemplo.com">
+                        </div>
                         <div class="form-grid-actions">
                             <input type="hidden" name="Registrar_Maquila" value="1">
                             <button type="submit" class="btn-primary">✚ Registrar</button>
@@ -366,6 +376,8 @@ if (!isset($_SESSION['areasPorMaquilaQueMaquila'])) {
                                         <div class="table-form-row">
                                             <input type="text" name="Nombre_Maquila"
                                                 value="<?= htmlspecialchars($maquila['Nombre_Maquila']) ?>" required placeholder="Nombre">
+                                            <input type="email" name="Email_Maquila"
+                                                value="<?= htmlspecialchars($maquila['Email_Maquila'] ?? '') ?>" placeholder="Correo Electrónico">
                                             <input type="password" name="Contraseña_Maquila" value=""
                                                 placeholder="Nueva contraseña (Opcional)">
                                             <input type="hidden" name="Id_Maquila"

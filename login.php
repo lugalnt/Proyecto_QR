@@ -48,7 +48,23 @@ session_start();
                 <button type="submit" class="button">Registrarse</button>
             </form>
 
+            <!-- Formulario de Recuperación -->
+            <form id="recover-form" action="api/recuperar_password.php" method="post" style="display: none;" onsubmit="handleRecoverForm(event)">
+                <input type="hidden" name="form_type" value="recover">
+                <div>
+                    <h2 style="font-size: 1.2rem; margin-bottom: 10px; color: #fff;">Recuperar Contraseña</h2>
+                    <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 15px;">Se enviará una nueva contraseña al correo registrado.</p>
+                    <select id="recover-typeAcc" name="typeAcc" style="margin-bottom: 15px; padding: 10px; width: 100%;">
+                        <option value="usuario">Usuario</option>
+                        <option value="maquila">Maquila</option>
+                    </select>
+                    <input type="text" id="recover-name" name="Nombre" placeholder="Nombre (Usuario/Maquila)" maxlength="50" required>
+                </div>
+                <button type="submit" class="button" id="recover-submit-btn">Enviar nueva contraseña</button>
+            </form>
+
             <div class="help-links">
+                <a href="#" onclick="toggleRecoverForm()">¿Olvidaste tu contraseña?</a>
                 <a href="contacto.html">Contacto</a>
                 <a href="ayuda.html">Ayuda</a>
             </div>
@@ -59,9 +75,12 @@ session_start();
         function toggleForm() {
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');
+            const recoverForm = document.getElementById('recover-form');
             const formTitle = document.getElementById('form-title');
             const toggleText = document.getElementById('toggle-text');
             const toggleLabel = document.querySelector('label[for="check"]');
+
+            recoverForm.style.display = 'none';
 
             if (loginForm.style.display === 'block') {
                 loginForm.style.display = 'none';
@@ -75,6 +94,48 @@ session_start();
                 formTitle.textContent = 'Iniciar Sesión';
                 toggleText.innerHTML = '<h2>¿No Tienes Cuenta?</h2>';
                 toggleLabel.textContent = 'Registrate';
+            }
+        }
+
+        function toggleRecoverForm() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const recoverForm = document.getElementById('recover-form');
+            const formTitle = document.getElementById('form-title');
+            
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'none';
+            recoverForm.style.display = 'block';
+            formTitle.textContent = 'Recuperación';
+        }
+
+        async function handleRecoverForm(event) {
+            event.preventDefault();
+            const btn = document.getElementById('recover-submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('api/recuperar_password.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Ocurrió un error al procesar la solicitud.');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
             }
         }
 

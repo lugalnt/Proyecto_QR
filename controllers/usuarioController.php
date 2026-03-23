@@ -10,7 +10,7 @@ class UsuarioController
     private BaseController $base;
 
     // Indica las columnas en el orden para CSV si quieres usar registrar con string
-    private array $fields = ['Nombre_Usuario', 'Password_Usuario', 'Telefono_Usuario', 'Puesto_Usuario'];
+    private array $fields = ['Nombre_Usuario', 'Password_Usuario', 'Telefono_Usuario', 'Puesto_Usuario', 'Email_Usuario'];
 
     public function __construct()
     {

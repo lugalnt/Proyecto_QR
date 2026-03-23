@@ -10,7 +10,7 @@ class MaquilaController
     private BaseController $base;
 
     // Indica las columnas en el orden para CSV si quieres usar registrar con string
-    private array $fields = ['Nombre_Maquila', 'Contraseña_Maquila'];
+    private array $fields = ['Nombre_Maquila', 'Contraseña_Maquila', 'Email_Maquila'];
 
     public function __construct()
     {
