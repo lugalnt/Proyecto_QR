@@ -98,7 +98,10 @@ class UsuarioController
 
     public function eliminar($id)
     {
-        return $this->base->eliminar($id);
+        // Soft-delete: marca deleted_at en lugar de borrar la fila
+        // Esto evita violaciones de FK con usuario_reporte, usuario_session, etc.
+        $now = date('Y-m-d H:i:s');
+        return $this->base->actualizar($id, ['deleted_at' => $now]);
     }
 
     public function login($NombreUsuario, $Contraseña)
