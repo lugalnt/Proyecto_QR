@@ -81,7 +81,10 @@ class MaquilaController
 
     public function eliminar($id)
     {
-        return $this->base->eliminar($id);
+        // Soft-delete: marca deleted_at en lugar de borrar la fila
+        // Esto evita violaciones de FK con maquila_area, etc.
+        $now = date('Y-m-d H:i:s');
+        return $this->base->actualizar($id, ['deleted_at' => $now]);
     }
 
     public function login($NombreMaquila, $Contraseña)
