@@ -1,4 +1,4 @@
-﻿B4A=true
+B4A=true
 Group=Default Group
 ModulesStructureVersion=1
 Type=Activity
@@ -330,10 +330,18 @@ Sub RenderReport(rp As Map)
 					Try
 						Dim respMap As Map = c.Get("responses")
 						For Each k As String In respMap.Keys
+							If k.EndsWith("_stts") Then Continue
 							Try
 								Dim v As Object = respMap.Get(k)
 								Dim vs As String = FormatValue(v)
-								responsesText = responsesText & k & ": " & vs & CRLF
+								
+								Dim sttsKey As String = k & "_stts"
+								Dim sttsVal As String = ""
+								If respMap.ContainsKey(sttsKey) Then
+									sttsVal = " (" & respMap.Get(sttsKey) & ")"
+								End If
+								
+								responsesText = responsesText & k & ": " & vs & sttsVal & CRLF
 							Catch
 								Log("RenderReport: error leyendo responses key '" & k & "': " & LastException.Message)
 							End Try

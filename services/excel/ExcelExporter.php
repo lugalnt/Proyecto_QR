@@ -186,19 +186,30 @@ class ExcelExporter
     {
         $carName = $car['car_name'] ?? $car['name'] ?? $car['Nombre_CAR'] ?? 'Sin Nombre';
         $observacion = $car['observacion'] ?? $car['obs'] ?? '';
+        
+        $incidencia = $car['incidencia'] ?? $car['incidencias'] ?? '';
+        if (!empty($incidencia)) {
+            $obs_part = empty($observacion) ? '' : $observacion . " | ";
+            $observacion = $obs_part . "Incidencia: " . $incidencia;
+        }
+
         $responses = $car['responses'] ?? [];
         $props = $car['properties'] ?? $car['Propiedades'] ?? [];
 
         $details = [];
         if (!empty($responses) && is_array($responses)) {
             foreach ($responses as $label => $value) {
-                $details[] = ['label' => $label, 'value' => $value];
+                if (substr((string)$label, -5) === '_stts') continue;
+                $valStr = is_bool($value) ? ($value ? 'si' : 'no') : (string)$value;
+                $details[] = ['label' => $label, 'value' => $valStr];
             }
         } elseif (!empty($props) && is_array($props)) {
             foreach ($props as $prop) {
+                $val = $prop['value'] ?? $prop['Valor'] ?? '';
+                $valStr = is_bool($val) ? ($val ? 'si' : 'no') : (string)$val;
                 $details[] = [
                     'label' => $prop['label'] ?? $prop['Nombre_Propiedad'] ?? '-',
-                    'value' => $prop['value'] ?? $prop['Valor'] ?? ''
+                    'value' => $valStr
                 ];
             }
         }
@@ -283,6 +294,8 @@ class ExcelExporter
         foreach ($car['details'] as $detail) {
             if ($currentRow >= $obsRowIndex) {
                 $sheet->insertNewRowBefore($obsRowIndex, 1);
+                // Clonar el estilo de la fila inicial de datos a la fila recién insertada
+                $sheet->duplicateStyle($sheet->getStyle('A16:P16'), 'A' . $obsRowIndex . ':P' . $obsRowIndex);
                 $obsRowIndex++;
             }
 
@@ -348,11 +361,30 @@ class ExcelExporter
         $sheet->setCellValue('C10', 'Reporte mensual de sistemas contra incendio');
         $sheet->setCellValue('O10', $globalInfo['fecha']);
 
+        // Buscar dinámicamente la fila de "Observaciones" (normalmente la 62)
+        $obsRowIndex = 62;
+        $highestRow = $sheet->getHighestRow();
+        for ($row = 14; $row <= min($highestRow, 150); $row++) {
+            $val = $sheet->getCell('B' . $row)->getCalculatedValue();
+            if ($val && stripos((string) $val, 'Observaciones') !== false) {
+                $obsRowIndex = $row;
+                break;
+            }
+        }
+
         $r = 14; // Primera fila de datos
 
         foreach ($allCars as $entry) {
             $car = $entry['car'];
             $area = $entry['area'];
+
+            // Si las filas alcanzan la fila de Observaciones, insertar nuevas para evitar que se corte el reporte
+            if ($r >= $obsRowIndex - 1) {
+                $sheet->insertNewRowBefore($obsRowIndex - 1, 1);
+                // Clonar estilo de la fila 14 (o similar, limpia) a la nueva
+                $sheet->duplicateStyle($sheet->getStyle('A14:O14'), 'A' . ($obsRowIndex - 1) . ':O' . ($obsRowIndex - 1));
+                $obsRowIndex++;
+            }
 
             // Recopilar irregularidades (ítems marcados como "no satisfactorio")
             $irregularidades = [];
@@ -360,6 +392,7 @@ class ExcelExporter
 
             foreach ($car['details'] as $detail) {
                 $lowV = strtolower(trim((string) $detail['value']));
+                // Ya no hace falta preocuparse tanto del false porque ahora llega como "no", pero se deja compatible
                 $isBad = in_array($lowV, ['no', 'error', '0', 'false', 'malo', 'x', 'n']);
 
                 if ($isBad) {
@@ -389,8 +422,6 @@ class ExcelExporter
             }
 
             $r++;
-            if ($r > 60)
-                break; // Límite de seguridad (fila 62 es Observaciones en plantilla)
         }
 
         // Observaciones generales: consolidar todas las obs de todos los CARs
@@ -401,7 +432,9 @@ class ExcelExporter
             }
         }
         if (!empty($obsGenerales)) {
-            $sheet->setCellValue('B63', implode("\n", $obsGenerales));
+            // Escribir debajo de la celda "Observaciones :" (buscada dinámicamente)
+            $sheet->setCellValue('B' . ($obsRowIndex + 1), implode("\n", $obsGenerales));
+            $sheet->getStyle('B' . ($obsRowIndex + 1))->getAlignment()->setWrapText(true);
         }
     }
 

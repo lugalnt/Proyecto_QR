@@ -90,10 +90,23 @@
             lines.push('--- ' + cname + ' ---');
             if (cr.responses && typeof cr.responses === 'object') {
                 Object.keys(cr.responses).forEach(function (label) {
+                    if (label.endsWith('_stts')) return;
+                    
                     var val = cr.responses[label];
                     var display = String(val);
                     if (typeof val === 'boolean') display = (val ? 'Sí' : 'No');
-                    lines.push(String(label) + ': ' + display);
+                    
+                    var sttsKey = label + '_stts';
+                    var sttsVal = '';
+                    if (cr.responses[sttsKey]) {
+                        var c = cr.responses[sttsKey];
+                        var emoji = '';
+                        if (c === 'Satisfactoria') emoji = ' ✔️';
+                        if (c === 'No Satisfactoria') emoji = ' ❌';
+                        sttsVal = ' [' + c + emoji + ']';
+                    }
+                    
+                    lines.push(String(label) + ': ' + display + sttsVal);
                 });
             } else {
                 lines.push('No hay respuestas.');
