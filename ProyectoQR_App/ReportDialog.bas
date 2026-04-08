@@ -28,7 +28,7 @@ Sub Globals
 	' ---- UI base ----
 	Private pnlMain As Panel
 	Private lblTitle As Label
-	Private pnlContent As Panel
+	Private pnlContent As ScrollView
 	Private btnPrev As Button
 	Private btnNext As Button
 	Private btnSave As Button
@@ -94,9 +94,9 @@ Sub Activity_Create(FirstTime As Boolean)
 	lblTitle.Gravity = Gravity.CENTER
 	pnlHeader.AddView(lblTitle, innerPad, 0, screenW - (innerPad * 2), headerH)
 
-	' ---- Panel de contenido scrollable ----
-	pnlContent.Initialize("pnlContent")
-	pnlContent.Color = Colors.White
+	' ---- ScrollView de contenido (permite scroll si el CAR tiene muchas props) ----
+	pnlContent.Initialize(contentH)   ' altura interna inicial; se ajusta en ShowCAR
+	pnlContent.Panel.Color = Colors.White
 	pnlMain.AddView(pnlContent, 0, contentTop, screenW, contentH)
 
 	' ---- Footer: zona de botones ----
@@ -262,7 +262,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		SaveCurrentValues
 	End If
 
-	pnlContent.RemoveAllViews
+	pnlContent.Panel.RemoveAllViews
 	curEditTexts.Initialize
 	curCheckBoxes.Initialize
 	curSpinners.Initialize
@@ -320,7 +320,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		Dim pnlProp As Panel
 		pnlProp.Initialize("")
 		pnlProp.Color = Colors.ARGB(255, 245, 248, 255)  ' fondo levemente azulado
-		pnlContent.AddView(pnlProp, hPad - 4dip, top, fieldW + 8dip, 4dip) ' línea divisora delgada
+		pnlContent.Panel.AddView(pnlProp, hPad - 4dip, top, fieldW + 8dip, 4dip) ' línea divisora delgada
 		top = top + 4dip + 4dip
 
 		' etiqueta mejorada
@@ -329,7 +329,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		lbl.Text = label
 		lbl.TextSize = 13
 		lbl.TextColor = Colors.RGB(25, 118, 210)  ' azul para labels
-		pnlContent.AddView(lbl, hPad, top, fieldW, 24dip)
+		pnlContent.Panel.AddView(lbl, hPad, top, fieldW, 24dip)
 
 		If ptype = "bool" Or ptype = "boolean" Then
 			Dim cb As CheckBox
@@ -351,7 +351,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 				End Try
 			End If
 			cb.Checked = dflt
-			pnlContent.AddView(cb, hPad, top + 24dip, 28dip, 28dip)
+			pnlContent.Panel.AddView(cb, hPad, top + 24dip, 28dip, 28dip)
 
 			curCheckBoxes.Add(cb)
 			Dim metaCb As Map
@@ -390,7 +390,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			End If
 			etN.Text = txt
 
-			pnlContent.AddView(etN, hPad, top + 24dip, fieldW, 40dip)
+			pnlContent.Panel.AddView(etN, hPad, top + 24dip, fieldW, 40dip)
 
 			curEditTexts.Add(etN)
 			Dim metaN As Map
@@ -421,7 +421,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			End If
 			etT.Text = txt2
 
-			pnlContent.AddView(etT, hPad, top + 24dip, fieldW, 76dip)
+			pnlContent.Panel.AddView(etT, hPad, top + 24dip, fieldW, 76dip)
 
 			curEditTexts.Add(etT)
 			Dim metaT As Map
@@ -440,7 +440,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		lblStts.Text = "Estado:"
 		lblStts.TextSize = 12
 		lblStts.TextColor = Colors.RGB(90, 90, 90)
-		pnlContent.AddView(lblStts, hPad, top, 70dip, 32dip)
+		pnlContent.Panel.AddView(lblStts, hPad, top, 70dip, 32dip)
 		
 		Dim spStatus As Spinner
 		spStatus.Initialize("")
@@ -460,7 +460,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		If idxStatus = -1 Then idxStatus = 0
 		spStatus.SelectedIndex = idxStatus
 		
-		pnlContent.AddView(spStatus, hPad + 72dip, top, fieldW - 72dip, 32dip)
+		pnlContent.Panel.AddView(spStatus, hPad + 72dip, top, fieldW - 72dip, 32dip)
 		curSpinners.Add(spStatus)
 		
 		Dim metaS As Map
@@ -478,7 +478,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 	Dim pnlObsSep As Panel
 	pnlObsSep.Initialize("")
 	pnlObsSep.Color = Colors.ARGB(255, 220, 220, 230)
-	pnlContent.AddView(pnlObsSep, hPad - 4dip, top, fieldW + 8dip, 2dip)
+	pnlContent.Panel.AddView(pnlObsSep, hPad - 4dip, top, fieldW + 8dip, 2dip)
 	top = top + 6dip
 
 	Dim lblObs As Label
@@ -486,12 +486,12 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 	lblObs.Text = "Observación"
 	lblObs.TextSize = 13
 	lblObs.TextColor = Colors.RGB(25, 118, 210)
-	pnlContent.AddView(lblObs, hPad, top, fieldW, 24dip)
+	pnlContent.Panel.AddView(lblObs, hPad, top, fieldW, 24dip)
 
 	curObs.Initialize("")
 	curObs.SingleLine = False
 	curObs.Text = savedObs
-	pnlContent.AddView(curObs, hPad, top + 24dip, fieldW, 72dip)
+	pnlContent.Panel.AddView(curObs, hPad, top + 24dip, fieldW, 72dip)
 	top = top + 24dip + 72dip + 10dip
 
 	' ---- Incidencia ----
@@ -500,12 +500,16 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 	lblInc.Text = "Incidencia"
 	lblInc.TextSize = 13
 	lblInc.TextColor = Colors.RGB(25, 118, 210)
-	pnlContent.AddView(lblInc, hPad, top, fieldW, 24dip)
+	pnlContent.Panel.AddView(lblInc, hPad, top, fieldW, 24dip)
 
 	curInc.Initialize("")
 	curInc.SingleLine = False
 	curInc.Text = savedInc
-	pnlContent.AddView(curInc, hPad, top + 24dip, fieldW, 72dip)
+	pnlContent.Panel.AddView(curInc, hPad, top + 24dip, fieldW, 72dip)
+	top = top + 24dip + 72dip + 10dip
+
+	' Ajustar altura del panel interno para que el scroll funcione
+	pnlContent.Panel.Height = top + 20dip
 
 	' Navegación
 	btnPrev.Enabled = (index > 0)
