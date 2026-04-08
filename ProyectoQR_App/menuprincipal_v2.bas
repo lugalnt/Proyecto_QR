@@ -257,9 +257,12 @@ Sub JobDone(Job As HttpJob)
 
 				Dim nombre As String
 				nombre = ""
-				If data.ContainsKey("Nombre_Area")  Then nombre = data.Get("Nombre_Area")
-				Else If data.ContainsKey("Nombre")   Then nombre = data.Get("Nombre")
-				Else If data.ContainsKey("NombreArea") Then nombre = data.Get("NombreArea")
+				If data.ContainsKey("Nombre_Area") Then
+					nombre = data.Get("Nombre_Area")
+				Else If data.ContainsKey("Nombre") Then
+					nombre = data.Get("Nombre")
+				Else If data.ContainsKey("NombreArea") Then
+					nombre = data.Get("NombreArea")
 				End If
 
 				If data.ContainsKey("Id_Area") Then
@@ -268,16 +271,22 @@ Sub JobDone(Job As HttpJob)
 
 				Dim descripcion As String
 				descripcion = ""
-				If data.ContainsKey("Descripcion_Area")  Then descripcion = data.Get("Descripcion_Area")
-				Else If data.ContainsKey("Descripcion")  Then descripcion = data.Get("Descripcion")
-				Else If data.ContainsKey("DescripcionArea") Then descripcion = data.Get("DescripcionArea")
+				If data.ContainsKey("Descripcion_Area") Then
+					descripcion = data.Get("Descripcion_Area")
+				Else If data.ContainsKey("Descripcion") Then
+					descripcion = data.Get("Descripcion")
+				Else If data.ContainsKey("DescripcionArea") Then
+					descripcion = data.Get("DescripcionArea")
 				End If
 
 				Dim numeroCAR As String
 				numeroCAR = ""
-				If data.ContainsKey("NumeroCAR_Area") Then numeroCAR = data.Get("NumeroCAR_Area")
-				Else If data.ContainsKey("NumeroCAR") Then numeroCAR = data.Get("NumeroCAR")
-				Else If data.ContainsKey("Numero_CAR") Then numeroCAR = data.Get("Numero_CAR")
+				If data.ContainsKey("NumeroCAR_Area") Then
+					numeroCAR = data.Get("NumeroCAR_Area")
+				Else If data.ContainsKey("NumeroCAR") Then
+					numeroCAR = data.Get("NumeroCAR")
+				Else If data.ContainsKey("Numero_CAR") Then
+					numeroCAR = data.Get("Numero_CAR")
 				End If
 
 				If data.ContainsKey("JSON_Area") Then
