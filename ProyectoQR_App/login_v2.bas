@@ -255,7 +255,7 @@ Sub JobDone(Job As HttpJob)
 					Starter.Token         = token
 
 					ToastMessageShow("Bienvenido, " & nombre, False)
-					StartActivity(menuprincipal)
+					StartActivity(menuprincipal_v2)   ' v2: menú en código puro
 					Activity.Finish
 
 				Else If rol = "maquila" Then
