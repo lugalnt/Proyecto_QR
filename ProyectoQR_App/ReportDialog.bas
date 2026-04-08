@@ -58,69 +58,84 @@ Sub Activity_Create(FirstTime As Boolean)
 	' ---------------- UI dinámico y limpio ----------------
 	' Reemplaza el bloque UI antiguo por este (dentro de Activity_Create)
 
-	' obtener tamaño pantalla relativo
+	' ---- Layout responsivo mejorado ----
 	Dim screenW As Int = 100%x
 	Dim screenH As Int = 100%y
 
-	' márgenes y zonas
-	Dim outerMargin As Int = 8dip
-	Dim headerH As Int = 12%y        ' altura cabecera (título)
-	Dim footerH As Int = 18%y        ' altura zona de botones
+	' Márgenes y zonas dinámicas según tamaño de pantalla
+	Dim outerMargin As Int = 10dip
+	Dim innerPad As Int = 12dip
+	Dim headerH As Int = 13%y         ' cabecera: título + progreso
+	
+	' Footer: 2 filas de botones. Altura dinámica para que nunca se amontonen.
+	Dim btnH As Int = 46dip           ' alto de cada botón
+	Dim btnGap As Int = 6dip          ' espacio entre botones
+	Dim footerRows As Int = 2         ' fila 1: Anterior+Siguiente | fila 2: Guardar+Cancelar
+	Dim footerH As Int = (btnH * footerRows) + (btnGap * (footerRows + 1)) + outerMargin
+	
 	Dim contentTop As Int = headerH + outerMargin
-	Dim contentHeight As Int = screenH - headerH - footerH - (outerMargin * 2)
+	Dim contentH As Int = screenH - headerH - footerH - (outerMargin * 2)
 
-	' medidas para botones
-	Dim btnHeight As Int = 48dip
-	Dim btnGap As Int = 8dip
-	Dim btnCount As Int = 3
-	Dim btnWidth As Int = (screenW - (outerMargin * 2) - (btnGap * (btnCount - 1))) / btnCount
-
-	' panel principal (fondo)
+	' ---- Panel principal ----
 	pnlMain.Initialize("pnlMain")
 	Activity.AddView(pnlMain, 0, 0, screenW, screenH)
-	pnlMain.Color = Colors.White
+	pnlMain.Color = Colors.ARGB(255, 250, 252, 255)  ' fondo blanco azulado muy suave
 
-	' título centrado en la cabecera
+	' ---- Barra de cabecera con fondo de color ----
+	Dim pnlHeader As Panel
+	pnlHeader.Initialize("pnlHeader")
+	pnlHeader.Color = Colors.RGB(25, 118, 210)  ' azul Material
+	pnlMain.AddView(pnlHeader, 0, 0, screenW, headerH)
+
 	lblTitle.Initialize("lblTitle")
 	lblTitle.Text = "Área / Reporte"
-	lblTitle.TextSize = 18dip
-	lblTitle.TextColor = Colors.Black
+	lblTitle.TextSize = 16
+	lblTitle.TextColor = Colors.White
 	lblTitle.Gravity = Gravity.CENTER
-	pnlMain.AddView(lblTitle, outerMargin, 4dip, screenW - (outerMargin * 2), headerH - 8dip)
+	pnlHeader.AddView(lblTitle, innerPad, 0, screenW - (innerPad * 2), headerH)
 
-	' panel de contenido (dentro de la pantalla, con padding)
+	' ---- Panel de contenido scrollable ----
 	pnlContent.Initialize("pnlContent")
-	pnlContent.Color = Colors.ARGB(255, 250, 250, 250) ' leve contraste
-	pnlMain.AddView(pnlContent, outerMargin, contentTop, screenW - (outerMargin * 2), contentHeight)
-	' Opcional: agrega sombra/outline si usas un panel custom (no nativo sin librería)
+	pnlContent.Color = Colors.White
+	pnlMain.AddView(pnlContent, 0, contentTop, screenW, contentH)
 
-	' Botones principales (fila)
-	Dim yBtns As Int = screenH - footerH + outerMargin
+	' ---- Footer: zona de botones ----
+	Dim yFooter As Int = screenH - footerH
+	Dim pnlFooter As Panel
+	pnlFooter.Initialize("pnlFooter")
+	pnlFooter.Color = Colors.ARGB(255, 240, 240, 245)
+	pnlMain.AddView(pnlFooter, 0, yFooter, screenW, footerH)
+
+	' Fila 1 del footer: Anterior | Siguiente  (mitad del ancho cada uno)
+	Dim halfW As Int = (screenW - (outerMargin * 3)) / 2
+	Dim yRow1 As Int = btnGap
+
 	btnPrev.Initialize("btnPrev")
-	btnPrev.Text = "Anterior"
-	pnlMain.AddView(btnPrev, outerMargin, yBtns, btnWidth, btnHeight)
+	btnPrev.Text = "◀  Anterior"
+	btnPrev.Color = Colors.RGB(96, 125, 139)   ' gris azulado
+	btnPrev.TextColor = Colors.White
+	pnlFooter.AddView(btnPrev, outerMargin, yRow1, halfW, btnH)
 
 	btnNext.Initialize("btnNext")
-	btnNext.Text = "Siguiente"
-	pnlMain.AddView(btnNext, outerMargin + btnWidth + btnGap, yBtns, btnWidth, btnHeight)
+	btnNext.Text = "Siguiente  ▶"
+	btnNext.Color = Colors.RGB(96, 125, 139)
+	btnNext.TextColor = Colors.White
+	pnlFooter.AddView(btnNext, outerMargin + halfW + outerMargin, yRow1, halfW, btnH)
+
+	' Fila 2 del footer: Guardar | Cancelar  (con énfasis visual)
+	Dim yRow2 As Int = yRow1 + btnH + btnGap
 
 	btnSave.Initialize("btnSave")
-	btnSave.Text = "Guardar Reporte"
-	pnlMain.AddView(btnSave, outerMargin + 2 * (btnWidth + btnGap), yBtns, btnWidth, btnHeight)
-
-	' Botón cancelar (fila inferior, ancho completo con margen)
-	btnCancel.Initialize("btnCancel")
-	btnCancel.Text = "Cancelar"
-	Dim yCancel As Int = yBtns + btnHeight + btnGap
-	pnlMain.AddView(btnCancel, outerMargin, yCancel, screenW - (outerMargin * 2), 44dip)
-
-	' Ajustes visuales (opcionales, personaliza colores)
-	btnPrev.Color = Colors.LightGray
-	btnNext.Color = Colors.LightGray
-	btnSave.Color = Colors.RGB(33,150,243) ' azul
+	btnSave.Text = "✔  Guardar Reporte"
+	btnSave.Color = Colors.RGB(25, 118, 210)   ' azul Material
 	btnSave.TextColor = Colors.White
-	btnCancel.Color = Colors.RGB(220, 53, 69) ' rojo suave
+	pnlFooter.AddView(btnSave, outerMargin, yRow2, halfW, btnH)
+
+	btnCancel.Initialize("btnCancel")
+	btnCancel.Text = "✖  Cancelar"
+	btnCancel.Color = Colors.RGB(211, 47, 47)  ' rojo Material
 	btnCancel.TextColor = Colors.White
+	pnlFooter.AddView(btnCancel, outerMargin + halfW + outerMargin, yRow2, halfW, btnH)
 
 
 	' ------------------------------------------------------
@@ -273,7 +288,11 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 	If saved.IsInitialized And saved.ContainsKey("incidencia") Then savedInc = saved.Get("incidencia")
 
 	' Construye controles según properties
-	Dim top As Int = 8dip
+	' Padding interno mejorado
+	Dim top As Int = 10dip
+	Dim hPad As Int = 14dip           ' margen horizontal interno
+	Dim fieldW As Int = 100%x - (hPad * 2)
+	
 	Dim props As List
 	If carMap.ContainsKey("properties") Then
 		props = carMap.Get("properties")
@@ -297,13 +316,20 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 
 		Dim ptype As String = GetFirstString(prop, Array As String("type","tipo")).ToLowerCase
 
-		' etiqueta
+		' Separador/tarjeta visual por propiedad
+		Dim pnlProp As Panel
+		pnlProp.Initialize("")
+		pnlProp.Color = Colors.ARGB(255, 245, 248, 255)  ' fondo levemente azulado
+		pnlContent.AddView(pnlProp, hPad - 4dip, top, fieldW + 8dip, 4dip) ' línea divisora delgada
+		top = top + 4dip + 4dip
+
+		' etiqueta mejorada
 		Dim lbl As Label
 		lbl.Initialize("")
 		lbl.Text = label
-		lbl.TextSize = 12
-		lbl.TextColor = Colors.Black
-		pnlContent.AddView(lbl, 8dip, top, 84%x, 22dip)
+		lbl.TextSize = 13
+		lbl.TextColor = Colors.RGB(25, 118, 210)  ' azul para labels
+		pnlContent.AddView(lbl, hPad, top, fieldW, 24dip)
 
 		If ptype = "bool" Or ptype = "boolean" Then
 			Dim cb As CheckBox
@@ -325,7 +351,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 				End Try
 			End If
 			cb.Checked = dflt
-			pnlContent.AddView(cb, 8dip, top + 24dip, 24dip, 24dip)
+			pnlContent.AddView(cb, hPad, top + 24dip, 28dip, 28dip)
 
 			curCheckBoxes.Add(cb)
 			Dim metaCb As Map
@@ -335,7 +361,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			metaCb.Put("idx", curCheckBoxes.Size - 1)
 			curPropOrder.Add(metaCb)
 
-			top = top + 24dip + 16dip
+			top = top + 24dip + 20dip
 
 		Else If ptype = "number" Or ptype = "integer" Or ptype = "float" Then
 			Dim etN As EditText
@@ -364,7 +390,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			End If
 			etN.Text = txt
 
-			pnlContent.AddView(etN, 8dip, top + 22dip, 84%x, 34dip)
+			pnlContent.AddView(etN, hPad, top + 24dip, fieldW, 40dip)
 
 			curEditTexts.Add(etN)
 			Dim metaN As Map
@@ -374,7 +400,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			metaN.Put("idx", curEditTexts.Size - 1)
 			curPropOrder.Add(metaN)
 
-			top = top + 22dip + 34dip + 8dip
+			top = top + 24dip + 40dip + 10dip
 
 		Else
 			' texto
@@ -395,7 +421,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			End If
 			etT.Text = txt2
 
-			pnlContent.AddView(etT, 8dip, top + 22dip, 84%x, 72dip)
+			pnlContent.AddView(etT, hPad, top + 24dip, fieldW, 76dip)
 
 			curEditTexts.Add(etT)
 			Dim metaT As Map
@@ -405,16 +431,16 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 			metaT.Put("idx", curEditTexts.Size - 1)
 			curPropOrder.Add(metaT)
 
-			top = top + 22dip + 72dip + 8dip
+			top = top + 24dip + 76dip + 10dip
 		End If
 		
 		' ---- Spinner de Estado (Satisfactorio, etc) ----
 		Dim lblStts As Label
 		lblStts.Initialize("")
-		lblStts.Text = "Estado: "
+		lblStts.Text = "Estado:"
 		lblStts.TextSize = 12
-		lblStts.TextColor = Colors.DarkGray
-		pnlContent.AddView(lblStts, 8dip, top, 80dip, 30dip)
+		lblStts.TextColor = Colors.RGB(90, 90, 90)
+		pnlContent.AddView(lblStts, hPad, top, 70dip, 32dip)
 		
 		Dim spStatus As Spinner
 		spStatus.Initialize("")
@@ -434,7 +460,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		If idxStatus = -1 Then idxStatus = 0
 		spStatus.SelectedIndex = idxStatus
 		
-		pnlContent.AddView(spStatus, 8dip + 80dip, top, 84%x - 80dip, 30dip)
+		pnlContent.AddView(spStatus, hPad + 72dip, top, fieldW - 72dip, 32dip)
 		curSpinners.Add(spStatus)
 		
 		Dim metaS As Map
@@ -444,34 +470,42 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 		metaS.Put("idx", curSpinners.Size - 1)
 		curPropOrder.Add(metaS)
 		
-		top = top + 30dip + 16dip
+		top = top + 32dip + 12dip
 		
 	Next
 
-	' Observación
+	' ---- Observación ----
+	Dim pnlObsSep As Panel
+	pnlObsSep.Initialize("")
+	pnlObsSep.Color = Colors.ARGB(255, 220, 220, 230)
+	pnlContent.AddView(pnlObsSep, hPad - 4dip, top, fieldW + 8dip, 2dip)
+	top = top + 6dip
+
 	Dim lblObs As Label
 	lblObs.Initialize("")
 	lblObs.Text = "Observación"
-	lblObs.TextSize = 12
-	pnlContent.AddView(lblObs, 8dip, top, 84%x, 20dip)
+	lblObs.TextSize = 13
+	lblObs.TextColor = Colors.RGB(25, 118, 210)
+	pnlContent.AddView(lblObs, hPad, top, fieldW, 24dip)
 
 	curObs.Initialize("")
 	curObs.SingleLine = False
 	curObs.Text = savedObs
-	pnlContent.AddView(curObs, 8dip, top + 20dip, 84%x, 70dip)
-	top = top + 20dip + 70dip + 8dip
+	pnlContent.AddView(curObs, hPad, top + 24dip, fieldW, 72dip)
+	top = top + 24dip + 72dip + 10dip
 
-	' Incidencia
+	' ---- Incidencia ----
 	Dim lblInc As Label
 	lblInc.Initialize("")
 	lblInc.Text = "Incidencia"
-	lblInc.TextSize = 12
-	pnlContent.AddView(lblInc, 8dip, top, 84%x, 20dip)
+	lblInc.TextSize = 13
+	lblInc.TextColor = Colors.RGB(25, 118, 210)
+	pnlContent.AddView(lblInc, hPad, top, fieldW, 24dip)
 
 	curInc.Initialize("")
 	curInc.SingleLine = False
 	curInc.Text = savedInc
-	pnlContent.AddView(curInc, 8dip, top + 20dip, 84%x, 70dip)
+	pnlContent.AddView(curInc, hPad, top + 24dip, fieldW, 72dip)
 
 	' Navegación
 	btnPrev.Enabled = (index > 0)

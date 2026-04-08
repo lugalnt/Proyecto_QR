@@ -1,4 +1,4 @@
-﻿B4A=true
+B4A=true
 Group=Default Group
 ModulesStructureVersion=1
 Type=Activity
@@ -33,25 +33,39 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.RemoveAllViews
 	Dim screenW As Int = 100%x
+	Dim screenH As Int = 100%y
+
+	' ---- Panel de cabecera con fondo azul ----
+	Dim pnlHeader As Panel
+	pnlHeader.Initialize("pnlHeader")
+	pnlHeader.Color = Colors.RGB(25, 118, 210)
+	Activity.AddView(pnlHeader, 0, 0, screenW, 12%y)
 
 	lblTitle.Initialize("lblTitle")
 	lblTitle.Text = "Reportes"
 	lblTitle.TextSize = 16
-	lblTitle.Gravity = Gravity.CENTER_HORIZONTAL + Gravity.CENTER_VERTICAL
-	Activity.AddView(lblTitle, 0, 0, screenW, 10%y)
+	lblTitle.TextColor = Colors.White
+	lblTitle.Gravity = Gravity.CENTER
+	pnlHeader.AddView(lblTitle, 0, 0, screenW, 12%y)
 
+	' ---- Botón refrescar (moderno, en header) ----
 	btnRefresh.Initialize("btnRefresh")
-	btnRefresh.Text = "Refrescar"
-	Activity.AddView(btnRefresh, 2%x, 10%y + 4dip, 30%x, 8%y)
+	btnRefresh.Text = "↻  Refrescar"
+	btnRefresh.Color = Colors.RGB(21, 101, 192)  ' azul más oscuro para button en header
+	btnRefresh.TextColor = Colors.White
+	btnRefresh.TextSize = 13
+	Activity.AddView(btnRefresh, screenW - 35%x - 8dip, 12%y + 6dip, 35%x, 7%y)
 
+	' ---- ListView ocupa el resto de la pantalla ----
 	lv.Initialize("lvReports")
-	lv.SingleLineLayout.Label.TextColor = Colors.Black
-	Activity.AddView(lv, 0, 18%y, screenW, 72%y)
+	lv.SingleLineLayout.Label.TextColor = Colors.RGB(30, 30, 30)
+	lv.SingleLineLayout.Label.TextSize = 14
+	Activity.AddView(lv, 0, 12%y + 7%y + 10dip, screenW, screenH - 12%y - 7%y - 10dip)
 
 	reportsMap.Initialize
 
 	If AreaToShow <> "" Then
-		lblTitle.Text = "Reportes del área: " & AreaToShow
+		lblTitle.Text = "Reportes: " & AreaToShow
 		If BaseUrlToUse = "" Then
 			BaseUrlToUse = "https://yourserver.example/api/get_reports_by_area.php?area={area}"
 		End If
