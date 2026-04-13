@@ -1,4 +1,4 @@
-﻿B4A=true
+B4A=true
 Group=Default Group
 ModulesStructureVersion=1
 Type=Activity
@@ -45,6 +45,7 @@ Sub Globals
 	Private curPropOrder As List      ' List<Map{type,label,idx}> define cómo leer cada control
 	Private curObs As EditText        ' observación del CAR mostrado
 	Private curInc As EditText        ' incidencia del CAR mostrado
+	Private curSpinners As List       ' List<Spinner> para el estado del prop
 
 	' ---- Respuestas almacenadas (una entrada por CAR) ----
 	' answersList(i) = Map { "car_name":String, "responses":Map, "observacion":String?, "incidencia":String? }
@@ -234,6 +235,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	' Inicializa colecciones de la pantalla actual
 	curEditTexts.Initialize
 	curCheckBoxes.Initialize
+	curSpinners.Initialize
 	curPropOrder.Initialize
 	currentIndex = 0
 	ShowCAR(currentIndex, True)
@@ -248,6 +250,7 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 	pnlContent.RemoveAllViews
 	curEditTexts.Initialize
 	curCheckBoxes.Initialize
+	curSpinners.Initialize
 	curPropOrder.Initialize
 
 	If index < 0 Or index > carsList.Size - 1 Then Return
@@ -404,6 +407,45 @@ Private Sub ShowCAR(index As Int, isFirst As Boolean)
 
 			top = top + 22dip + 72dip + 8dip
 		End If
+		
+		' ---- Spinner de Estado (Satisfactorio, etc) ----
+		Dim lblStts As Label
+		lblStts.Initialize("")
+		lblStts.Text = "Estado: "
+		lblStts.TextSize = 12
+		lblStts.TextColor = Colors.DarkGray
+		pnlContent.AddView(lblStts, 8dip, top, 80dip, 30dip)
+		
+		Dim spStatus As Spinner
+		spStatus.Initialize("")
+		spStatus.AddAll(Array As String("N/A", "Satisfactoria", "No Satisfactoria"))
+		
+		' Intentar restaurar el valor de _stts si está guardado
+		Dim sttsKey As String = label & "_stts"
+		Dim savedSttsVal As String = "N/A"
+		If savedResp.ContainsKey(sttsKey) Then
+			Try
+				savedSttsVal = savedResp.Get(sttsKey)
+			Catch
+			End Try
+		End If
+		
+		Dim idxStatus As Int = spStatus.IndexOf(savedSttsVal)
+		If idxStatus = -1 Then idxStatus = 0
+		spStatus.SelectedIndex = idxStatus
+		
+		pnlContent.AddView(spStatus, 8dip + 80dip, top, 84%x - 80dip, 30dip)
+		curSpinners.Add(spStatus)
+		
+		Dim metaS As Map
+		metaS.Initialize
+		metaS.Put("type", "spinner")
+		metaS.Put("label", sttsKey)
+		metaS.Put("idx", curSpinners.Size - 1)
+		curPropOrder.Add(metaS)
+		
+		top = top + 30dip + 16dip
+		
 	Next
 
 	' Observación
@@ -460,6 +502,9 @@ Private Sub SaveCurrentValues
 		Else If t = "checkbox" Then
 			Dim cb As CheckBox = curCheckBoxes.Get(idx)
 			responses.Put(label, cb.Checked)
+		Else If t = "spinner" Then
+			Dim sp As Spinner = curSpinners.Get(idx)
+			responses.Put(label, sp.SelectedItem)
 		End If
 	Next
 

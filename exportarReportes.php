@@ -7,9 +7,9 @@ if (!isset($_SESSION['Id_Usuario'])) {
 }
 
 require_once 'controllers/reporteController.php';
-require_once 'services/excel/ExcelExporter.php';
+require_once 'services/excel/NuevoExcelExporter.php';
 
-use Services\Excel\ExcelExporter;
+use Services\Excel\NuevoExcelExporter as ExcelExporter;
 
 $ReporteController = new ReporteController();
 

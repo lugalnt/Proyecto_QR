@@ -1,0 +1,110 @@
+La reunión se centró en la implementación
+de un sistema de códigos QR para la gestión
+de equipos y válvulas, con el objetivo de
+mejorar la eficiencia y la precisión del
+inventario. Se discutió la transición de un
+sistema basado en áreas a uno basado en
+sistemas, la personalización de los códigos QR
+para elementos individuales como válvulas,
+la inclusión de campos de observación e
+incidencias, y la posibilidad de que todo el
+equipo participe en las pruebas para asegurar
+una implementación exitosa. También se
+abordó la viabilidad de la aplicación, su costo
+y cómo integrar la información visual de las
+imágenes proporcionadas.
+Temas principales
+Cambio de sistema de gestión por áreas a por
+sistemas
+Se discute la propuesta de cambiar el
+enfoque del sistema de códigos QR de un
+esquema basado en 'áreas' a uno basado
+en 'sistemas'. Esto implica modificar cómo
+se organizan y registran los equipos y
+componentes. La idea es que un 'sistema'
+sea más abarcador, como 'válvulas', y
+dentro de este se puedan detallar los
+componentes individuales. Se reconoce que
+esto no debería ser un cambio complicado,
+ya que solo implicaría modificar el nombre y
+la estructura de los registros.
+Detalle y personalización de códigos QR para
+válvulas
+Se propone que, en lugar de un solo
+código QR para un grupo de válvulas, cada
+válvula individual tenga su propio código
+personalizado. Esto permitiría registrar
+el funcionamiento y el rango de cada
+válvula, así como cualquier observación o
+incidencia. Se visualiza un sistema donde al
+escanear el QR de un sistema de válvulas,
+se muestre una lista detallada de cada
+válvula con su estado OK/No OK y otros
+datos relevantes. Las imágenes muestran
+ejemplos de cómo se podrían organizar
+las secciones de un sistema, con campos
+para 'válvulas' y 'hidrantes', y cómo se
+detallarían los problemas específicos de
+cada válvula.
+Inclusión de campos de observación e
+incidencias
+Se enfatiza la importancia de incluir un
+campo de 'observación' y 'incidencia' en
+cada registro, más allá de solo un estado
+'OK' o 'no OK'. Esto permitiría a los técnicos
+proporcionar detalles específicos sobre
+cualquier problema o hallazgo, lo que
+facilitaría un seguimiento más preciso. Se
+menciona que la aplicación ya está diseñada
+para incluir estos campos por defecto.
+Pruebas y capacitación del equipo
+Se propone realizar una prueba con todo
+el equipo involucrado para asegurar que
+el sistema funcione correctamente y que
+todos comprendan su uso. Se sugiere que
+el creador del sistema acompañe al equipo
+para explicar el funcionamiento, cómo dar
+de alta nuevos elementos y cómo añadir los
+códigos QR. La idea es empezar con una
+planta más pequeña, como la de 'Javid', y
+luego escalar a otras. Se enfatiza que la
+práctica es clave para que el proceso sea
+más rápido y eficiente a largo plazo.
+Formalización y costos del sistema
+Se discute la necesidad de formalizar
+el sistema, incluyendo la asignación de
+nombres correctos a los componentes y
+la estructura de los datos. Se compara la
+solución propuesta con programas externos
+que venden membresías para sistemas
+similares, destacando que la solución actual
+busca ser gratuita para el usuario final, a
+diferencia de los modelos de suscripción
+que cobran por el mantenimiento del
+servidor y la página web. Se menciona que
+el desarrollo actual busca que la aplicación
+sea accesible a través de datos móviles sin
+costos adicionales, excepto el consumo de
+datos.
+Elementos de acción
+Modificar el sistema para que se base en
+'sistemas' en lugar de 'áreas' para una
+mejor organización de los equipos.
+Speaker 1
+Diseñar la interfaz para que al escanear
+un código QR de un sistema (ej. válvulas),
+se despliegue una lista detallada de los
+componentes individuales con sus estados y
+observaciones.
+Speaker 1
+Preparar una prueba del sistema con todo el
+equipo de mantenimiento, comenzando con
+una planta más pequeña como 'Javid'.
+000, 2 feb 202 · Speaker 1
+Ajustar la aplicación para que incluya una
+generalización al final del reporte, como un
+resumen de los datos.
+Speaker 1
+Contactar con el equipo para coordinar una
+fecha para la prueba y capacitación del
+sistema.
