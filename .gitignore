@@ -10,3 +10,7 @@ vendor/
 .DS_Store
 Thumbs.db
 *.log
+
+# B4A - Archivos compilados y temporales
+ProyectoQR_App/Objects/
+ProyectoQR_App/AutoBackups/
