@@ -264,33 +264,43 @@ End Sub
 ' -------------------------------------------------------
 Sub RenderReport(rp As Map)
 	Dim y As Int = 10dip
-	Dim padding As Int = 10dip
+	Dim padding As Int = 12dip
 	Dim w As Int = 100%x - 2 * padding
 
-	' Area info
+	' ---- Cabecera del área ----
 	If rp.ContainsKey("area") Then
 		Try
 			Dim area As Map = rp.Get("area")
+			
+			' Panel de cabecera con color de fondo
+			Dim pnlAreaHeader As Panel
+			pnlAreaHeader.Initialize("pnlAreaHeader")
+			pnlAreaHeader.Color = Colors.RGB(25, 118, 210)
+			Activity.AddView(pnlAreaHeader, 0, 0, 100%x, 14%y)
+			
 			Dim lblTitle As Label
 			lblTitle.Initialize("lblTitle")
 			Dim name As String = ""
 			If area.ContainsKey("area_name") Then name = area.Get("area_name")
 			If name = "" And area.ContainsKey("areaName") Then name = area.Get("areaName")
-			lblTitle.Text = "Área: " & name
+			lblTitle.Text = Chr(10) & "Área: " & name
 			lblTitle.TextSize = 16
 			lblTitle.Typeface = Typeface.DEFAULT_BOLD
-			Dim hTitle As Int = EstimateLabelHeight(lblTitle.Text, lblTitle.TextSize, w)
-			pnl.AddView(lblTitle, padding, y, w, hTitle)
-			y = y + hTitle + 6dip
-
+			lblTitle.TextColor = Colors.White
+			lblTitle.Gravity = Gravity.LEFT + Gravity.CENTER_VERTICAL
+			pnlAreaHeader.AddView(lblTitle, padding, 0, 100%x - (padding * 2), 14%y)
+			
+			y = 14%y + 8dip
+			
 			Dim desc As String = ""
 			If area.ContainsKey("area_description") Then desc = area.Get("area_description")
 			If desc = "" And area.ContainsKey("areaDescription") Then desc = area.Get("areaDescription")
 			If desc <> "" Then
 				Dim lblDesc As Label
 				lblDesc.Initialize("lblDesc")
-				lblDesc.Text = "Descripción: " & desc
-				lblDesc.TextSize = 14
+				lblDesc.Text = desc
+				lblDesc.TextSize = 13
+				lblDesc.TextColor = Colors.RGB(80, 80, 80)
 				Dim hDesc As Int = EstimateLabelHeight(lblDesc.Text, lblDesc.TextSize, w)
 				pnl.AddView(lblDesc, padding, y, w, hDesc)
 				y = y + hDesc + 6dip
@@ -309,20 +319,27 @@ Sub RenderReport(rp As Map)
 				Dim carName As String = ""
 				If c.ContainsKey("car_name") Then carName = c.Get("car_name")
 
-				' Card panel
+				' ---- Card mejorada con borde azul lateral ----
 				Dim card As Panel
 				card.Initialize("card" & i)
-				card.Color = Colors.ARGB(255, 245, 245, 245)
-				pnl.AddView(card, padding, y, w, 60dip) ' altura provisional; la ajustaremos luego
+				card.Color = Colors.ARGB(255, 248, 250, 255)  ' fondo casi blanco azulado
+				pnl.AddView(card, padding, y, w, 60dip)  ' altura provisional
 
-				' Car name
+				' Barra de color en el borde izquierdo
+				Dim pnlBar As Panel
+				pnlBar.Initialize("")
+				pnlBar.Color = Colors.RGB(25, 118, 210)
+				card.AddView(pnlBar, 0, 0, 5dip, 60dip)  ' altura temporal, se reajusta
+
+				' Car name (negrita, azul oscuro)
 				Dim lblCar As Label
 				lblCar.Initialize("lblCar" & i)
-				lblCar.Text = "CAR: " & carName
-				lblCar.TextSize = 15
+				lblCar.Text = "C.A.R: " & carName
+				lblCar.TextSize = 14
 				lblCar.Typeface = Typeface.DEFAULT_BOLD
-				Dim hCarName As Int = EstimateLabelHeight(lblCar.Text, lblCar.TextSize, w - 16dip)
-				card.AddView(lblCar, 8dip, 4dip, w - 16dip, hCarName)
+				lblCar.TextColor = Colors.RGB(20, 60, 120)
+				Dim hCarName As Int = EstimateLabelHeight(lblCar.Text, lblCar.TextSize, w - 20dip)
+				card.AddView(lblCar, 10dip, 6dip, w - 20dip, hCarName)
 
 				' Responses (formatted) - ahora usando FormatValue para traducir booleans
 				Dim responsesText As String = ""
@@ -341,7 +358,7 @@ Sub RenderReport(rp As Map)
 									sttsVal = " (" & respMap.Get(sttsKey) & ")"
 								End If
 								
-								responsesText = responsesText & k & ": " & vs & sttsVal & CRLF
+								responsesText = responsesText & " • " & k & ": " & vs & sttsVal & CRLF
 							Catch
 								Log("RenderReport: error leyendo responses key '" & k & "': " & LastException.Message)
 							End Try
@@ -444,28 +461,31 @@ Sub RenderReport(rp As Map)
 				If detailsResp = "" Then detailsResp = "(sin respuestas)"
 				If detailsExtras = "" Then detailsExtras = "" ' si no hay extras no mostramos etiqueta extra
 
-				' Label responses
+				' Label responses (gris oscuro, legible)
 				Dim lblResp As Label
 				lblResp.Initialize("lblResp" & i)
 				lblResp.Text = detailsResp
-				lblResp.TextSize = 13
-				Dim hResp As Int = EstimateLabelHeight(lblResp.Text, lblResp.TextSize, w - 16dip)
-				card.AddView(lblResp, 8dip, 4dip + hCarName, w - 16dip, hResp)
+				lblResp.TextSize = 12
+				lblResp.TextColor = Colors.RGB(50, 50, 50)
+				Dim hResp As Int = EstimateLabelHeight(lblResp.Text, lblResp.TextSize, w - 20dip)
+				card.AddView(lblResp, 10dip, 6dip + hCarName + 4dip, w - 20dip, hResp)
 
 				Dim hExtras As Int = 0
 				If detailsExtras <> "" Then
 					Dim lblExtras As Label
 					lblExtras.Initialize("lblExtras" & i)
 					lblExtras.Text = detailsExtras
-					lblExtras.TextSize = 13
-					hExtras = EstimateLabelHeight(lblExtras.Text, lblExtras.TextSize, w - 16dip)
-					card.AddView(lblExtras, 8dip, 4dip + hCarName + hResp, w - 16dip, hExtras)
+					lblExtras.TextSize = 12
+					lblExtras.TextColor = Colors.RGB(130, 80, 0)  ' color ámbar para extras
+					hExtras = EstimateLabelHeight(lblExtras.Text, lblExtras.TextSize, w - 20dip)
+					card.AddView(lblExtras, 10dip, 6dip + hCarName + 4dip + hResp, w - 20dip, hExtras)
 				End If
 
-				' ajustar altura del card según contenido
-				Dim hCard As Int = hCarName + hResp + hExtras + 16dip
+				' Ajustar altura del card y la barra de borde
+				Dim hCard As Int = hCarName + hResp + hExtras + 20dip
 				card.SetLayout(card.Left, card.Top, card.Width, hCard)
-				y = y + hCard + 8dip
+				pnlBar.SetLayout(0, 0, 5dip, hCard)  ' la barra cubre todo el alto real
+				y = y + hCard + 10dip
 			Next
 		Catch
 			Log("Error leyendo car_reports: " & LastException.Message)
@@ -505,21 +525,31 @@ Sub RenderReport(rp As Map)
 End Sub
 
 Sub AddActionButtons(top As Int)
+	' Separador visual antes de los botones
+	Dim pnlSep As Panel
+	pnlSep.Initialize("")
+	pnlSep.Color = Colors.ARGB(255, 200, 200, 210)
+	pnl.AddView(pnlSep, 10dip, top, 100%x - 20dip, 1dip)
+	top = top + 10dip
+
 	Dim btnEdit As Button
 	btnEdit.Initialize("btnEdit")
-	btnEdit.Text = "Editar Reporte"
-	btnEdit.Color = Colors.RGB(255, 193, 7) ' Amber/Orange
-	btnEdit.TextColor = Colors.Black
-	pnl.AddView(btnEdit, 10dip, top, 45%x, 50dip)
+	btnEdit.Text = "✎  Editar Reporte"
+	btnEdit.Color = Colors.RGB(245, 127, 23)  ' Naranja Material
+	btnEdit.TextColor = Colors.White
+	btnEdit.TextSize = 14
+	pnl.AddView(btnEdit, 10dip, top, 100%x - 20dip, 52dip)
+	top = top + 52dip + 10dip
 
 	Dim btnDelete As Button
 	btnDelete.Initialize("btnDelete")
-	btnDelete.Text = "Eliminar"
-	btnDelete.Color = Colors.RGB(220, 53, 69) ' Red
+	btnDelete.Text = "🗑  Eliminar Reporte"
+	btnDelete.Color = Colors.RGB(198, 40, 40)  ' Rojo oscuro Material
 	btnDelete.TextColor = Colors.White
-	pnl.AddView(btnDelete, 55%x, top, 40%x, 50dip)
+	btnDelete.TextSize = 14
+	pnl.AddView(btnDelete, 10dip, top, 100%x - 20dip, 52dip)
 
-	pnl.Height = top + 70dip
+	pnl.Height = top + 72dip
 End Sub
 
 Sub btnEdit_Click
