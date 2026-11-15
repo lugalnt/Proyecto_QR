@@ -5,8 +5,20 @@ config/env.php
 
 # Dependencias (se reinstalan con composer install)
 vendor/
+/vendor/
+
+# Archivos de pruebas y Docker locales
+.phpunit.cache/
+.phpunit.result.cache
+mysql_data/
+mysql_data_staging/
+mysql_data*/
 
 # Archivos del sistema / editores
 .DS_Store
 Thumbs.db
 *.log
+
+# B4A - Archivos compilados y temporales
+ProyectoQR_App/Objects/
+ProyectoQR_App/AutoBackups/

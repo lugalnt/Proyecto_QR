@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    container_name: fcs_app_staging
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: fcs_db_staging
+      MYSQL_USER: user_staging
+      MYSQL_PASSWORD: ${STAGING_DB_PASSWORD:-staging_pass_2026}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - fcs_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: fcs_mysql_staging
+    environment:
+      MYSQL_ROOT_PASSWORD: ${STAGING_ROOT_PASSWORD:-root_pass_2026}
+      MYSQL_DATABASE: fcs_db_staging
+      MYSQL_USER: user_staging
+      MYSQL_PASSWORD: ${STAGING_DB_PASSWORD:-staging_pass_2026}
+    volumes:
+      - mysql_data_staging:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fcs_network
+
+volumes:
+  mysql_data_staging:
+
+networks:
+  fcs_network:
+    driver: bridge

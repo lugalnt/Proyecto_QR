@@ -1,2 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+health.php text eol=lf
+tests/Unit/*.php text eol=lf
+phpunit.xml text eol=lf
+phpcs.xml text eol=lf
+php.ini text eol=lf
+.env.example text eol=lf
+Dockerfile text eol=lf
