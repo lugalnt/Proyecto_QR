@@ -3,13 +3,13 @@
     <rule ref="PSR12"/>
     <file>./health.php</file>
     <file>./tests</file>
-    <exclude-pattern>./vendor/*</exclude-pattern>
-    <exclude-pattern>./tests/excel/*</exclude-pattern>
-    <exclude-pattern>./tests/debug_file.php</exclude-pattern>
-    <exclude-pattern>./tests/generate_test_sql.php</exclude-pattern>
-    <exclude-pattern>./tests/inspect_excel.php</exclude-pattern>
-    <exclude-pattern>./tests/inspect_excel_v2.php</exclude-pattern>
-    <exclude-pattern>./tests/inspect_names.php</exclude-pattern>
-    <exclude-pattern>./tests/test.php</exclude-pattern>
-    <exclude-pattern>./tests/verify_export.php</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>tests/excel/*</exclude-pattern>
+    <exclude-pattern>tests/debug_file.php</exclude-pattern>
+    <exclude-pattern>tests/generate_test_sql.php</exclude-pattern>
+    <exclude-pattern>tests/inspect_excel.php</exclude-pattern>
+    <exclude-pattern>tests/inspect_excel_v2.php</exclude-pattern>
+    <exclude-pattern>tests/inspect_names.php</exclude-pattern>
+    <exclude-pattern>tests/test.php</exclude-pattern>
+    <exclude-pattern>tests/verify_export.php</exclude-pattern>
 </ruleset>
